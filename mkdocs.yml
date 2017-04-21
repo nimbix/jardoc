@@ -4,4 +4,5 @@ extra_css:
     - css/extra.css
 pages:
     - Home: index.md
+    - Public Applications: public.md
 
