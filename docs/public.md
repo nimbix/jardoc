@@ -20,8 +20,10 @@ To promote a private or team application for public consumption on the Nimbix Cl
 
 Please note that the best practice when embedding an AppDef is to both copy the json file into the image as well as call the Nimbix API's public validation endpoint.  This will cause the Docker build to fail if the AppDef is invalid.  For example, if ```AppDef.json``` is adjacent to ```Dockerfile``` in your build tree, you would add the following 2 lines to the ```Dockerfile```:
 
-    COPY AppDef.json /etc/NAE/AppDef.json
-    RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://api.jarvice.com/jarvice/validate
+```Dockerfile
+COPY AppDef.json /etc/NAE/AppDef.json
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://api.jarvice.com/jarvice/validate
+```
 
 ## Additional Requirements if Charging for Usage
 
