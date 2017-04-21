@@ -217,3 +217,25 @@ a
 {
     outline: none;
 }
+
+.wy-side-nav-search {
+    background-color: rgb(0, 51, 102);
+}
+
+.wy-nav-side {
+    background-color: rgb(0, 51, 102);
+}
+
+.wy-menu-vertical li ul li a {
+    background-color: rgb(0, 51, 102);
+    color: white;
+}
+
+.ul.subnav {
+    color: white;
+}
+
+.wy-nav-content-wrap {
+    background: white;
+}
+
