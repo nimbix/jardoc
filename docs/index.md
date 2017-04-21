@@ -1,17 +1,6 @@
-# Welcome to MkDocs
+# Welcome to JARVICE
 
-For full documentation visit [mkdocs.org](http://mkdocs.org).
+JARVICE is the leading platform for compute and data intensive workflows at scale.  This documentation will help you build and deploy custom applications on the JARVICE platform.
 
-## Commands
+For more about JARVICE, including how to sign up for service, please visit the [Nimbix website](https://www.nimbix.net).
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
