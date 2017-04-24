@@ -239,3 +239,10 @@ a
     background: white;
 }
 
+.toctree-l1 a {color: #FFF !important}
+.toctree-l1.current {color: #000 !important}
+.toctree-l2 a {color: #FFF !important; background-color: #30302e}
+.toctree-l3 a {color: #FFF !important; background-color: #30302e}
+.toctree-l3 a hover {color: #FFF !important; background-color: #30302e !important}
+
+

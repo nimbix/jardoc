@@ -4,5 +4,6 @@ extra_css:
     - css/extra.css
 pages:
     - Home: index.md
+    - CI/CD Pipeline: cicd.md
     - Public Applications: public.md
 
