@@ -245,4 +245,19 @@ a
 .toctree-l3 a {color: #FFF !important; background-color: #30302e}
 .toctree-l3 a hover {color: #FFF !important; background-color: #30302e !important}
 
+.wy-menu-vertical li.on a, .wy-menu-vertical li.current>a {
+       color: #404040 ;
+       padding: 0.4045em 1.618em;
+       font-weight: bold;
+       position: relative;
+       background: #000 !important;
+       border: none;
+       border-bottom: solid 1px #c9c9c9 ;
+       border-top: solid 1px #c9c9c9 ;
+       padding-left: 1.618em -4px;
+}
+
+.wy-menu-vertical li ul li a:hover{
+    background-color: #000 !important;}
+
 
