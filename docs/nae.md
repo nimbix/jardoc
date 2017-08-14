@@ -42,7 +42,9 @@ Provides job information available to the application, and can be sourced into a
 
 Provides account variables as environment variables for the application, and can be sourced into a shell script.  Account variables are managed for end users by Nimbix Support and are frequently used to describe license server addresses and keys.
 
-### Container metadata
+# Container metadata
+
+### /etc/NAE
 
 The directory `/etc/NAE` contains certain metadata files for the JARVICE system; these are managed by the application developer and are part of the Docker image:
 
