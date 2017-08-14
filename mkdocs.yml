@@ -4,9 +4,6 @@ extra_css:
     - css/extra.css
 pages:
     - Home: index.md
-    - PushToCompute Overview: ptc_overview.md
-    - PushToCompute Tutorial: ptc_tutorial.md
-    - Building and Deploying PushToCompute Workflows: ptc_workflows.md
     - CI/CD Pipeline: cicd.md
     - Public Applications: public.md
 

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="37cm" height="21cm" viewBox="579 539 722 411" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="580" y="700" width="160" height="89"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="580" y="700" width="160" height="89"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="660" y="749.3">
+      <tspan x="660" y="749.3">Local Git clone</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1140" y="540" width="160" height="89"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1140" y="540" width="160" height="89"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1220" y="589.3">
+      <tspan x="1220" y="589.3">JARVICE Application</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1140" y="700" width="160" height="89"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1140" y="700" width="160" height="89"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1220" y="749.3">
+      <tspan x="1220" y="749.3">PushToCompute: Pull</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="920" y="700" width="160" height="89"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="920" y="700" width="160" height="89"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1000" y="741.3">
+      <tspan x="1000" y="741.3">PushToCompute:</tspan>
+      <tspan x="1000" y="757.3">Build and Push</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="780" y="860" width="160" height="89"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="780" y="860" width="160" height="89"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="860" y="901.3">
+      <tspan x="860" y="901.3">Git repository</tspan>
+      <tspan x="860" y="917.3">(e.g. GitHub)</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="1080" y="860" width="160" height="89"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="1080" y="860" width="160" height="89"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1160" y="901.3">
+      <tspan x="1160" y="901.3">Docker registry</tspan>
+      <tspan x="1160" y="917.3">(e.g. DockerHub)</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="660,789 660,904.5 770.264,904.5 "/>
+    <polygon style="fill: #000000" points="777.764,904.5 767.764,909.5 770.264,904.5 767.764,899.5 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="777.764,904.5 767.764,909.5 770.264,904.5 767.764,899.5 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="860" y1="860" x2="991.317" y2="793.404"/>
+    <polygon style="fill: #000000" points="998.006,790.011 991.349,798.994 991.317,793.404 986.826,790.075 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="998.006,790.011 991.349,798.994 991.317,793.404 986.826,790.075 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1000" y1="789" x2="1151.1" y2="856.051"/>
+    <polygon style="fill: #000000" points="1157.96,859.093 1146.79,859.607 1151.1,856.051 1150.84,850.467 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1157.96,859.093 1146.79,859.607 1151.1,856.051 1150.84,850.467 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1160" y1="860" x2="1213.72" y2="796.436"/>
+    <polygon style="fill: #000000" points="1218.56,790.708 1215.92,801.573 1213.72,796.436 1208.28,795.119 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1218.56,790.708 1215.92,801.573 1213.72,796.436 1208.28,795.119 "/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1220" y1="700" x2="1220" y2="638.736"/>
+    <polygon style="fill: #000000" points="1220,631.236 1225,641.236 1220,638.736 1215,641.236 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="1220,631.236 1225,641.236 1220,638.736 1215,641.236 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="680" y="900">
+    <tspan x="680" y="900">git push</tspan>
+  </text>
+</svg>
