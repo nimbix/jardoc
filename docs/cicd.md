@@ -71,3 +71,41 @@ Once you have an application in your *PushToCompute&trade;* page, you can click 
 
 ![App context](appcontext.png)
 
+*Edit* allows you to change parameters specified at creation time or since last edit (see above for which parameters can be changed and which cannot).
+
+*Delete* allows you to delete the application from your account.
+
+*Build* performs a source build by cloning the specified Git repository, performing a `docker build` for the appropriate architecture, and pushing the generated image to the specified Docker registry and target.  This option is enabled only if you specified a Git URL in the application.
+
+*Build+Pull* performs a *Build* and then does a `docker pull` of the application into the target image on JARVICE.
+
+*Abort Build* aborts a build already in progress, if possible.
+
+*Pull* performs a `docker pull` of the application into the target image on JARVICE.
+
+*History* opens a pop up window to monitor event history (such as build and pull status) of your application.  Use this function to know when a pull completes for example.
+
+*Downlaod AppDef* downloads the application's `AppDef.json`, which you can modify to change application metadata and endpoints.  The default `AppDef.json` provides standard endpoints and basic metadata.  You can upload changes by placing `/etc/NAE/AppDef.json` in your Docker image.  For reference on the application definition format (AppDef), please see the [JARVICE Application Definition Guide](https://www.nimbix.net/jarvice-application-deployment-guide/).
+
+# Running the Application
+
+To run the application, simply click in the body of the card as you would other JARVICE applications.  This will launch the task builder.  If you are using the default AppDef, you will see 3 endpoints: *Batch*, *Server*, and *GUI*.
+
+*Batch* is used to execute a command and exit, much like `docker run` does.
+
+*Server* is used to boot the application image as if it were a full session, and later connect to its services (e.g. `ssh` or `http`).
+
+*GUI* is used to execute a GUI command inside a graphical session accessible via browser (HTML5) or VNC client.  This endpoint only functions if your image includes the Nimbix Desktop.
+
+# Updating the Application
+
+You may update your application at any time by executing any portion of the pipeline (e.g. *Build*, *Build+Pull*, or *Pull*).  The application image is available immediately after a pull completes.
+
+# Automating the Pipeline
+
+All functions described above in *Building and Deploying* can be triggered via HTTP GET from other services.  You will see a confirmation dialog that allows youto copy a Web Hook URL to the clipboard before performing the action, e.g.:
+
+![Web Hook](webhook.png)
+
+In the above example, simply right click on the underlined _link_ and select *Copy* to copy it to the clipboard.  Then paste it into the Web Hook definition of your Git repository dashboard to link it to a `push`.  Subsequent `git push` will trigger a build from source, push to the Docker registry, and a pull into the JARVICE application.
+
