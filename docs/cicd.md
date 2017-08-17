@@ -85,7 +85,7 @@ Once you have an application in your *PushToCompute&trade;* page, you can click 
 
 *History* opens a pop up window to monitor event history (such as build and pull status) of your application.  Use this function to know when a pull completes for example.
 
-*Download AppDef* downloads the application's `AppDef.json`, which you can modify to change application metadata and endpoints.  The default `AppDef.json` provides standard endpoints and basic metadata.  You can upload changes by placing `/etc/NAE/AppDef.json` in your Docker image.  For reference on the application definition format (AppDef), please see the [JARVICE Application Definition Guide](https://www.nimbix.net/jarvice-application-deployment-guide/).
+*Download AppDef* downloads the application's `AppDef.json`, which you can modify to change application metadata and endpoints.  The default `AppDef.json` provides standard endpoints and basic metadata.  You can upload changes by placing `/etc/NAE/AppDef.json` in your Docker image.  For reference on the application definition format (AppDef), please see the [Application Definition Guide](appdef.md) section.
 
 # Running the Application
 

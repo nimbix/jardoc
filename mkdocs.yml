@@ -7,5 +7,6 @@ pages:
     - CI/CD Pipeline: cicd.md
     - Docker Images on JARVICE: docker.md
     - Nimbix Application Environment: nae.md
+    - Application Definition Guide: appdef.md
     - Public Applications: public.md
 

@@ -50,7 +50,7 @@ The directory `/etc/NAE` contains certain metadata files for the JARVICE system;
 
 #### /etc/NAE/AppDef.json
 
-This is the AppDef - if present a pull into JARVICE replaces the endpoint and metadata definitions on file.  You may download the AppDef from the JARVICE portal as described in [CI/CD Pipeline](cicd.md), and modify it per the [JARVICE Application Definition Guide](https://www.nimbix.net/jarvice-application-deployment-guide/).  The JARVICE API also provides a validation endpoint that can interrupt the `docker build` if it fails.  You may call this endpoint manually as well.  The following example snippet inserts an AppDef into a Docker image and validates it at build time:
+This is the AppDef - if present a pull into JARVICE replaces the endpoint and metadata definitions on file.  You may download the AppDef from the JARVICE portal as described in [CI/CD Pipeline](cicd.md), and modify it per the [Application Definition Guide](appdef.md) section.  The JARVICE API also provides a validation endpoint that can interrupt the `docker build` if it fails.  You may call this endpoint manually as well.  The following example snippet inserts an AppDef into a Docker image and validates it at build time:
 
 ```
 COPY AppDef.json /etc/NAE/AppDef.json

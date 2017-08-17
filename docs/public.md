@@ -4,7 +4,7 @@ JARVICE supports making applications public to end users outside your team.  Add
 
 To promote a private or team application for public consumption on the Nimbix Cloud, it must meet the following requirements:
 
-- Be deployed from a properly constructed Docker image created and tested with the [PushToCompute&trade;](ptc.md) mechanism
+- Be deployed from a properly constructed Docker image created and tested with the PushToCompute&trade; [CI/CD Pipeline](cicd.md) mechanism
 - Contain its own AppDef, not just use the default, with the following minimum enhancements:
     - Proper application title value for the ```name``` key
     - Proper application description value for the ```description``` key
