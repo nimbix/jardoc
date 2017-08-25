@@ -112,9 +112,25 @@ On success: ```{"status": "terminated"}```
 
 1. One of ``name`` or ``number`` must be specified
 
-# STATUS AND INFORMATION
+# Status and Information
+
+These API endpoints allow you to query status or request information from running or completed jobs.
 
 ## /jarvice/appdef
+
+Returns the Application Definition (AppDef) for a given application.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` - name of application to return information for; please note this is the application ID, not necessarily the same as the ```name``` value in the AppDef
+
+##### Response
+
+On success, a JSON payload with the AppDef requested.
 
 ## /jarvice/apps
 
@@ -130,16 +146,91 @@ Returns information about available application(s).
 
 ##### Response
 
-On success, a JSON payload with application information for each available application, or for the specific application name if available. The application name is used as the dictionary key, and the data subkey contains the raw definition in JSON format. The price value is the application price itself, not including underlying machine price (which is available by querying the machine type using [/jarvice/machines](#jarvicemachines)).
+On success, a JSON payload with application information for each available application, or for the specific application name if available. The application name is used as the dictionary key, and the data subkey contains the raw definition in JSON format. The ```price``` value is the application price itself, not including underlying machine price (which is available by querying the machine type using [/jarvice/machines](#jarvicemachines)).
 
 Note that application name is the application ID, not necessarily the same as the human readable ```name``` in the AppDef for the given application.
 
-
 ## /jarvice/connect
+
+Requests the network address and user ```nimbix``` password (if set), for an interactive job.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+##### Response
+
+On success, a JSON payload: ```{"address": <network-address>, "password": <nimbix-password>}```
+
+##### Notes
+
+1. One of ```name``` or ```number``` must be specified
+
+2. Job must be running an application endpoint that has ```interactive``` set to ```true``` in its AppDef in order for it to respond successfully
+
+3. This method may take a few seconds to respond successfully after starting a job, as its connection parameters are not known until its application components start
 
 ## /jarvice/info
 
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+##### Response
+
+On success, a JSON payload, e.g.:
+```
+{
+    "url": <web-service-URL>
+    "about": <about-HTML>
+    "help": <help-HTML>
+    "actions": {
+        <action-1> {
+            "alt": <action-description>
+        },
+        <action-n> {
+            "alt": <action-description>
+        }
+    }
+}
+```
+* *web-service-URL* is intended to be used to connect to an application-specific web service, if one exists, running inside the [application environment](nae.md); the address is accessible from the client; the value is taken from ```/etc/NAE/url.txt``` inside the environment
+
+* All values may be ```null``` if not applicable
+
+##### Notes
+
+1. One of ```name``` or ```number``` must be specified
+
+2. This method may take a few seconds to respond successfully after starting a job, as its connection parameters are not known until its application components start
+
 ## /jarvice/jobs
+
+Returns job information and status for all queued and running jobs.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```completed``` (optional) - set to ```true``` (case sensitive) to show only completed jobs (default, if not specified: ```false```)
+
+##### Response
+
+On success, a JSON payload with job status for each queued or running job (keyed by job number), formatted like the response of [/jarvice/status](#jarvicestatus)
 
 ## /jarvice/machines
 
