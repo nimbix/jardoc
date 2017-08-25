@@ -10,6 +10,8 @@ In all cases referring to an API key, this is available from the JARVICE portal 
 
 These API endpoints allow you to submit jobs and control their execution.  Jobs run on one or more compute nodes and launch the image of an application from the service catalog.
 
+
+---
 ## /jarvice/action
 
 Executes an application-defined command inside a running job.  The command runs asynchronously and its standard output/standard error is accessible with [/jarvice/tail](#jarvicetail) while the job is running.
@@ -30,13 +32,14 @@ Executes an application-defined command inside a running job.  The command runs 
 
 On success: ```{"status": "action requested"}```
 
-##### Notes
+##### Additional Notes
 
 1. One of ``name`` or ``number`` must be specified
 
 2. Action is requested asynchronously - if the action produces output in a batch job, it can be checked with [/jarvice/tail](#jarvicetail)
 
 
+---
 ## /jarvice/shutdown
 
 Requests a graceful termination of a job, executing the operating system ```poweroff``` mechanism if applicable.
@@ -55,13 +58,14 @@ Requests a graceful termination of a job, executing the operating system ```powe
 
 On success: ```{"status": "shutdown requested"}
 
-##### Notes
+##### Additional Notes
 
 1. One of ``name`` or ``number`` must be specified
 
 2. Shutdown is requested asynchronously - job status can be monitored with [/jarvice/status](#jarvicestatus)
 
 
+---
 ## /jarvice/submit
 
 Submits a job for processing. The body is in JSON format and can be generated from the JARVICE web portal by clicking the *PREVIEW SUBMISSION* tab in the task builder and copying its contents to the clipboard - e.g.:
@@ -78,7 +82,7 @@ Click the copy icon above the *SUBMIT* button to copy the contents of the API ca
 
 On success, a JSON payload indicating the job name and job number (with ```name``` and ```number``` keys).
 
-##### Notes
+##### Additional Notes
 
 1. All boolean values default to ```false``` if not specified
 
@@ -90,6 +94,8 @@ On success, a JSON payload indicating the job name and job number (with ```name`
 
 5. ```ipaddr``` will be validated by the underlying platform for authorization for the user; it may also fail if the address is already assigned (but this won't be known until the job starts running).
 
+
+---
 ## /jarvice/terminate
 
 Immediately terminates a running job.
@@ -108,7 +114,7 @@ Immediately terminates a running job.
 
 On success: ```{"status": "terminated"}```
 
-##### Notes
+##### Additional Notes
 
 1. One of ``name`` or ``number`` must be specified
 
@@ -116,6 +122,8 @@ On success: ```{"status": "terminated"}```
 
 These API endpoints allow you to query status or request information from running or completed jobs.
 
+
+---
 ## /jarvice/appdef
 
 Returns the Application Definition (AppDef) for a given application.
@@ -132,6 +140,8 @@ Returns the Application Definition (AppDef) for a given application.
 
 On success, a JSON payload with the AppDef requested.
 
+
+---
 ## /jarvice/apps
 
 Returns information about available application(s).
@@ -150,6 +160,8 @@ On success, a JSON payload with application information for each available appli
 
 Note that application name is the application ID, not necessarily the same as the human readable ```name``` in the AppDef for the given application.
 
+
+---
 ## /jarvice/connect
 
 Requests the network address and user ```nimbix``` password (if set), for an interactive job.
@@ -168,7 +180,7 @@ Requests the network address and user ```nimbix``` password (if set), for an int
 
 On success, a JSON payload: ```{"address": <network-address>, "password": <nimbix-password>}```
 
-##### Notes
+##### Additional Notes
 
 1. One of ```name``` or ```number``` must be specified
 
@@ -176,6 +188,8 @@ On success, a JSON payload: ```{"address": <network-address>, "password": <nimbi
 
 3. This method may take a few seconds to respond successfully after starting a job, as its connection parameters are not known until its application components start
 
+
+---
 ## /jarvice/info
 
 ##### Parameters
@@ -210,12 +224,14 @@ On success, a JSON payload, e.g.:
 
 * All values may be ```null``` if not applicable
 
-##### Notes
+##### Additional Notes
 
 1. One of ```name``` or ```number``` must be specified
 
 2. This method may take a few seconds to respond successfully after starting a job, as its connection parameters are not known until its application components start
 
+
+---
 ## /jarvice/jobs
 
 Returns job information and status for all queued and running jobs.
@@ -232,24 +248,171 @@ Returns job information and status for all queued and running jobs.
 
 On success, a JSON payload with job status for each queued or running job (keyed by job number), formatted like the response of [/jarvice/status](#jarvicestatus)
 
+
+---
 ## /jarvice/machines
 
+Returns information about available machine type(s).
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - name of machine type to return information for (default, if not specified: all)
+
+##### Response
+
+On success, a JSON payload with machine information for each available machine type, or for the specific machine ```name``` if available. The machine name is used as the dictionary key.
+
+
+---
 ## /jarvice/output
 
+Returns a tail (or optionally all) of the output of a completed job.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```lines``` (optional) - number of lines to tail from the end (default: 100) - use ```0``` to return all lines rather than just a tail
+
+##### Response
+
+On success, the requested output tail in ```text/plain format``` (with single ```\n``` for line breaks), up to and including the number of lines requested; if the total length of the output is less than lines requested, the entire output is returned.  If lines requested is ```0```, all lines in the output are returned rather than just a tail of it.
+
+##### Additional Notes
+
+1. One of ```name``` or ```number``` must be specified
+
+2. Job must have completed; to get the output of a running job instead, use [/jarvice/tail](#jarvicetail)
+
+
+---
 ## /jarvice/screenshot
 
+Returns a screenshot for a running job (if it is graphical).
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```width``` (optional) - pixel width to restrict screenshot to
+
+* ```height``` (optional) - pixel height to restrict screenshot to
+
+* ```emphatic``` (optional) - if specified, emphatically resize (disregarding aspect ratio) to specified ```width``` and/or ```height```
+
+##### Response
+
+On success, an ```image/png``` payload with the requested screenshot if available.
+
+##### Additional Notes
+
+1. One of ```name``` or ```number``` must be specified
+
+2. If ```emphatic``` is not specified, but ```width``` and/or ```height``` is, the aspect ratio of the screenshot image is preserved when resizing.
+
+
+---
 ## /jarvice/status
 
+Queries status for a previously submitted job.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+##### Response
+
+On success, a JSON payload with job status, formatted as follows:
+```
+{
+    <job-number> {
+        "job_name": <job-name>
+        "job_status": <job-status>
+        "job_submit_time": <job-submit-time>
+        "job_start_time": <job-start-time>
+        "job_end_time": <job-end-time>
+        "job_application": <job-application>
+        "job_command": <job-command>
+        "job_walltime": <job-walltime>
+    }
+}
+```
+
+* All "time" values are represented in UNIX time (seconds since the Epoch); values may be 0 if the data is not yet available (e.g. a job that hasn't completed yet will have a 0 for ```job_end_time```); additional values may be returned in the future.
+
+##### Additional Notes
+
+1. One of ```name``` or ```number``` must be specified
+
+
+---
 ## /jarvice/tail
+
+Returns a tail (or optionally all) of the output of a running job.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```lines``` (optional) - number of lines to tail from the end (default: 100) - use ```0``` to return all lines rather than just a tail
+
+##### Response
+
+On success, the requested output tail in ```text/plain format``` (with single ```\n``` for line breaks), up to and including the number of lines requested; if the total length of the output is less than lines requested, the entire output is returned.  If lines requested is ```0```, all lines in the output are returned rather than just a tail of it.
+
+##### Additional Notes
+
+1. One of ```name``` or ```number``` must be specified
+
+2. Job must still be running; to get the output of a completed job instead, use [/jarvice/output](#jarviceoutput)
+
 
 # PushToCompute&trade;
 
+These API endpoints allow you to manage JARVICE application images via the PushToCompute&trade; subsystem.  For more information on these mechanisms, please see [CI/CD Pipeline](cicd.md).
+
+
+---
 ## /jarvice/history
 
+
+---
 ## /jarvice/pull
 
+
+---
 ## /jarvice/build
 
+
+---
 ## /jarvice/validate
 
 
