@@ -451,13 +451,51 @@ A JSON payload with the status message in the ```status``` key.
 3. If pulling a private repository, you must log into the Docker registry in the JARVICE portal from the *PushToCompute&trade;* page first
 
 
-
-
 ---
 ## /jarvice/build
+
+Builds a JARVICE application image for a Docker repository. The JARVICE application ID must already exist.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```target``` - target application ID to build an image for (must exist)
+
+* ```pull``` (optional) - on successful build, pull Docker repository into a JARVICE application image (default: ```false```)
+
+* ```abort``` (optional) abort a running image build (default: ```false```)
+
+##### Response
+
+A JSON payload with the status message in the ```status``` key.
+
+##### Additional Notes
+
+1. You will receive a notification once the build starts and completes, either with or without error, per your account's notification preferences
+
+2. If ```abort``` is specified, any running build is aborted immediately; if not, a build is scheduled; note that scheduling a build with one already running results in failure
+
+3. ```abort``` does not automatically schedule a new build - it merely changes the meaning of this endpoint from schedule to abort build
 
 
 ---
 ## /jarvice/validate
+
+Validates an AppDef (application definition).
+
+##### Parameters
+
+**POST only:** JSON payload containing an AppDef (application definition) to validate.  Please see the [Application Definition Guide](appdef.md) for details on the format.  A valid AppDef can be used to customize the user interface endpoints for an application, as well as descriptive metadata.
+
+##### Response
+
+A JSON payload with the boolean status in the ```valid``` key if successful, or a 400 error with a descriptive message on failure.
+
+##### Additional Notes
+
+1. Validation is done in a single pass and may not pinpoint the exact location of the error in every case
 
 
