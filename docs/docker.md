@@ -4,9 +4,9 @@ JARVICE supports most Ubuntu or CentOS-based images.  There is currently no expl
 
 For convenience, Nimbix provides various base images for both **x86_64** and **ppc64le** platforms.  Please note that these images are maintained as "best effort", and are meant mainly for convenience:
 
-### Popular x86_64 Base Images
+## Popular x86_64 Base Images
 
-#### Ubuntu style
+### Ubuntu style
 
 [nimbix/ubuntu-base](https://hub.docker.com/r/nimbix/ubuntu-base/)
 
@@ -21,7 +21,7 @@ For convenience, Nimbix provides various base images for both **x86_64** and **p
 
 ([nvidia/cuda](https://hub.docker.com/r/nvidia/cuda/)-based image with remote access capabilities.)
 
-#### CentOS style
+### CentOS style
 
 [nimbix/centos-base](https://hub.docker.com/r/nimbix/centos-base/)
 
@@ -35,7 +35,7 @@ For convenience, Nimbix provides various base images for both **x86_64** and **p
 
 ([nvidia/cuda](https://hub.docker.com/r/nvidia/cuda/)-based image with remote access capabilities.)
 
-### Popular ppc64le Base Images
+## Popular ppc64le Base Images
 
 [nimbix/ubuntu-cuda-ppc64le](https://hub.docker.com/r/nimbix/ubuntu-cuda-ppc64le/)
 
@@ -45,7 +45,7 @@ For convenience, Nimbix provides various base images for both **x86_64** and **p
 
 (CUDA-capable Ubuntu base image with remote access capabilities)
 
-### Specialty nimbix Base Images
+## Specialty nimbix Base Images
 
 [jarvice/ubuntu-ibm-mldl-ppc64le](https://hub.docker.com/r/jarvice/ubuntu-ibm-mldl-ppc64le/)
 
@@ -87,7 +87,7 @@ JARVICE provides a high performance container engine used to deploy large scale 
 2. `EXPOSE` directives are ignored - JARVICE forwards most ports into the container automatically.  If you have problems with specific ports, please contact Support.
 3. `ENTRYPOINT` is ignored.  JARVICE uses endpoints defined in the AppDef to run commands or start services inside the Docker image.
 
-### Best Practices
+## Best Practices
 
 1. Use wrapper scripts for commands to set environment variables, etc.
 2. Use `sudo` to gain privileges - the `nimbix` user supports passwordless `sudo` if the image is set up properly with [image-common](https://github.com/nimbix/image-common).
