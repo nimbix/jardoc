@@ -403,9 +403,54 @@ These API endpoints allow you to manage JARVICE application images via the PushT
 ---
 ## /jarvice/history
 
+Retrieve build/pull history for a JARVICE application image.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```target``` - target image name to get history for (usually same as the application ID)
+
+* ```limit``` (optional) - the number of entries to limit the output to (default: 100)
+
+* ```reltime``` (optional) - use relative timestamps (default: ```true```) - set to ```false``` to use absolute timestamps
+
+##### Response
+
+On success, the requested reverse chronological history (most recent first) in ```text/plain``` format (with single ```\n``` for line breaks), up to and including the ```limit``` requested. Blank output indicates either the target does not exist, or has no associated build/pull history (yet).
+
+
 
 ---
 ## /jarvice/pull
+
+Pulls a Docker repository into a JARVICE application image. The JARVICE application image must already exist.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```repo``` - Docker repository to pull from
+
+* ```target``` - target image name to store application in (usually same as the application ID)
+
+##### Response
+
+A JSON payload with the status message in the ```status``` key.
+
+##### Additional Notes
+
+1. You will receive a notification once the pull starts and completes, either with or without error, per your account's notification preferences
+
+2. ```repo``` uses the same syntax as the ```docker pull``` does
+
+3. If pulling a private repository, you must log into the Docker registry in the JARVICE portal from the *PushToCompute&trade;* page first
+
+
 
 
 ---
