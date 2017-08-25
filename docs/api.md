@@ -90,8 +90,27 @@ On success, a JSON payload indicating the job name and job number (with ```name`
 
 5. ```ipaddr``` will be validated by the underlying platform for authorization for the user; it may also fail if the address is already assigned (but this won't be known until the job starts running).
 
-
 ## /jarvice/terminate
+
+Immediately terminates a running job.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+##### Response
+
+On success: ```{"status": "terminated"}```
+
+##### Notes
+
+1. One of ``name`` or ``number`` must be specified
 
 # STATUS AND INFORMATION
 
