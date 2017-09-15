@@ -1,9 +1,9 @@
 # Overview
 
 The script below provides a good example of how to use the various JARVICE API
-endpoints to control and interact with job in the Nimbix Public Cloud.  The
+endpoints to control and interact with a job in the Nimbix Public Cloud.  The
 example is a bit superfluous, but that is with the intent of showing how to
-use as much of the JARVICE API endpoints as possible:
+use as many of the JARVICE API endpoints as possible:
 
 ## [jarvice-job-exec](recipe/jarvice-job-exec)
 ```
@@ -259,7 +259,7 @@ like so:
 ./jarvice-job-exec --username <username> --apikey <apikey> -- --download /data/filename ./filename
 ```
 
-Executing it with the *--help* flag will print out it's usage:
+Executing *jarvice-job-exec* with the *--help* flag will print out it's usage:
 ```
 Usage: ./jarvice-job-exec [options] -- <jarvice_job_plugin_options>
 Available [options]:
@@ -275,12 +275,13 @@ Available [options]:
 # Custom job execution with *jarvice-job-exec*
 
 As seen above, with the *--job-json* argument, it is possible to submit a
-job with a JSON file to customize the launch of the JARVICE job.  The JARVICE
-portal can be used to grab JSON which can be used as a starting point.  When
-launching a job from the [portal](https://platform.jarvice.com/), click on
-the "Preview Submission" tab to copy and paste the job's JSON text.
+JARVICE job with custom JSON using a local file.  The
+[JARVICE portal](https://platform.jarvice.com/) can be used to grab JSON
+which can be used as a starting point.  When launching a job from the
+[portal](https://platform.jarvice.com/), click on the "Preview Submission"
+tab to copy and paste the job's JSON text.
 
-Here a JSON file one might use with *--job-json* to override the default
+Here is a JSON file one might use with *--job-json* to override the default
 *jarvice-filemanager* job started by *jarvice-job-exec*:
 
 ## [jarvice-job.json](recipe/jarvice-job.json)
@@ -310,13 +311,13 @@ Here a JSON file one might use with *--job-json* to override the default
 ```
 
 When specifying custom JSON with a *username* and *apikey* in it, it is no
-longer necessary to use the *--username* and *--apikey* arguments to
-*jarvice-job-exec*.
+longer necessary to use the *--username* and *--apikey* arguments when
+executing *jarvice-job-exec*.
 
 ## [jarvice-filemanager-plugin.sh](recipe/jarvice-filemanager-plugin.sh)
 
 When executing *jarvice-job-exec* with the *--job-plugin* flag, it is possible
-to provide customized code for interacting with a job.  The following example
+to provide customized code for interacting with the job.  The following example
 overrides the *jarvice_job_plugin* function.  Unlike the default
 *jarvice-filemanager* code in *jarvice-job-exec*, this custom plugin allows
 uploading and downloading of files in a single job run:
