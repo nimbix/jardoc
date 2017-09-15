@@ -268,8 +268,8 @@ fi
     "readonly": false
   },
   "user": {
-    "username": "paulbsch",
-    "apikey": "f8ee5d6249534be9b381e6b97a8d88b08a507990"
+    "username": "<username>",
+    "apikey": "<apikey>"
   }
 }
 ```
