@@ -9,5 +9,6 @@ pages:
     - Nimbix Application Environment: nae.md
     - Application Definition Guide: appdef.md
     - The JARVICE API: api.md
+    - JARVICE recipe: recipe.md
     - Public Applications: public.md
 
