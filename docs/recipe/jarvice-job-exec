@@ -1,12 +1,3 @@
-# Overview
-
-The script below provides a good example of how to use the various JARVICE API
-endpoints to control and interact with job in the Nimbix Public Cloud.  The
-example is a bit superfluous, but that is with the intent of showing how to
-use as much of the JARVICE API endpoints as possible:
-
-# [jarvice-job-exec](recipe/jarvice-job-exec)
-```
 #!/bin/bash
 
 #set -x  # Trace script execution
@@ -246,73 +237,4 @@ if [ "$jarvice_job_status" = "PROCESSING STARTING" ]; then
     echo "Terminating JARVICE job '$jarvice_job_name'..."
     json_result=$(jarvice_api_endpoint "terminate")
 fi
-```
-
-# jarvice-job.json
-```
-{
-  "app": "jarvice-filemanager",
-  "staging": false,
-  "checkedout": false,
-  "application": {
-    "command": "filemanager",
-    "geometry": "1423x812"
-  },
-  "machine": {
-    "type": "n0",
-    "nodes": 1
-  },
-  "vault": {
-    "name": "drop.jarvice.com",
-    "force": false,
-    "readonly": false
-  },
-  "user": {
-    "username": "<username>",
-    "apikey": "<apikey>"
-  }
-}
-```
-
-# jarvice-filemanager-plugin.sh
-```
-function jarvice_job_plugin_usage {
-    echo "Available <jarvice_job_plugin_options>:"
-    echo -e " --up <src> <dst>\tUpload local <src> file to remote <dst>"
-    echo -e " --down <src> <dst>\tDownload remote <src> file to local <dst>"
-}
-
-function jarvice_job_plugin {
-    while [ $# -gt 0 ]; do
-        case $1 in
-            --up)
-                upload_src="$2"
-                upload_dst="$3"
-                shift; shift; shift
-                ;;
-            --down)
-                download_src="$2"
-                download_dst="$3"
-                shift; shift; shift
-                ;;
-            *)
-                jarvice_job_plugin_usage
-                return
-                ;;
-        esac
-    done
-
-    webdav_url="https://$jarvice_job_address/owncloud/remote.php/webdav/"
-    curl="curl -u nimbix:$jarvice_job_password -s -k"
-    curl+=" --retry-delay 1 --retry 30 --retry-connrefused"
-    if [ -n "$upload_src" -a -n "$upload_dst" ]; then
-        echo "Uploading $upload_src to $upload_dst..."
-        $curl --upload-file "$upload_src" "$webdav_url$upload_dst"
-    fi
-    if [ -n "$download_src" -a -n "$download_dst" ]; then
-        echo "Downloading $download_src to $download_dst..."
-        $curl --output "$download_dst" "$webdav_url$download_src"
-    fi
-}
-```
 

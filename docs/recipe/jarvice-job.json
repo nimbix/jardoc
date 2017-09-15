@@ -1,0 +1,22 @@
+{
+  "app": "jarvice-filemanager",
+  "staging": false,
+  "checkedout": false,
+  "application": {
+    "command": "filemanager",
+    "geometry": "1423x812"
+  },
+  "machine": {
+    "type": "n0",
+    "nodes": 1
+  },
+  "vault": {
+    "name": "drop.jarvice.com",
+    "force": false,
+    "readonly": false
+  },
+  "user": {
+    "username": "paulbsch",
+    "apikey": "f8ee5d6249534be9b381e6b97a8d88b08a507990"
+  }
+}
