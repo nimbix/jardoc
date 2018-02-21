@@ -53,7 +53,9 @@ Example 2: push builds to *repo/image:tag1,tag2* and pull image from *repo/image
 
 `repo/image:tag1,tag2`
 
-Note: PushToCompute&trade; builds will always first push a uniquely generated tag.  That tag will consist of the first seven characters of the latest git source repository commit and a datetime stamp.  i.e. *repo/image:git_commit.datetime_stamp* e.g. *repo/image:a72500f.201802211706*
+Note: PushToCompute&trade; builds will always first push a uniquely generated tag.  That tag will consist of the first seven characters of the latest git source repository commit and a datetime stamp.
+i.e.&nbsp;*repo/image:git_commit.datetime_stamp*
+e.g.&nbsp;*repo/image:a72500f.201802211706*
 
 
 *Git Source URL...* is the Git URL, either `https:` or `ssh`.  This value would be the same as you would pass to the `git clone` command.  You may change this value later if needed.  JARVICE supports 2 additional extensions to the Git URL: specification of a branch, as well as a Dockerfile.  If branch is not specified, it defaults to `master`, and if Dockerfile is not specified, it defaults to `Dockerfile` at the top of the tree - e.g.:
