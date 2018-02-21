@@ -53,7 +53,7 @@ Example 2: push builds to *repo/image:tag1,tag2* and pull image from *repo/image
 
 `repo/image:tag1,tag2`
 
-Note: PushToCompute&trade; builds will always first push a uniquely generated tag.  That tag will consist of the first seven characters of the latest git source repository commit and a datetime stamp.
+Note: PushToCompute&trade; builds will always first push a uniquely generated docker build tag.  That tag will consist of the first seven characters of the latest git source repository commit and a datetime stamp.
 i.e.&nbsp;*repo/image:git_commit.datetime_stamp*
 e.g.&nbsp;*repo/image:a72500f.201802211706*
 
