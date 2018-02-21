@@ -43,7 +43,18 @@ The next step is to define the JARVICE application, which involves creating a ta
 
 *App ID* is a mandatory parameter and must be all lowercase, consisting of letters, numbers, and/or underscores, to give your application an identifier in the system.  It's recommended that this be a short identifier as it's used for API calls as well as displayed at the bottom of the application launcher in the *PushToCompute&trade;* page for quick reference.  **You may not change this value once set.**
 
-*Docker Repository* is the image in the Docker Registry, including optional tags (default is `latest`) to pull from in order to create the application.  If you are building the application on JARVICE, it's also the Docker image to push to (see pipeline above).  This value would be the same as you would pass to the `docker pull` command on the local shell, for example.  You may change this value later if needed.
+*Docker Repository* is the image in the Docker Registry, including optional tags (default is `latest`) pull from in order to create the application.  If you are building the application on JARVICE, it's also the Docker image to push to (see pipeline above).  This value would be the same as you would pass to the `docker pull` command on the local shell, for example.  You may change this value later if needed.
+
+Example 1: push builds to and pull image from *repo/image:latest* ('latest' is implicit if no tags are specified):
+
+`repo/image`
+
+Example 2: push builds to *repo/image:tag1,tag2* and pull image from *repo/image:tag1*:
+
+`repo/image:tag1,tag2`
+
+Note: PushToCompute&trade; builds will always first push a uniquely generated tag.  That tag will consist of the first seven characters of the latest git source repository commit and a datetime stamp.  i.e. *repo/image:git_commit.datetime_stamp* e.g. *repo/image:a72500f.201802211706*
+
 
 *Git Source URL...* is the Git URL, either `https:` or `ssh`.  This value would be the same as you would pass to the `git clone` command.  You may change this value later if needed.  JARVICE supports 2 additional extensions to the Git URL: specification of a branch, as well as a Dockerfile.  If branch is not specified, it defaults to `master`, and if Dockerfile is not specified, it defaults to `Dockerfile` at the top of the tree - e.g.:
 
