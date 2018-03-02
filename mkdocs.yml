@@ -11,4 +11,4 @@ pages:
     - The JARVICE API: api.md
     - JARVICE job recipe: recipe.md
     - Public Applications: public.md
-
+    - Quickstart for SDaccel on JARVICE: sdaccel_quickstart.md
