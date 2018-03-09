@@ -61,12 +61,15 @@ Requests a graceful termination of a job, executing the operating system ```powe
 
 On success: ```{"status": "shutdown requested"}```
 
+A job not in `PROCESSING STARTING` status will return an error, e.g. ```{"error": "Running job is not found"}```
+
 ##### Additional Notes
 
-1. One of ``name`` or ``number`` must be specified
+1. One of `name` or `number` must be specified
 
 2. Shutdown is requested asynchronously - job status can be monitored with [/jarvice/status](#jarvicestatus)
 
+3. Current job status must be `PROCESSING STARTING` as indicated by output of [/jarvice/status](#jarvicestatus), e.g. `{"job_status": "PROCESSING STARTING"}`. For other states, see [/jarvice/terminate](#jarviceterminate)
 
 ---
 ## /jarvice/submit
@@ -101,7 +104,9 @@ On success, a JSON payload indicating the job name and job number (with ```name`
 ---
 ## /jarvice/terminate
 
-Immediately terminates a running job.
+Immediately terminates a running job.  **NB**: This will terminate the job regardless of current status.
+
+**Best Practice**: Use the [/jarvice/shutdown](#/jarvice/shutdown) for a job in `PROCESSING STARTING` state and **only** use [/jarvice/terminate](#jarviceterminate) for a job not in a `PROCESSING STARTING` state or not responding to a [/jarvice/shutdown](#/jarvice/shutdown). 
 
 ##### Parameters
 
@@ -120,6 +125,7 @@ On success: ```{"status": "terminated"}```
 ##### Additional Notes
 
 1. One of ``name`` or ``number`` must be specified
+
 
 # Status and Information
 
