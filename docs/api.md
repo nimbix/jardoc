@@ -59,7 +59,7 @@ Requests a graceful termination of a job, executing the operating system ```powe
 
 ##### Response
 
-On success: ```{"status": "shutdown requested"}
+On success: ```{"status": "shutdown requested"}```
 
 ##### Additional Notes
 
