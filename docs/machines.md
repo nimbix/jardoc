@@ -26,7 +26,7 @@ Machine Type|System Architecture|Accelerator(s)|Step
 ```np8c1```|POWER8|*none*|1
 
 - step details relating to accelerators, memory, and CPU cores are defined by the service provider
-- for historical reasons the IBM POWER architecture defines GPU count as steps rather than accelerator type; accelerator type is may include model number in this system architecture
+- for historical reasons the IBM POWER architecture defines GPU count as steps rather than accelerator type; accelerator type may include model code (e.g. "k" for K80) in this system architecture
 - for historical reasons the "c" refers to CPU-only when it comes to accelerators on the IBM POWER architecture; on the x86 architecture "c" is implicit if no other accelerator is defined
 - JARVICE will provide users with machine selections based on wildcards as well; the best practice is to use as much wildcard substitution as possible and allow the user to select the machine they want to run on, rather than specify machines very narrowly in AppDefs
 
