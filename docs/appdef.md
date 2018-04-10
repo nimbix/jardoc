@@ -28,7 +28,7 @@ Key|Type|Required/Optional|Description
 
 Key|Type|Required/Optional|Description
 ---|---|---|---
-`machines`|list of strings or shell-style wildcards|required|Machines can be any machine type available on Nimbix, or accepted lazy expansions. For example, `ng*` would make all x86 GPU machine types available for this application. This can be overridden in a command that is defined in the `commands` section.
+`machines`|list of strings or shell-style wildcards|required|Machines can be any machine type available on Nimbix, or accepted lazy expansions. For example, `ng*` would make all x86 GPU machine types available for this application. This can be overridden in a command that is defined in the `commands` section.  See [Resource Selection](machines.md) for more information.
 `scale_max`|integer|optional|Defines the maximum number of machines allowed for this application. This can be overridden in a command that is defined in the `commands` section.  Typical use is to limit applications to run on a single machine rather than allow the user to launch jobs with multiple nodes for applications that may not support it.
 `vault-types`|list of strings|required|(If the application workflow does not support persistent storage, this should be `"vault-types”: [ “NONE” ]`); Defines what storage vaults are supported by the application. Must be one or more of of: `BLOCK`, `BLOCK_ARRAY`, `FILE`, or `NONE`.
 
