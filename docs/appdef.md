@@ -162,3 +162,78 @@ Selection lists are represented as drop down widgets in the user portal.
 
 If the selected storage vault is listable (e.g. a `FILE` vault), the user portal will provide a file picker widget.
 
+# Using Xilinx FPGA binaries
+
+Nimbix hosts a variety of Xilinx FPGA [Machine Types](machines.md) on JARVICE. Applications utilizing Xilinx FPGAs will need a pre-generated FPGA binary `*.xclbin`. The Xilinx SDAccel Development environment is used to design an accelerated kernel and generate the corresponding `xclbin` file. There are two options available to use a generated `xclbin` file:
+
+**Standard**
+
+Add the `xclbin` file to an Application's container at `/etc/NAE` or `/opt/<example-app>`, where <example-app> is a placeholder. Example using Dockerfile syntax:
+
+`ADD kernel.xclbin /opt/example/kernel.xclbin`
+
+Any executable inside the container can run the accelerated kernel using the standard Xilinx FPGA runtime.
+
+\*Note: The `xclbin` file contains an FPGA bitstream for the kernel and will be accessible inside the container
+
+**Protect kernel bitstream**
+
+The standard option is extended to protect the kernel FPGA bitstream by configuring the FPGA before starting a user's session and removing the kernel bitstream from the `xclbin` file. The remaining information is metadata used by the Xilinx FPGA runtime. Enable bitstream protection by adding the following `variables` to an [Appdef command](appdef.md#reference)
+
+**XCLBIN_BITSTREAM_PROGRAM**
+
+`XCLBIN_BITSTREAM_PROGRAM` is the full path to an `xclbin` used to configure the FPGA. The bitstream will be removed after programming is complete. The remaining information is metadata required by the Xilinx FPGA runtime
+
+**XCLBIN_BITSTREAM_PROTECT**
+
+(Optional) `XCLBIN_BITSTREAM_PROTECT` is a `|` separated list of `xclbin` files to delete from a container before a user session is started. The FPGA is not configured by any of `xclbin` files before deletion
+
+## Appdef Example
+
+```
+    "variable": {                                                               
+        "XCLBIN_BITSTREAM_PROGRAM": {                                           
+            "name": "Xilinx FPGA binary",                                       
+            "description": "Select user xclbin",                                
+            "userowned": false,                                                 
+            "inherit": false,                                                   
+            "required": false                                                   
+        },                                                                      
+        "XCLBIN_BITSTREAM_PROTECT": {                                           
+            "name": "Xilinx FPGA binary to delete",                             
+            "description": "xclbin to remove",                                  
+            "userowned": false,                                                 
+            "inherit": false,                                                   
+            "required": false                                                   
+         }                                                                      
+    },                                                                          
+    "commands": {                                                               
+        "Protect": {                                                            
+            "path": "/sbin/init",                                               
+            "interactive": true,                                                
+            "name": "Protect xclbin",                                           
+            "description": "Example of protecting Xilinx FPGA binaries",
+            "parameters": {                                                     
+                "XCLBIN_BITSTREAM_PROGRAM": {                                   
+                    "name": "Xilinx FPGA binary",                               
+                    "description": "Select user xclbin",                        
+                    "type": "CONST",                                            
+                    "required": true,                                           
+                    "positional": false,                                        
+                    "variable": true,                                           
+                    "value": "/opt/example/vdotprod.xclbin"                     
+                },                                                              
+                "XCLBIN_BITSTREAM_PROTECT": {                                   
+                    "name": "Xilinx FPGA binary to delete",                     
+                    "description": "xclbin to remove",                          
+                    "type": "CONST",                                            
+                    "required": true,                                           
+                    "positional": false,                                        
+                    "variable": true,                                           
+                    "value": "/opt/example/test.xclbin|/opt/example/test2.xclbin"
+                }                                                               
+            }                                                                   
+        }
+    }
+```
+
