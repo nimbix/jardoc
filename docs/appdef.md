@@ -164,11 +164,13 @@ If the selected storage vault is listable (e.g. a `FILE` vault), the user portal
 
 # Using Xilinx FPGA binaries
 
-Nimbix hosts a variety of Xilinx FPGA [Machine Types](machines.md) on JARVICE. Applications utilizing Xilinx FPGAs will need a pre-generated FPGA binary `*.xclbin`. The Xilinx SDAccel Development environment is used to design an accelerated kernel and generate the corresponding `xclbin` file. There are two options available to use a generated `xclbin` file:
+Nimbix hosts a variety of Xilinx FPGA [Machine Types](machines.md) on JARVICE. Applications utilizing Xilinx FPGAs will need to include a `*.xclbin` FPGA binary file. The Xilinx SDAccel Development environment is used to design an accelerated kernel and generate the corresponding `xclbin` file. There are two options available to use a `xclbin` file inside a JARVICE application.
 
-**Standard**
+##Standard
 
-Add the `xclbin` file to an Application's container at `/etc/NAE` or `/opt/<example-app>`, where <example-app> is a placeholder. Example using Dockerfile syntax:
+Add the `xclbin` file to an Application's container at `/etc/NAE` or `/opt/<example-app>`. 
+
+Example using Dockerfile syntax:
 
 `ADD kernel.xclbin /opt/example/kernel.xclbin`
 
@@ -176,17 +178,17 @@ Any executable inside the container can run the accelerated kernel using the sta
 
 \*Note: The `xclbin` file contains an FPGA bitstream for the kernel and will be accessible inside the container
 
-**Protect kernel bitstream**
+##Protect kernel bitstream
 
-The standard option is extended to protect the kernel FPGA bitstream by configuring the FPGA before starting a user's session and removing the kernel bitstream from the `xclbin` file. The remaining information is metadata used by the Xilinx FPGA runtime. Enable bitstream protection by adding the following `variables` to an [Appdef command](appdef.md#reference)
+The standard option is extended to protect a kernel's FPGA bitstream by configuring the FPGA before starting a user's session and removing the kernel bitstream from the `xclbin` file. The remaining information is metadata used by the Xilinx FPGA runtime. Enable bitstream protection by adding the following `variables` to an [Appdef command](appdef.md#reference):
 
 **XCLBIN_BITSTREAM_PROGRAM**
 
-`XCLBIN_BITSTREAM_PROGRAM` is the full path to an `xclbin` used to configure the FPGA. The bitstream will be removed after programming is complete. The remaining information is metadata required by the Xilinx FPGA runtime
+`XCLBIN_BITSTREAM_PROGRAM` is the full path to an `xclbin` used to configure the FPGA. The bitstream will be removed after programming is complete. The remaining information is metadata required by the Xilinx FPGA runtime.
 
 **XCLBIN_BITSTREAM_PROTECT**
 
-(Optional) `XCLBIN_BITSTREAM_PROTECT` is a `|` separated list of `xclbin` files to delete from a container before a user session is started. The FPGA is not configured by any of `xclbin` files before deletion
+(Optional) `XCLBIN_BITSTREAM_PROTECT` is a `|` separated list of `xclbin` files to delete from a container before a user session is started. The FPGA is not configured by any of `xclbin` files before deletion. This is useful for JARVICE applications with multiple Appdef commands using different FPGA kernels.
 
 ## Appdef Example
 
