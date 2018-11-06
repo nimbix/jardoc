@@ -20,6 +20,7 @@ Machine Type|System Architecture|Accelerator(s)|Step
 ```n3```|x86_64|*none*|3
 ```ng4```|x86_64|GPU|4
 ```ngd5```|x86_64|Dual GPU|5
+```nx6u```|x86_64|FPGA|6u
 ```np8g1```|POWER8|GPU|1
 ```np8g4```|POWER8|GPU|4
 ```np8gk4```|POWER8|GPU (K80)|4
