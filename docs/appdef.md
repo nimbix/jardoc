@@ -164,7 +164,7 @@ If the selected storage vault is listable (e.g. a `FILE` vault), the user portal
 
 # Using Xilinx FPGA binaries
 
-Nimbix hosts a variety of Xilinx FPGA [Machine Types](machines.md) on JARVICE. Applications utilizing Xilinx FPGAs will need to include a `*.xclbin` FPGA binary file. The Xilinx SDAccel Development environment is used to design an accelerated kernel and generate the corresponding `xclbin` file. There are two options available to use a `xclbin` file inside a JARVICE application.
+Nimbix hosts a variety of Xilinx FPGA [Machine Types](machines.md) on JARVICE. Applications utilizing Xilinx FPGAs will need to include a `*.xclbin` FPGA binary file. The [Xilinx SDAccel Development](https://www.nimbix.net/wp-content/uploads/2018/10/NEW-ug1240-sdaccel-nimbix-getting-started-1018-1.pdf) environment is used to design an accelerated kernel and generate the corresponding `xclbin` file. There are two options available to use a `xclbin` file inside a JARVICE application.
 
 ##Standard
 
