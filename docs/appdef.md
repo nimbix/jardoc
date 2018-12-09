@@ -238,4 +238,3 @@ The standard option is extended to protect a kernel's FPGA bitstream by configur
         }
     }
 ```
-

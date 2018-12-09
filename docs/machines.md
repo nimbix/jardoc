@@ -33,14 +33,13 @@ Machine Type|System Architecture|Accelerator(s)|Step
 
 ## Best Practices for AppDefs Using Wildcards
 
-- CPU only (x86): ```n[0-9]*```
+- CPU only (x86): ```n[0-9], n[1-9][0-9]```
 - CPU only (POWER8 or POWER9): ```np*c*```
 - Any (architecture depends on application): ```n*```
 - GPU (x86): ```ng*```
-- Xilinx FPGA (x86): ```nx*``` *
-- Xilinx FPGA (CAPI on IBM POWER): ```np[89]f*``` *
+- Xilinx FPGA (x86): ```nx*``` <sup>1</sup>
+- Xilinx FPGA (CAPI on IBM POWER): ```np[89]f*``` <sup>1</sup>
 
-\* FPGA selection should be more explicit in order to ensure compatibility with your bitstream.
+1 _FPGA selection should be more explicit in order to ensure compatibility with your bitstream._
 
 Please see [The JARVICE API: /jarvice/machines](api.md#jarvicemachines) for information on querying machine types from JARVICE.
-
