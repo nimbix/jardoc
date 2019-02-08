@@ -24,7 +24,7 @@ Place all temporary files here for best performance; typically this volume provi
 
 This directory is ephemeral and should not be used for storing persistent data.  If your application is designed to default to the home directory for persistent storage, either add a symbolic link to `/data` under `/home/nimbix` or change your configuration to default to `/data`
 
-NOTE: The `/home/nimbix` will be replaced if the [`identity` object](appdef.md#reference) exist in an Appdef file or is set using the [JARVICE API](api.md#jarvicesubmit).
+NOTE: The `/home/nimbix` will be replaced if the [`identity` object](appdef.md#reference) exists in an Appdef file or is set using the [JARVICE API](api.md#jarvicesubmit).
 
 
 ## /etc/JARVICE

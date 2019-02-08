@@ -80,7 +80,7 @@ Submits a job for processing. The body is in JSON format and can be generated fr
 
 Click the copy icon above the *SUBMIT* button to copy the contents of the API call to the clipboard.
 
-NOTE: Adding the [`identity` object](appdef.md#reference) in the submission json will replace the NAE `nimbix` user. The JARVICE API cannot override an `identity` set by an AppDef file.
+NOTE: Adding the [`identity` object](appdef.md#reference) in the submission json will replace the [NIMBIX Application Environment](nae.md) `nimbix` user. The JARVICE API cannot override an `identity` set by an AppDef file.
 
 Sample `identity` object:
 ```
