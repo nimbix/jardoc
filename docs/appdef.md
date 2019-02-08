@@ -23,6 +23,7 @@ Key|Type|Required/Optional|Description
 ---|---|---|---
 `commands`|command (object)|required|Defines an application command in the application drop-down
 `variables`|variable (object)|optional|Defines user and application-defined environment variables which will be available in `/etc/JARVICE/jobenv.sh`. This can be overridden in a command that is defined in the `commands` section.  These variables are set at the account level by Support and not user managed.
+`identity`|identity (object)|optional|Defines user identity to use within the JARVICE environment.
 
 **Storage and Machine Options**
 
@@ -90,6 +91,23 @@ Key|Type|Required/Optional|Description
 `userowned`|boolean|required|If true, then the user may override this value  . If false, it is an account variable which is currently managed and set by Nimbix Support.  Please note that this parameter is currently ignored and is treated as false.
 `inherit`|boolean|required|If true, the value of an account variable can be inherited from a team’s payer account.
 `required`|boolean|optional|If true, the application will not launch if the variable is not defined.
+
+**`identity` Object Reference**
+
+Identity is used to configure a username, group, UID, and/or GID for the Nimbix Application Environment (NAE). These setting will replace the `nimbix` user created by [image-common](https://github.com/nimbix/image-common).
+
+Key|Type|Required/Optional|Description
+---|---|---|---
+`username`|string|required|Username for JARVICE NAE. Spaces are not supported.
+`group`|string|optional|Group for JARVICE NAE. Defaults to `nimbix` if not set.
+`uid`|integer|optional|UID for JARVICE NAE. Defaults to `505` if not set.
+`gid`|integer|optional|GID for JARVICE NAE. Defaults to `505` if not set.
+
+NOTE:
+
+* Setting the `identity` object for an App will replace the NAE `nimbix` user. The JARVICE API cannot override an `identity` set by an AppDef file.
+* Setting `uid/gid` as root (0:0) is NOT supported.
+* Using `uid/gid` values less than `1000` may collide with system users/services and should be avoided.
 
 **Parameter Type Reference**
 
