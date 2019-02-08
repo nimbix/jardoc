@@ -80,6 +80,18 @@ Submits a job for processing. The body is in JSON format and can be generated fr
 
 Click the copy icon above the *SUBMIT* button to copy the contents of the API call to the clipboard.
 
+NOTE: Adding the [`identity` object](appdef.md#reference) in the submission json will replace the NAE `nimbix` user. The JARVICE API cannot override an `identity` set by an AppDef file.
+
+Sample `identity` object:
+```
+{
+  "username": "hpc",
+  "group": "jarvice",
+  "uid": 1111,
+  "gid": 2222
+}
+```
+
 ##### Parameters
 
 **POST only**: JSON payload to run the compute job, generated as specified above.  If copying from the web portal, paste the text into a file or script to use as the JSON payload to submit.  Please note that authentication is performed from the ```username``` and ```apikey``` values in the JSON itself.

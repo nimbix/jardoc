@@ -6,6 +6,8 @@ If the job is interactive (meaning the endpoint accepts connections from the out
 
 JARVICE runs endpoint commands as the user `nimbix`.  This user may gain `root` privileges using the `sudo` command without password if the image is set up correctly (see [Docker Images on JARVICE](docker.md) for additional details).
 
+NOTE: It is possible to replace the `nimbix` user using the [`identity` object](appdef.md#reference) within an Appdef or using the [JARVICE API](api.md#jarvicesubmit).
+
 # Runtime Directories and Files
 
 Certain directories and files have special meaning on JARVICE:
@@ -21,6 +23,9 @@ Place all temporary files here for best performance; typically this volume provi
 ## /home/nimbix
 
 This directory is ephemeral and should not be used for storing persistent data.  If your application is designed to default to the home directory for persistent storage, either add a symbolic link to `/data` under `/home/nimbix` or change your configuration to default to `/data`
+
+NOTE: The `/home/nimbix` will be replaced if the [`identity` object](appdef.md#reference) exist in an Appdef file or is set using the [JARVICE API](api.md#jarvicesubmit).
+
 
 ## /etc/JARVICE
 
