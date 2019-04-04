@@ -269,7 +269,6 @@ Returns job information and status for all queued and running jobs.
 
 On success, a JSON payload with job status for each queued or running job (keyed by job number), formatted like the response of [/jarvice/status](#jarvicestatus)
 
-
 ---
 ## /jarvice/machines
 
@@ -414,6 +413,27 @@ On success, the requested output tail in ```text/plain format``` (with single ``
 1. One of ```name``` or ```number``` must be specified
 
 2. Job must still be running; to get the output of a completed job instead, use [/jarvice/output](#jarviceoutput)
+
+---
+## /jarvice/teamjobs
+
+Returns job information and status for all queued and running jobs for an entire team.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```completed``` (optional) - set to ```true``` (case sensitive) to show only completed jobs (default, if not specified: ```false```)
+
+##### Response
+
+On success, a JSON payload with job status for each queued or running job (keyed by job number), formatted like the response of [/jarvice/status](#jarvicestatus)
+
+##### Additional Notes
+
+1. If `username` does not refer to a team payer, only jobs for that user will be listed
 
 
 # PushToCompute&trade;
