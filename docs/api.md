@@ -330,11 +330,12 @@ On success, a JSON payload indicating summary values in the `summary` key, and i
 
 ##### Additional Notes
 
-1. `cpu_used` is always a percentage value (percentage of total CPU resource allocated), while `memory_used` and `memory_total` are always in kilobytes.
-2. In the summary section, `cpu_used` is the average of all CPU utilization across all nodes in the job, while the memory values are the sum total, in kilobytes.
-3. The percentage of memory utilized from the summary can be calculated by dividing `memory_used` by `memory_total` and multiplying by `100`.
-4. All values are "point in time" rather than rolling average or any type of cumulative calculation, and are collected periodically (typically every 30 seconds)
-5. This endpoint may return a 404 for approximately the first minute that a job is running, until metrics become available
+1. One of ```name``` or ```number``` must be specified
+2. `cpu_used` is always a percentage value (percentage of total CPU resource allocated), while `memory_used` and `memory_total` are always in kilobytes.
+3. In the summary section, `cpu_used` is the average of all CPU utilization across all nodes in the job, while the memory values are the sum total, in kilobytes.
+4. The percentage of memory utilized from the summary can be calculated by dividing `memory_used` by `memory_total` and multiplying by `100`.
+5. All values are "point in time" rather than rolling average or any type of cumulative calculation, and are collected periodically (typically every 30 seconds)
+6. This endpoint may return a 404 for approximately the first minute that a job is running, until metrics become available
 
 ---
 ## /jarvice/output
