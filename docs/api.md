@@ -286,6 +286,56 @@ Returns information about available machine type(s).
 
 On success, a JSON payload with machine information for each available machine type, or for the specific machine ```name``` if available. The machine name is used as the dictionary key.
 
+---
+## /jarvice/metrics
+
+Returns the last known CPU and memory utilization metrics for a given job.
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+##### Response
+
+On success, a JSON payload indicating summary values in the `summary` key, and itemized values (one for each parallel node in the job) in the `itemized` key - e.g.:
+```
+{
+    "itemized": {
+        "memory_used": [
+            118832, 
+            99760
+        ], 
+        "cpu_used": [
+            52, 
+            0
+        ], 
+        "memory_total": [
+            16777216, 
+            16777216
+        ]
+    }, 
+    "summary": {
+        "memory_used": 218592, 
+        "cpu_used": 26, 
+        "memory_total": 33554432
+    }
+}
+```
+
+##### Additional Notes
+
+1. One of ```name``` or ```number``` must be specified
+2. `cpu_used` is always a percentage value (percentage of total CPU resource allocated), while `memory_used` and `memory_total` are always in kilobytes.
+3. In the summary section, `cpu_used` is the average of all CPU utilization across all nodes in the job, while the memory values are the sum total, in kilobytes.
+4. The percentage of memory utilized from the summary can be calculated by dividing `memory_used` by `memory_total` and multiplying by `100`.
+5. All values are "point in time" rather than rolling average or any type of cumulative calculation, and are collected periodically (typically every 30 seconds)
+6. This endpoint may return a 404 for approximately the first minute that a job is running, until metrics become available
 
 ---
 ## /jarvice/output
