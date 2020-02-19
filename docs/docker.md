@@ -95,10 +95,10 @@ JARVICE provides a high performance container engine used to deploy large scale 
 4. Docker build stages should be performed as `root` rather than `nimbix`.
 5. Avoid changing file ownership in Docker build stages and consider using `0666/0777` permissions while keeping `root:root` ownership. Use workflow scripts to change file ownership at runtime if stricter permissions are required.
 6. If you will be building your images outside of the PushToCompute
-[CI/CD Pipeline](cicd.md) pipline, make sure all
-of the `/etc/NAE` files used by the JARVICE platform are pushed
-into the final layer of your docker image.  This may be done by adding
-the following to the last line of your `Dockerfile`:
+[CI/CD Pipeline](cicd.md), make sure the `/etc/NAE/screenshot.png`,
+`/etc/NAE/screenshot.txt`, `/etc/NAE/license.txt`, and `/etc/NAE/AppDef.json`
+metadata files are pushed into the final layer of your docker image.
+This may be done by adding the following to the last line of your `Dockerfile`:
 ```
 RUN mkdir -p /etc/NAE && touch /etc/NAE/{screenshot.png,screenshot.txt,license.txt,AppDef.json}
 ```
