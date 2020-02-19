@@ -68,6 +68,14 @@ The example above assumes that `AppDef.json` contains a valid application defini
 
 A screenshot or graphic to display in the "large" card - when an application card is clicked.  This should be 960x540 resolution for optimal results.
 
+### /etc/NAE/screenshot.txt
+
+A description of the `/etc/NAE/screenshot.png` screenshot or graphic.
+
+### /etc/NAE/license.txt
+
+End user license agreement for your application.
+
 ### /etc/NAE/url.txt
 
 The URL to provide when a user clicks on a running application - this is used to connect the end user to whatever service the application provides.  Substitutions are supported as well.  For example, `https://%PUBLICADDR%/` in `/etc/url.txt` sends the user to the public IP address of the running application when they connect (%PUBLICADDR% is a substitution).
@@ -75,4 +83,19 @@ The URL to provide when a user clicks on a running application - this is used to
 ### /etc/NAE/help.html
 
 HTML help to pop up when the user clicks the help button while the application is running.
+
+# Metadata optimization for PushToCompute
+
+The `/etc/NAE/screenshot.png`, `/etc/NAE/screenshot.txt`,
+`/etc/NAE/license.txt`, and `/etc/NAE/AppDef.json` are loaded by JARVICE
+when it pulls application docker images into the platform.
+
+If you will be building your images outside of the PushToCompute
+[CI/CD Pipeline](cicd.md) pipline, make sure all
+of the `/etc/NAE` files used by the JARVICE platform are pushed
+into the final layer of your docker image.  This may be done by adding
+the following to the last line of your `Dockerfile`:
+```
+RUN mkdir -p /etc/NAE && touch /etc/NAE/{screenshot.png,screenshot.txt,license.txt,AppDef.json}
+```
 
