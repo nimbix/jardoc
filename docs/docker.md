@@ -97,7 +97,7 @@ JARVICE provides a high performance container engine used to deploy large scale 
 6. If you will be building your images outside of the PushToCompute
 [CI/CD Pipeline](cicd.md), make sure the `/etc/NAE/screenshot.png`,
 `/etc/NAE/screenshot.txt`, `/etc/NAE/license.txt`, and `/etc/NAE/AppDef.json`
-metadata files are pushed into the final layer of your docker image.
+metadata files exist and are pushed into the final layer of your docker image.
 This may be done by adding the following to the last line of your `Dockerfile`:
 ```
 RUN mkdir -p /etc/NAE && touch /etc/NAE/{screenshot.png,screenshot.txt,license.txt,AppDef.json}
