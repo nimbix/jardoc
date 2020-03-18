@@ -76,7 +76,7 @@ Key|Type|Required/Optional|Description
 ---|---|---|---
 `name`|string|required|Name of the parameter (used in the Task Builder).
 `description`|string|required|Description of the parameter (used in the Task Builder).
-`type`|string|required|Identifies the type of the parameter. One of: `CONST`, `STR`, `INT`, `FLOAT`, `RANGE`, `BOOL`, `selection`, `FILE`
+`type`|string|required|Identifies the type of the parameter. One of: `CONST`, `STR`, `INT`, `FLOAT`, `RANGE`, `BOOL`, `selection`, `FILE`, `UPLOAD`
 `required`|boolean|required|true if parameter setting is required, false if optional
 `variable`|boolean|optional|true if this parameter should be expressed as a variable in `/etc/JARVICE/jobenv.sh` rather than on the command line for the command referred to in the `path` key.  Default is false.
 `positional`|boolean|optional|True indicates the value of the parameter should be passed as a positional argument, ordered by the order of JSON objects in the parameters section.
@@ -181,6 +181,16 @@ Selection lists are represented as drop down widgets in the user portal.
 * `filter` is a list of wildcards to filter by (standard shell wildcard syntax); if there is more than one wildcard specified, use the \| (vertical bar) to separate them - e.g. to support C and Python files, use `*.c|*.py`
 
 If the selected storage vault is listable (e.g. a `FILE` vault), the user portal will provide a file picker widget.
+
+**UPLOAD**
+
+`UPLOAD` defines a file to upload from a local computer to a JARVICE job and supports the following keys:
+
+* `target` specifies the sub path that will be used to mount a file under `/opt` in a JARVICE job
+* `filter` is an extension of a MIME Type used to browse files on a local computer - e.g. to browse JSON files, use `.json`
+* `size` specifies the maximum size allowed for an upload file in bytes - e.g. 1024 to enforce a limit of 1KB
+
+The `target` key is required and only 1 `UPLOAD` parameter is supported for each command. The `variable` and `positional` parameter keys do not apply to `UPLOAD` parameters.
 
 # Using Xilinx FPGA binaries
 
