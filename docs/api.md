@@ -485,6 +485,50 @@ On success, a JSON payload with job status for each queued or running job (keyed
 
 1. If `username` does not refer to a team payer, only jobs for that user will be listed
 
+---
+## /jarvice/billing
+
+(JXE/System Admins only) Returns billing report for JARVICE users
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```reportuser``` (optional) - comma separated list of users to filter (default, if not specified: list all users)
+
+* ```billingcode``` (optional) - billing code to filter by
+
+* ```statuses``` (optional) - comma seperated string of statuses to filter by
+
+* ```machtypes``` (optional) - comma seperated string of machine types to filter
+
+* ```jobapp``` (optional) - application name to filter by (e.g. jarvice-ubuntu)
+
+* ```itemized``` (optional) - set to ```true``` to generate itemized report (default, if not specified: ```false```)
+
+* ```timeperiod``` (optional) - includes jobs in the previous/current month or custom range (either ```last```, ```current```, or ```range```)
+
+* ```startdate``` (optional) - range start of time period to generate report (YYYY-MM-DD)
+
+* ```enddate``` (optional) - range end of time period to generate report (YYYY-MM-DD)
+
+#### Response
+
+On success, a CSV file containing generated billing report
+
+#### Additional Notes
+
+1. Endpoint is for JARVICE XE System Administrators only
+
+2. If ```reportuser``` is a payer of a team, all team members are included
+
+3. Valid ```statuses``` fields are: COMPLETED, COMPLETED WITH ERROR, SUBMITTED, PROCESSING STARTING, CANCELED, EXEMPT, SEQUENTIALLY QUEUED, TERMINATED
+
+4. Valid ```machtypes``` can be queried using `/jarvice/machines` API
+
+5. ```startdate``` and ```enddate``` are required if ```timeperiod``` is set to ```range```
 
 # PushToCompute&trade;
 
