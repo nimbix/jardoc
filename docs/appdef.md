@@ -130,6 +130,7 @@ NOTE:
 * `%TGPUS%` – total number of GPUs selected (`%GPUS%` + (`%SGPUS%` * (`%NODES%` – 1)))
 * `%TRAM%` – total amount of RAM selected (`%RAM%` + (`%SRAM%` * (`%NODES%` – 1)))
 * `%JOBLABEL%` – job label, if specified
+* `%MACHINETYPE%` – machine type (e.g. n0, n3, etc.)
 * `%VTYPE%` – vault type (e.g. NONE, FILE, OBJECT, BLOCK, BLOCK_ARRAY)
 
 \* these substitutions are only available if the application is certified by Nimbix or the user calling the API owns the application; they are intended to facilitate job submission from inside jobs and should be used with care since this action can incur additional usage charges.
