@@ -486,6 +486,30 @@ On success, a JSON payload with job status for each queued or running job (keyed
 1. If `username` does not refer to a team payer, only jobs for that user will be listed
 
 ---
+## /jarvice/teamusers
+
+(Team Admins only) Returns a list of JARVICE users who are members of the callers team
+
+#### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+#### Reponse
+
+On success, a JSON payload with a list of team members, formatted as follows:
+
+```
+{
+    <jarvice-username> : {
+        "email": <user-email>,
+        "name": <user-name>
+    }
+}
+```
+
+---
 ## /jarvice/billing
 
 (JXE/System Admins only) Returns billing report for JARVICE users
@@ -530,6 +554,7 @@ On success, a CSV file containing generated billing report
 
 5. ```startdate``` and ```enddate``` are required if ```timeperiod``` is set to ```range```
 
+---
 # PushToCompute&trade;
 
 These API endpoints allow you to manage JARVICE application images via the PushToCompute&trade; subsystem.  For more information on these mechanisms, please see [CI/CD Pipeline](cicd.md).
