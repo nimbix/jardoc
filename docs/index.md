@@ -6,5 +6,5 @@ JARVICE is the leading platform for compute and data intensive workflows at scal
 
 For more about JARVICE, including how to sign up for service, please visit the [Nimbix website](https://www.nimbix.net).
 
-Copyright &copy; 2017 Nimbix, Inc.  All Rights Reserved.
+Copyright &copy; 2020 Nimbix, Inc.  All Rights Reserved.
 

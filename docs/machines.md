@@ -10,6 +10,7 @@ These values are all service provider dependent.
 In the Nimbix Cloud the following architectures are supported:
 
 - ```n``` - x86
+- ```na``` - ARM
 - ```np8``` - IBM POWER8
 - ```np9``` - IBM POWER9
 
@@ -21,6 +22,7 @@ Machine Type|System Architecture|Accelerator(s)|Step
 ```ng4```|x86_64|GPU|4
 ```ngd5```|x86_64|Dual GPU|5
 ```nx6u```|x86_64|FPGA|6u
+```na3```|ARM|*none*|3
 ```np8g1```|POWER8|GPU|1
 ```np8g4```|POWER8|GPU|4
 ```np8gk4```|POWER8|GPU (K80)|4
@@ -35,6 +37,7 @@ Machine Type|System Architecture|Accelerator(s)|Step
 
 - CPU only (x86): ```n[0-9], n[1-9][0-9]```
 - CPU only (POWER8 or POWER9): ```np*c*```
+- CPU only (ARM): ```na*```
 - Any (architecture depends on application): ```n*```
 - GPU (x86): ```ng*```
 - Xilinx FPGA (x86): ```nx*``` <sup>1</sup>

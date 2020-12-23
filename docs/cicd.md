@@ -9,7 +9,7 @@ This pipeline consists of various elements:
 - Integration with 3rd party Docker registries using various forms of authentication
 - Multiple application targets for various stages of the lifecycle (integration testing, system testing, production, etc.)
 
-While Docker images may be built and pushed locally or built by 3rd party services (e.g. Docker Hub automated builds), JARVICE's PushToCompute&trade; provides multiplatform build services for both **x86_64** and **ppc64le** (64-bit Little Endian IBM POWER) as an integrated function.
+While Docker images may be built and pushed locally or built by 3rd party services (e.g. Docker Hub automated builds), JARVICE's PushToCompute&trade; provides multiplatform build services for **x86_64**, **ARM** and **ppc64le** (64-bit Little Endian IBM POWER) as an integrated function.
 
 # Pipeline Description
 
@@ -72,7 +72,7 @@ Example 3: combination of examples 1 and 2:
 
 `git@github.com:myuser/myapp.git#branch1?Dockerfile.1`
 
-*System Architecture* is the target system type the application runs on, currently **x86_64** or **ppc64le** only.  This will determine both the build architecture (if building from Git source) as well as the target runtime architecture.  **You may not change this value once set.**
+*System Architecture* is the target system type the application runs on, currently **x86_64**, **ARM** or **ppc64le** only.  This will determine both the build architecture (if building from Git source) as well as the target runtime architecture.  **You may not change this value once set.**
 
 *Team Visible*, if set, allows members of your team to run the application (but not modify it).  You may change this value later if needed.
 

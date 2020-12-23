@@ -2,7 +2,7 @@
 
 JARVICE supports most Ubuntu or CentOS-based images.  There is currently no explicit support for other types such as Alpine.
 
-For convenience, Nimbix provides various base images for both **x86_64** and **ppc64le** platforms.  Please note that these images are maintained as "best effort", and are meant mainly for convenience:
+For convenience, Nimbix provides various base images for both **x86_64**, **ARM** and **ppc64le** platforms.  Please note that these images are maintained as "best effort", and are meant mainly for convenience:
 
 ## Popular x86_64 Base Images
 
@@ -34,6 +34,14 @@ For convenience, Nimbix provides various base images for both **x86_64** and **p
 [nimbix/base-centos-nvidia](https://hub.docker.com/r/nimbix/base-centos-nvidia/)
 
 ([nvidia/cuda](https://hub.docker.com/r/nvidia/cuda/)-based image with remote access capabilities.)
+
+## Popular ARM Images
+
+### Ubuntu style
+
+[nimbix/ubuntu-desktop:bionic-arm](https://console.cloud.google.com/gcr/images/jarvice/GLOBAL/ubuntu-desktop@sha256:c045f35269a9375a76b59dc39f592a059789e878fae531c56e7dd410ba056a88/details?tab=info)
+
+(Ubuntu image for ARM with Nimbix Desktop and remote access capabilities)
 
 ## Popular ppc64le Base Images
 
