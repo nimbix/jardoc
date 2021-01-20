@@ -555,6 +555,37 @@ On success, a CSV file containing generated billing report
 5. ```startdate``` and ```enddate``` are required if ```timeperiod``` is set to ```range```
 
 ---
+## /jarvice/queues
+
+(JXE only) Returns information about available queue(s).
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - name of queue to return information for (defualt, if not specified: all)
+
+* ```info``` (optional) - display additional info for each queue (default: ```false```)
+
+##### Response
+
+A JSON payload with an array of available queues *or*
+
+when `info=true`, a JSON payload with queue information, formatted as follows:
+
+```
+{
+    <queue-name> {
+        "name": <queue-name>,
+        "app": <application-id>,
+        "machine": <default-machine>,
+        "size": <node-limit-per-job>
+    }
+}
+```
+---
 # PushToCompute&trade;
 
 These API endpoints allow you to manage JARVICE application images via the PushToCompute&trade; subsystem.  For more information on these mechanisms, please see [CI/CD Pipeline](cicd.md).
