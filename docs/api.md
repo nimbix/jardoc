@@ -565,7 +565,7 @@ On success, a CSV file containing generated billing report
 
 * ```apikey``` - API key for user to authenticate
 
-* ```name``` (optional) - name of queue to return information for (defualt, if not specified: all)
+* ```name``` (optional) - name of queue to return information for (default, if not specified: all)
 
 * ```info``` (optional) - display additional info for each queue (default: ```false```)
 
