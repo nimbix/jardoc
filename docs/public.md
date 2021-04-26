@@ -22,7 +22,7 @@ Please note that the best practice when embedding an AppDef is to both copy the 
 
 ```Dockerfile
 COPY AppDef.json /etc/NAE/AppDef.json
-RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://api.jarvice.com/jarvice/validate
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
 ```
 
 ## Additional Requirements if Charging for Usage

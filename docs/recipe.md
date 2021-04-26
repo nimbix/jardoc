@@ -11,7 +11,7 @@ use as many of the JARVICE API endpoints as possible:
 
 #set -x  # Trace script execution
 
-jarvice_api_url="https://api.jarvice.com"
+jarvice_api_url="https://cloud.nimbix.net/api"
 jarvice_api_url+="/jarvice"
 
 # Updating these values will modify the default job submit JSON below
@@ -139,7 +139,7 @@ while [ $# -gt 0 ]; do
 done
 
 # The JSON can be found under the "Preview Submission" tab when kicking off a
-# job from https://platform.jarvice.com/
+# job from https://cloud.nimbix.net/
 [ -z "$jarvice_job_submit_json" ] && jarvice_job_submit_json=$(cat <<EOF
 {
   "app": "$jarvice_app",
@@ -276,9 +276,9 @@ Available [options]:
 
 As seen above, with the *--job-json* argument, it is possible to submit a
 JARVICE job with custom JSON using a local file.  The
-[JARVICE portal](https://platform.jarvice.com/) can be used to grab JSON
+[JARVICE portal](https://cloud.nimbix.net/) can be used to grab JSON
 which can be used as a starting point.  When launching a job from the
-[portal](https://platform.jarvice.com/), click on the "Preview Submission"
+[portal](https://cloud.nimbix.net/), click on the "Preview Submission"
 tab to copy and paste the job's JSON text.
 
 Here is a JSON file one might use with *--job-json* to override the default

@@ -59,7 +59,7 @@ This is the AppDef - if present a pull into JARVICE replaces the endpoint and me
 
 ```
 COPY AppDef.json /etc/NAE/AppDef.json
-RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://api.jarvice.com/jarvice/validate
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
 ```
 
 The example above assumes that `AppDef.json` contains a valid application definition and lives adjacent to the Dockerfile in the repository.

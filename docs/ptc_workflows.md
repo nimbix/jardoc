@@ -97,7 +97,7 @@ If you prefer, you can make business arrangements with Nimbix to charge license 
 
 No prior experience designing web interfaces or APIs is required for you to deploy a multi-node high performance computing application that leverages the built-in capabilities of JARVICE on the Nimbix Cloud.
 
-A PushToCompute™ work flow can be deployed directly to **GitHub** or **Bitbucket** for free, continuous integration onto the JARVICE platform at https://platform.jarvice.com.  
+A PushToCompute™ work flow can be deployed directly to **GitHub** or **Bitbucket** for free, continuous integration onto the JARVICE platform at https://cloud.nimbix.net .  
 
 Work flows can be launched either from the portal, or via a simple web API call. This provides great flexibility in integrating existing web application components with a server-less  high-density compute back-end powered by JARVICE.
 

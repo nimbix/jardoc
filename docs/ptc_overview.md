@@ -18,7 +18,7 @@ Now, you’re ready to begin. How do you get your applications onto JARVICE quic
 
 PushToCompute is a feature of Nimbix’  JARVICE platform that is used for high performance, automatic platform orchestration during the Nimbix cloud runtime, providing continuous integration for your supercomputing applications. It’s the fastest, easiest way for developers to onboard compute-intensive applications into the cloud.  
 
-The PushToCompute™ work flow exposes an application or a subset of the application’s capabilities to users on Nimbix' JARVICE platform.  End users typically consume work flows from the web-based portal at   https://platform.jarvice.com, shown here:
+The PushToCompute™ work flow exposes an application or a subset of the application’s capabilities to users on Nimbix' JARVICE platform.  End users typically consume work flows from the web-based portal at   https://cloud.nimbix.net, shown here:
 
 ![JARVICEportal](img/JARVICEportal.png)
 
