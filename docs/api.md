@@ -183,6 +183,51 @@ Note that application name is the application ID, not necessarily the same as th
 
 
 ---
+## /jarvice/billing
+
+(JXE/System Admins only) Returns billing report for JARVICE users
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```reportuser``` (optional) - comma separated list of users to filter (default, if not specified: list all users)
+
+* ```billingcode``` (optional) - billing code to filter by
+
+* ```statuses``` (optional) - comma seperated string of statuses to filter by
+
+* ```machtypes``` (optional) - comma seperated string of machine types to filter
+
+* ```jobapp``` (optional) - application name to filter by (e.g. jarvice-ubuntu)
+
+* ```itemized``` (optional) - set to ```true``` to generate itemized report (default, if not specified: ```false```)
+
+* ```timeperiod``` (optional) - includes jobs in the previous/current month or custom range (either ```last```, ```current```, or ```range```)
+
+* ```startdate``` (optional) - range start of time period to generate report (YYYY-MM-DD)
+
+* ```enddate``` (optional) - range end of time period to generate report (YYYY-MM-DD)
+
+#### Response
+
+On success, a CSV file containing generated billing report
+
+#### Additional Notes
+
+1. Endpoint is for JARVICE XE System Administrators only
+
+2. If ```reportuser``` is a payer of a team, all team members are included
+
+3. Valid ```statuses``` fields are: COMPLETED, COMPLETED WITH ERROR, SUBMITTED, PROCESSING STARTING, CANCELED, EXEMPT, SEQUENTIALLY QUEUED, TERMINATED
+
+4. Valid ```machtypes``` can be queried using `/jarvice/machines` API
+
+5. ```startdate``` and ```enddate``` are required if ```timeperiod``` is set to ```range```
+
+---
 ## /jarvice/connect
 
 Requests the network address and user ```nimbix``` password (if set), for an interactive job.
@@ -510,9 +555,9 @@ On success, a JSON payload with a list of team members, formatted as follows:
 ```
 
 ---
-## /jarvice/billing
+## /jarvice/vault
 
-(JXE/System Admins only) Returns billing report for JARVICE users
+List files in a vault.
 
 ##### Parameters
 
@@ -520,39 +565,46 @@ On success, a JSON payload with a list of team members, formatted as follows:
 
 * ```apikey``` - API key for user to authenticate
 
-* ```reportuser``` (optional) - comma separated list of users to filter (default, if not specified: list all users)
+* ```vault``` - name of vault to list files in
 
-* ```billingcode``` (optional) - billing code to filter by
+* ```path``` - directory in vault to list files in
 
-* ```statuses``` (optional) - comma seperated string of statuses to filter by
+* ```details``` (optional) - include file details such as size and modification time if set to ```true``` (default is ```false```)
 
-* ```machtypes``` (optional) - comma seperated string of machine types to filter
+* ```sort``` (optional) - either ```n```, ```s```, or ```m``` to sort by **n**ame (default), **s**ize, or **m**odification time (respectively) in ascending order; use uppercase for reverse sort
 
-* ```jobapp``` (optional) - application name to filter by (e.g. jarvice-ubuntu)
+##### Response
 
-* ```itemized``` (optional) - set to ```true``` to generate itemized report (default, if not specified: ```false```)
+On success, a list of lists in ```application/json``` format; each element pertains to a file or directory, and includes its name, size, and modification time - e.g.:
+```
+[
+    [
+        "file1",
+        56,
+        1599756815
+    ],
+    [
+        "file2",
+        123,
+        1599756817
+    ]
+]
+```
 
-* ```timeperiod``` (optional) - includes jobs in the previous/current month or custom range (either ```last```, ```current```, or ```range```)
+* "modification time" (3rd value in each element) is represented in UNIX time (seconds since the Epoch)
 
-* ```startdate``` (optional) - range start of time period to generate report (YYYY-MM-DD)
+##### Additional Notes
 
-* ```enddate``` (optional) - range end of time period to generate report (YYYY-MM-DD)
+1. Listing is not recursive - only the files in the directory specified by the ```path``` parameter are listed
 
-#### Response
+2. Directories are marked with a trailing ```/``` character
 
-On success, a CSV file containing generated billing report
+3. Both size and modification time may be 0 if ```details``` is not ```true```
 
-#### Additional Notes
+4. Sorting by anything other than name requires ```details``` to be set to ```true```
 
-1. Endpoint is for JARVICE XE System Administrators only
+5. Requesting a detailed listing may be significantly slower for certain storage topologies or if listing very large numbers of files; use only if necessary
 
-2. If ```reportuser``` is a payer of a team, all team members are included
-
-3. Valid ```statuses``` fields are: COMPLETED, COMPLETED WITH ERROR, SUBMITTED, PROCESSING STARTING, CANCELED, EXEMPT, SEQUENTIALLY QUEUED, TERMINATED
-
-4. Valid ```machtypes``` can be queried using `/jarvice/machines` API
-
-5. ```startdate``` and ```enddate``` are required if ```timeperiod``` is set to ```range```
 
 ---
 ## /jarvice/queues
@@ -611,7 +663,6 @@ Retrieve build/pull history for a JARVICE application image.
 ##### Response
 
 On success, the requested reverse chronological history (most recent first) in ```text/plain``` format (with single ```\n``` for line breaks), up to and including the ```limit``` requested. Blank output indicates either the target does not exist, or has no associated build/pull history (yet).
-
 
 
 ---
