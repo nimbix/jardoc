@@ -282,6 +282,8 @@ Returns information about available machine type(s).
 
 * ```name``` (optional) - name of machine type to return information for (default, if not specified: all)
 
+* ```vault``` (optional) - vault name to use for machine compatibility; if specified, response will be a list of machines that can be used against that vault; if not specified, the user's default vault is used to determine machine compatibility
+
 ##### Response
 
 On success, a JSON payload with machine information for each available machine type, or for the specific machine ```name``` if available. The machine name is used as the dictionary key.
