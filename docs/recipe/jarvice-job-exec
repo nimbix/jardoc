@@ -2,7 +2,7 @@
 
 #set -x  # Trace script execution
 
-jarvice_api_url="https://api.jarvice.com"
+jarvice_api_url="https://cloud.nimbix.net/api"
 jarvice_api_url+="/jarvice"
 
 # Updating these values will modify the default job submit JSON below
@@ -11,7 +11,7 @@ jarvice_application_command="filemanager"
 jarvice_application_geometry="1423x812"
 jarvice_machine_type="n0"
 jarvice_machine_nodes="1"
-jarvice_vault_name="drop.jarvice.com"
+jarvice_vault_name="Elastic_File"
 jarvice_user_username=
 jarvice_user_apikey=
 

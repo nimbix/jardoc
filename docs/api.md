@@ -2,7 +2,7 @@
 
 The JARVICE API allows full control on running jobs as well as managing applications via PushToCompute&trade;.  The API server delivers the endpoints below - for the Nimbix Public Cloud the API server is:
 ```text
-https://api.jarvice.com/
+https://cloud.nimbix.net/api
 ```
 
 Unless otherwise noted, all endpoints support both GET and POST request methods.  Also, unless otherwise noted, responses deliver both an HTTP status code and a JSON payload.
