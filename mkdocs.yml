@@ -7,6 +7,7 @@ pages:
     - PushToCompute: cicd.md
     - Docker Images on JARVICE: docker.md
     - Nimbix Application Environment: nae.md
+    - MPI Application Configuration Guide: mpi.md
     - Application Definition Guide: appdef.md
     - The JARVICE API: api.md
     - Resource Selection: machines.md
