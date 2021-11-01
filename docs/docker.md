@@ -108,5 +108,5 @@ JARVICE provides a high performance container engine used to deploy large scale 
 metadata files exist and are pushed into the final layer of your docker image.
 This may be done by adding the following to the last line of your `Dockerfile`:
 ```
-RUN mkdir -p /etc/NAE && touch /etc/NAE/{screenshot.png,screenshot.txt,license.txt,AppDef.json}
+RUN mkdir -p /etc/NAE && touch /etc/NAE/screenshot.png /etc/NAE/screenshot.txt /etc/NAE/license.txt /etc/NAE/AppDef.json
 ```
