@@ -72,6 +72,37 @@ A job not in `PROCESSING STARTING` status will return an error, e.g. ```{"error"
 3. Current job status must be `PROCESSING STARTING` as indicated by output of [/jarvice/status](#jarvicestatus), e.g. `{"job_status": "PROCESSING STARTING"}`. For other states, see [/jarvice/terminate](#jarviceterminate)
 
 ---
+## /jarvice/signal
+
+Send a signal to a running job (e.g. SIGTSTP/20).
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+* ```name``` (optional) - job name (name key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```number``` (optional) - job number (number key returned from [/jarvice/submit](#jarvicesubmit))
+
+* ```signal``` (optional) - signal to send to job (default to SIGTSTP/20)
+
+##### Response
+
+On success: ```{"signal": <signal>, "pid": <pid>}```
+
+Where `pid` is the process that receives the `signal`.
+
+##### Additional Notes
+
+1. One of `name` or `number` must be specified
+
+2. `signal` must use the integer representation for the signal
+
+3. `/jarvice/signal` will set the substatus 'Suspended by user' which is updated on the JARVICE Dashboard. This substatus is cleared by signaling SIGCONT/18. Processes that ignore SIGTSTP are not suspended even if the job substatus is set to 'Suspended by user'
+
+---
 ## /jarvice/submit
 
 Submits a job for processing. The body is in JSON format and can be generated from the JARVICE web portal by clicking the *PREVIEW SUBMISSION* tab in the task builder and copying its contents to the clipboard - e.g.:
