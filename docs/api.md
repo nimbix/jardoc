@@ -101,6 +101,7 @@ Where `pid` is the process that receives the `signal`.
 2. `signal` must use the integer representation for the signal
 
 3. `/jarvice/signal` will set the substatus 'Suspended by user' which is updated on the JARVICE Dashboard. This substatus is cleared by signaling SIGCONT/18. Processes that ignore SIGTSTP are not suspended even if the job substatus is set to 'Suspended by user'
+4. JarviceXE applications can override signal behavior by setting `JARVICE_SIGNAL_OVERRIDE` environment variable to a custom script to handle signals sent to the application from the JARVICE API. (see example [Dockerfile using ENV to set `JARVICE_SIGNAL_OVERRIDE`](https://github.com/nimbix/app-slurm/blob/main/Dockerfile) and [override script](https://github.com/nimbix/app-slurm/blob/main/scripts/signal-override.sh))
 
 ---
 ## /jarvice/submit
