@@ -2,7 +2,7 @@ site_name: JARVICE
 theme: readthedocs
 extra_css:
     - css/extra.css
-pages:
+nav:
     - Home: index.md
     - PushToCompute: cicd.md
     - Docker Images on JARVICE: docker.md
