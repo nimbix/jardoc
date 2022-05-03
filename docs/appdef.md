@@ -137,7 +137,7 @@ NOTE:
 
 ### CONST
 
-`CONST` defines a constant value and supports substitutions as well - the user may not modify these paraemters.  When the type is `CONST`, the `value` key may be either an actual value or one of the following substitutions:
+`CONST` defines a constant value and supports substitutions as well - the user may not modify these parameters.  When the type is `CONST`, the `value` key may be either an actual value or one of the following substitutions:
 
 * `%APIURL%` – public API URL \*
 * `%APIUSER%` – username of user who submitted the call \*
@@ -169,6 +169,15 @@ NOTE:
 * `value` is the default value (which can be left blank to require an explicit value set)
 * `min` is the minimum number
 * `max` is the maximum number
+
+### RANGE
+
+`RANGE` defines an integer value using a slider:
+
+* `value` is the default value on which slider will be set
+* `min` is the minimum number on the slider
+* `max` is the maximum number on the slider
+* `step` set the steps on the slider (for example `2` to force even/odd numbers only)
 
 The portal will express this as a slider widget.
 
