@@ -1,6 +1,20 @@
 # Jarvice Applications Push to Compute tutorial
 
-This tutorial should allow end users to build their own applications (apps) for Jarvice clusters.
+This tutorial should allow end users to build their own applications (apps) for Jarvice clusters
+through Jarvice PushToCompute interface.
+
+First part of the tutorial is dedicated to general knowledge 
+and how to build and deploy a basic application.
+
+Second part covers most standard used cases users could need
+to build their application.
+
+It is assumed user have already installed **docker** on its system.
+
+--------------
+DRAFT
+
+Missing files manager tuto
 
 The following examples are covered:
 
@@ -10,22 +24,71 @@ The following examples are covered:
 4. Review possible parameters
 
 
-5. Basic non interactive application
+5. Non interactive application
 6. Basic shell interactive application
 7. Basic UI interactive application
 8. Mixed Shell and UI application
 9. Basic MPI application
 10. User tunable application
+DRAFT
+--------------
+
+Table of content:
+
+  * [1. Global view](#1-global-view)
+  * [2. Hello world](#2-hello-world)
+    + [2.1. Create Dockerfile](#21-create-dockerfile)
+    + [2.2. Create AppDef.json](#22-create-appdefjson)
+    + [2.3. Finalize image](#23-finalize-image)
+    + [2.4. Register to registry (optional)](#24-register-to-registry--optional-)
+    + [2.6. Push image](#26-push-image)
+    + [2.6. Pull image with Push to Compute](#26-pull-image-with-push-to-compute)
+    + [2.7. Run application in Jarvice](#27-run-application-in-jarvice)
+    + [2.8. Gather logs](#28-gather-logs)
+    + [3. Important building guidelines](#3-important-building-guidelines)
+      - [3.1. Repush image](#31-repush-image)
+      - [3.2. Multi stages](#32-multi-stages)
+      - [3.3. End with NAE](#33-end-with-nae)
+    + [3. Basic interactive job](#3-basic-interactive-job)
+    + [3.1. Standard way](#31-standard-way)
+    + [3.2. On an existing application image](#32-on-an-existing-application-image)
+  * [3. Review application parameters](#3-review-application-parameters)
+  * [3.1. Commands](#31-commands)
+  * [3.2. Commands parameters](#32-commands-parameters)
+    + [3.2.1. CONST](#321-const)
+    + [3.2.2. STR](#322-str)
+    + [3.2.3. INT](#323-int)
+    + [3.2.4. FLOAT](#324-float)
+    + [3.2.5. RANGE](#325-range)
+    + [3.2.6. BOOL](#326-bool)
+    + [3.2.7. Selection](#327-selection)
+    + [3.2.8. FILE](#328-file)
+    + [3.2.9. UPLOAD](#329-upload)
+    + [3.2.10 Using parameters](#3210-using-parameters)
+
 
 ## 1. Global view
 
+In order to use Jarvice cluster, users need to build their own application container image, then push it to a registry accessible from the cluster, pull it using PushToCompute interface, and then simply submit jobs.
+
+Process global view can be reduced to this simple schema:
+
 ![GlobalProcess](img/apps_tutorial/GlobalProcess.svg)
 
+In order to explain in details this process, best way is to build an Hello World application, steps by steps.
+
 ## 2. Hello world
+
+Objective of this Hello World application is simply to display an Hello World as output mesage of a Jarvice job.
+
+In order to achieve that, we will need to go through multiple steps. Process is not complexe, but need steps to be understood 
+in ordure to avoid basic issues.
 
 ### 2.1. Create Dockerfile
 
 ![GlobalProcess_step_1](img/apps_tutorial/GlobalProcess_step_1.svg)
+
+First step is to create the Dockerfile that will be used to build application container image.
 
 Create folder hello_world:
 
@@ -34,7 +97,8 @@ mkdir hello_world
 cd hello_world
 ```
 
-Create a Dockerfile. A Dockerfile is a multi steps description of how image should be created, and from what. We are going to start from basic Ubuntu image, as this source image is a widely used starting point.
+Create a Dockerfile. A Dockerfile is a multi steps description of how image should be created, and from what. 
+We are going to start from basic Ubuntu image, as this source image is a widely used starting point.
 
 To get more details on how this Dockerfile can be extended and used, refer to https://docs.docker.com/engine/reference/builder/ .
 
@@ -1446,3 +1510,396 @@ You can see that:
 * Uploaded file was correctly uploaded as `/opt/file.txt`.
 
 We have seen all possible and existing parameters. You can now use the ones needed to create tunable applications for Jarvice.
+
+# Non interactive application
+
+Non-interactive applications are probably the most common.
+
+Users specify some settings via provided application command parameters (input file or folder, solver to use, tunings, etc.) and launch job. Job executes then in background, and user can collect result once job has ended.
+
+Users can also check application logs in their user space on Jarvice interface.
+
+Lets create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound, subtitles, etc.), and so other streams will be ignored.
+
+## Dockerfile
+
+We can already re-use the multi stages example above:
+
+```dockerfile
+# Stage 0, lets give it a name for convenience: download_extract_ffmpeg
+FROM ubuntu:latest AS download_extract_ffmpeg
+
+RUN apt-get update; apt-get install tar xz-utils wget -y;
+
+RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz;
+
+RUN tar xvJf ffmpeg-release-amd64-static.tar.xz;
+
+RUN cd ffmpeg-5.0.1-amd64-static; cp ffmpeg /usr/bin/ffmpeg;
+
+# Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
+FROM ubuntu:latest 
+
+COPY --from=download_extract_ffmpeg /usr/bin/ffmpeg /usr/bin/ffmpeg
+
+COPY NAE/AppDef.json /etc/NAE/AppDef.json
+
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
+
+RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
+```
+
+## AppDef
+
+Lets now create a related `AppDef.json` file:
+
+```json
+{
+    "name": "Video convertion",
+    "description": "A basic video convertion app, for a tutorial",
+    "author": "Me",
+    "licensed": false,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "Convert": {
+            "path": "/usr/bin/ffmpeg",
+            "interactive": false,
+            "name": "Convert video",
+            "description": "Covert video to h265 using ffmpeg",
+            "parameters": {
+                "-i": {
+                    "name": "Input file parameter",
+                    "description": "File to be processed parameter",
+                    "type": "CONST",
+                    "value": "-i",
+                    "positional": true,
+                    "required": true
+                },
+                "input_file": {
+                    "name": "Input file path",
+                    "description": "File to be processed parameter path",
+                    "type": "FILE",
+                    "positional": true,
+                    "required": true
+                },
+                "-c:v": {
+                    "name": "Video codec parameter",
+                    "description": "Video codec parameter",
+                    "type": "CONST",
+                    "value": "-c:v",
+                    "positional": true,
+                    "required": true
+                },
+                "libx265": {
+                    "name": "Video codec h265",
+                    "description": "Video codec h265",
+                    "type": "CONST",
+                    "value": "libx265",
+                    "positional": true,
+                    "required": true
+                },
+                "-crf": {
+                    "name": "crf parameter",
+                    "description": "crf parameter (quality)",
+                    "type": "CONST",
+                    "value": "-c:v",
+                    "positional": true,
+                    "required": true
+                },
+                "crf_value": {
+                    "name": "crf value",
+                    "description": "crf value, between 0 (quality lossless) and 51 (worse quality). Default is 28.",
+                    "type": "RANGE",
+                    "value": 28,
+                    "min": 0,
+                    "max": 51,
+                    "step": 1,
+                    "positional": true,
+                    "required": true
+                },
+                "output_file": {
+                    "name": "Output file",
+                    "description": "Output file path and name. Must be /data/XXX .",
+                    "type": "STR",
+                    "value": "/data/out.mkv",
+                    "positional": true,
+                    "required": true
+                }
+            }
+        }
+    },
+    "image": {
+        "type": "image/png",
+        "data": ""
+    }
+}
+```
+
+# Basic shell interactive application
+
+# Basic UI interactive application
+
+# Basic MPI application
+
+MPI applications need a wrapper script to load native Jarvice OpenMPI runtime or to load application MPI runtime.
+
+MPI applications most of the time need to be launched from a specific directory. In order to achieve that,
+we will propose user to pick a specific file in the target folder, and we will launch MPI application from 
+that folder in `launch.sh` script.
+
+We will assume our MPI application is stored inside `/opt/my_parallel_application/bin/mpi_application` folder.
+
+## Wrapper script
+
+Create folder app-mpi and NAE subfolder:
+
+```
+mkdir app-mpi/NAE/ -p
+```
+
+Then in app-mpi, create file launch.sh with the following content:
+
+```bash
+#!/usr/bin/env bash
+# Source the JARVICE job environment variables
+echo "Sourcing JARVICE environment..."
+[[ -r /etc/JARVICE/jobenv.sh ]] && source /etc/JARVICE/jobenv.sh
+[[ -r /etc/JARVICE/jobinfo.sh ]] && source /etc/JARVICE/jobinfo.sh
+
+# Wait for slaves...max of 60 seconds
+echo "Checking slave nodes are operational..."
+SLAVE_CHECK_TIMEOUT=60
+TOOLSDIR="/usr/local/JARVICE/tools/bin"
+${TOOLSDIR}/python_ssh_test ${SLAVE_CHECK_TIMEOUT}
+ERR=$?
+if [[ ${ERR} -gt 0 ]]; then
+  echo "One or more slaves failed to start" 1>&2
+  exit ${ERR}
+fi
+
+# start SSHd
+echo "Starting local sshd..."
+if [[ -x /usr/sbin/sshd ]]; then
+  sudo service ssh start
+fi
+
+# Gather job environment and process input
+echo "Processing computational environment..."
+CASE_FOLDER=
+MPIHOSTS=
+CORES=
+
+while [[ -n "$1" ]]; do
+  case "$1" in
+  case_folder)
+    shift
+    CASE_FOLDER="$1"
+    ;;
+  *)
+    echo "Invalid argument: $1" >&2
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+CASE_FOLDER=$(dirname "$CASE_FOLDER")
+echo " - Using Case directory: $CASE_FOLDER"
+
+CORES=$(cat /etc/JARVICE/cores | wc -l )
+NBNODES=$(cat /etc/JARVICE/nodes | wc -l)
+if [[ "$NBNODES" -gt 1 ]]; then
+  MPIHOSTS="/etc/JARVICE/cores"
+  NBPROCPERNODE=$((CORES/NBNODES))
+  echo "MPI environment: "
+  echo "  - mpi_hosts list file: $MPIHOSTS"
+  echo "  - number of process per nodes: $NBPROCPERNODE"
+  echo "  - cores: $CORES"
+else
+  echo "MPI environment: "
+  echo "  - cores: $CORES"
+fi
+
+# Load mpi environment
+echo "Loading Jarvice OpenMPI environment..."
+export PATH=/opt/JARVICE/openmpi/bin:$PATH
+export LD_LIBRARY_PATH=/opt/JARVICE/openmpi/lib:$LD_LIBRARY_PATH
+
+# Enter case directory
+echo "Entering case folder $CASE_FOLDER ..."
+cd "$CASE_FOLDER"
+
+# Execute command, add verbosity to see exact command executed
+# Also use full path for binaries, even mpirun, to avoid issues on slave nodes
+echo "Executing application."
+echo "First command explicitely shows who is running MPI (help understanding)."
+echo "Second command is the real application."
+date
+set -x
+/opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -n $CORES --hostfile /etc/JARVICE/cores hostname
+/opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -n $CORES --hostfile /etc/JARVICE/cores /opt/my_parallel_application/bin/mpi_application
+set +x
+date
+```
+
+## MPI application
+
+Lets now create a very basic MPI application, to be built and stored in our image.
+
+In order for this test to be valid, a simple hello world is not enough, we need to at least establish a communication between nodes to ensure all goes well. Simplest way to do that is by using collective communications.
+
+Create file `collectives.c` with the following content:
+
+```C
+#include <stddef.h>
+#include <mpi.h>
+    
+// Grouped Calculs program
+    
+int main(int argc, char** argv) 
+{
+    MPI_Init(NULL, NULL);
+    int nb_mpi_processes;
+    MPI_Comm_size(MPI_COMM_WORLD, &nb_mpi_processes);
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    
+    double val,sum_val,mul_val,max_val,min_val;
+    val = (rank + 1)*1.0;
+    double aval[8];
+    double bval[2];
+    double cval[4];
+    
+    MPI_Allreduce ( &val , &sum_val , 1 , MPI_DOUBLE , MPI_SUM , MPI_COMM_WORLD );
+    MPI_Allreduce ( &val , &mul_val , 1 , MPI_DOUBLE , MPI_PROD , MPI_COMM_WORLD );
+    MPI_Allreduce ( &val , &max_val , 1 , MPI_DOUBLE , MPI_MAX , MPI_COMM_WORLD );
+    MPI_Allreduce ( &val , &min_val , 1 , MPI_DOUBLE , MPI_MIN , MPI_COMM_WORLD );
+    
+    // check
+    printf("Process %d I have the values %lf %lf %lf %lf %lf\n",rank,val,sum_val,mul_val,max_val,min_val);
+    
+    // OTHERS
+    val = 0.0;
+    if(rank==0) {val = 7777.0;}
+    MPI_Bcast( &val , 1 , MPI_DOUBLE , 0 , MPI_COMM_WORLD);
+    
+    // check
+    printf("Process %d after BCAST %lf\n",rank,val);
+    
+    int n;
+    if(rank==3)
+    {
+        for(n=0;n<8;++n)
+            aval[n] = n*10.0;
+    }
+    MPI_Scatter( &aval , 2 , MPI_DOUBLE , &bval , 2 , MPI_DOUBLE , 3 , MPI_COMM_WORLD);
+    
+    // check
+    printf("Process %d after SCATTER %lf %lf\n",rank,bval[0],bval[1]);
+    
+    MPI_Finalize(); // Close MPI
+    
+    return 0;
+}
+```
+
+We will build this code during docker build process.
+
+## AppDef file
+
+The `AppDef.json` file should not be complex for this application. We simply need user to define a file so we can grab application case/input files folder. Create file `NAE/AppDef.json` with the following content:
+
+```json
+{
+  "name": "MPI application",
+  "description": "A test MPI application",
+  "author": "Me",
+  "licensed": true,
+  "classifications": [
+    "Unclassified"
+  ],
+  "machines": [
+    "*"
+  ],
+  "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+  ],
+  "commands": {
+    "run_mpi": {
+      "path": "/launch.sh",
+      "interactive": true,
+      "name": "Launch MPI job",
+      "description": "Run a collective MPI job.",
+      "parameters": {
+        "case_folder": {
+          "required": true,
+          "type": "FILE",
+          "name": "Case or input files folder. Select any file in this folder to allow folder detection."
+        }
+      }
+    },
+  "image": {
+    "type": "image/png",
+    "data": ""
+  },
+}
+```
+
+## Dockerfile
+
+Since we are going to build our application here, we will need to do a multi-stage build, in oder to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content:
+
+```dockerfile
+# Stage 0, lets give it a name for convenience: download_extract_ffmpeg
+FROM ubuntu:latest AS build_stage
+
+RUN apt-get update; apt-get install gcc openmpi-bin openmpi-common libopenmpi-dev;
+
+COPY collectives.c /collectives.c
+
+RUN cd /; mpicc collectives.c -o mpi_application;
+
+# Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
+FROM ubuntu:latest 
+
+RUN mkdir -p /opt/my_parallel_application/bin/;
+
+COPY --from=build_stage /mpi_application /opt/my_parallel_application/bin/mpi_application
+
+COPY NAE/AppDef.json /etc/NAE/AppDef.json
+
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
+
+RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
+```
+
+And build application as usual. Create a repository, push it, and pull it into Jarvice PushToCompute.
+
+## Run JOB
+
+For this very basic application, we do not really need an input folder, that was only here to 
+explain the process of user providing a file path in execution folder / workdir so script cat 
+retrieve it.
+
+Launch job by selecting any file, but be sure to select multiple nodes for this job.
+
+In the output, you should get:
+
+This also validate that network is capable of running MPI jobs. Note however that we did not tested 
+network performances here. It is advised to run Intel MPI Benchmarks suite or OSU benchmarks suite to 
+further test network capailities.
+
