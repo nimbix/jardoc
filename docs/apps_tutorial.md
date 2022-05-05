@@ -11,63 +11,50 @@ to build their application.
 
 It is assumed user have already installed **docker** on its system.
 
---------------
-DRAFT
-
-Missing files manager tuto
-
-The following examples are covered:
-
-1. Hello world image with detailed process
-2. Important building guidelines
-3. Basic shell interactive application
-4. Review possible parameters
-
-
-5. Non interactive application
-6. Basic shell interactive application
-7. Basic UI interactive application
-8. Mixed Shell and UI application
-9. Basic MPI application
-10. User tunable application
-DRAFT
---------------
-
 Table of content:
 
-  * [1. Global view](#1-global-view)
-  * [2. Hello world](#2-hello-world)
-    + [2.1. Create Dockerfile](#21-create-dockerfile)
-    + [2.2. Create AppDef.json](#22-create-appdefjson)
-    + [2.3. Finalize image](#23-finalize-image)
-    + [2.4. Register to registry (optional)](#24-register-to-registry--optional-)
-    + [2.6. Push image](#26-push-image)
-    + [2.6. Pull image with Push to Compute](#26-pull-image-with-push-to-compute)
-    + [2.7. Run application in Jarvice](#27-run-application-in-jarvice)
-    + [2.8. Gather logs](#28-gather-logs)
-    + [3. Important building guidelines](#3-important-building-guidelines)
-      - [3.1. Repush image](#31-repush-image)
-      - [3.2. Multi stages](#32-multi-stages)
-      - [3.3. End with NAE](#33-end-with-nae)
-    + [3. Basic interactive job](#3-basic-interactive-job)
-    + [3.1. Standard way](#31-standard-way)
-    + [3.2. On an existing application image](#32-on-an-existing-application-image)
-  * [3. Review application parameters](#3-review-application-parameters)
-  * [3.1. Commands](#31-commands)
-  * [3.2. Commands parameters](#32-commands-parameters)
-    + [3.2.1. CONST](#321-const)
-    + [3.2.2. STR](#322-str)
-    + [3.2.3. INT](#323-int)
-    + [3.2.4. FLOAT](#324-float)
-    + [3.2.5. RANGE](#325-range)
-    + [3.2.6. BOOL](#326-bool)
-    + [3.2.7. Selection](#327-selection)
-    + [3.2.8. FILE](#328-file)
-    + [3.2.9. UPLOAD](#329-upload)
-    + [3.2.10 Using parameters](#3210-using-parameters)
+- [Jarvice Applications Push to Compute tutorial](#jarvice-applications-push-to-compute-tutorial)
+- [1. Global view](#1-global-view)
+- [2. Hello world](#2-hello-world)
+  - [2.1. Create Dockerfile](#21-create-dockerfile)
+  - [2.2. Create AppDef.json](#22-create-appdefjson)
+  - [2.3. Finalize image](#23-finalize-image)
+  - [2.4. Register to registry (optional)](#24-register-to-registry-optional)
+  - [2.5. Push image](#25-push-image)
+  - [2.6. Pull image with Push to Compute](#26-pull-image-with-push-to-compute)
+  - [2.7. Run application in Jarvice](#27-run-application-in-jarvice)
+  - [2.8. Gather logs](#28-gather-logs)
+- [3. Important building guidelines](#3-important-building-guidelines)
+  - [3.1. Repush image](#31-repush-image)
+  - [3.2. Multi stages](#32-multi-stages)
+  - [3.3. End with NAE](#33-end-with-nae)
+- [4. Basic interactive job](#4-basic-interactive-job)
+  - [4.1. Standard way](#41-standard-way)
+  - [4.2. On an existing application image](#42-on-an-existing-application-image)
+- [5. Review application parameters](#5-review-application-parameters)
+  - [5.1. Commands](#51-commands)
+  - [5.2. Commands parameters](#52-commands-parameters)
+- [6. Non interactive application](#6-non-interactive-application)
+  - [6.1. Dockerfile](#61-dockerfile)
+  - [6.2. AppDef](#62-appdef)
+  - [6.3. Run application](#63-run-application)
+- [7. Basic shell interactive application](#7-basic-shell-interactive-application)
+  - [7.1. Create image](#71-create-image)
+  - [7.2. Create calculator.py file](#72-create-calculatorpy-file)
+  - [7.3. Create AppDef](#73-create-appdef)
+  - [7.4. Launch and use](#74-launch-and-use)
+- [8. Basic UI interactive application](#8-basic-ui-interactive-application)
+  - [8.1. Create image](#81-create-image)
+  - [8.2. Create AppDef](#82-create-appdef)
+  - [8.3. Launch application](#83-launch-application)
+- [9. Basic MPI application](#9-basic-mpi-application)
+  - [9.1. Wrapper script](#91-wrapper-script)
+  - [9.2. MPI application](#92-mpi-application)
+  - [9.3. AppDef file](#93-appdef-file)
+  - [9.4. Dockerfile](#94-dockerfile)
+  - [9.5. Run JOB](#95-run-job)
 
-
-## 1. Global view
+# 1. Global view
 
 In order to use Jarvice cluster, users need to build their own application container image, then push it to a registry accessible from the cluster, pull it using PushToCompute interface, and then simply submit jobs.
 
@@ -77,14 +64,14 @@ Process global view can be reduced to this simple schema:
 
 In order to explain in details this process, best way is to build an Hello World application, steps by steps.
 
-## 2. Hello world
+# 2. Hello world
 
 Objective of this Hello World application is simply to display an Hello World as output mesage of a Jarvice job.
 
 In order to achieve that, we will need to go through multiple steps. Process is not complexe, but need steps to be understood 
 in ordure to avoid basic issues.
 
-### 2.1. Create Dockerfile
+## 2.1. Create Dockerfile
 
 ![GlobalProcess_step_1](img/apps_tutorial/GlobalProcess_step_1.svg)
 
@@ -141,7 +128,7 @@ UBUNTU_CODENAME=focal
 
 We can see here that image contains Ubuntu 20.04 release.
 
-### 2.2. Create AppDef.json
+## 2.2. Create AppDef.json
 
 ![GlobalProcess_step_2](img/apps_tutorial/GlobalProcess_step_2.svg)
 
@@ -319,7 +306,7 @@ Get the output, and add it into AppDef.json inside `images.data` value:
 
 Now that our AppDef file is ready, it is time to inject it into final image.
 
-### 2.3. Finalize image
+## 2.3. Finalize image
 
 ![GlobalProcess_step_3](img/apps_tutorial/GlobalProcess_step_3.svg)
 
@@ -402,7 +389,7 @@ Our image is ready.
 
 Next step is to push image to a registry.
 
-### 2.4. Register to registry (optional)
+## 2.4. Register to registry (optional)
 
 ![GlobalProcess_step_4](img/apps_tutorial/GlobalProcess_step_4.svg)
 
@@ -429,7 +416,7 @@ Pull command is displayed on repository page:
 
 ![DockerHub_step_3](img/apps_tutorial/docker_hub_step_3.png)
 
-### 2.6. Push image
+## 2.5. Push image
 
 ![GlobalProcess_step_5](img/apps_tutorial/GlobalProcess_step_5.svg)
 
@@ -472,7 +459,7 @@ v1: digest: sha256:7c37fb5840d4677f5e8b45195b8aa64ef0059ccda9fcefc0df62db49e426d
 
 Image is not pushed and can be pulled from Jarvice Push to Compute interface.
 
-### 2.6. Pull image with Push to Compute
+## 2.6. Pull image with Push to Compute
 
 ![GlobalProcess_step_6](img/apps_tutorial/GlobalProcess_step_6.svg)
 
@@ -504,7 +491,7 @@ It is possible to check application logs / history to see pull process. To do so
 
 Application is now ready to be run in Jarvice.
 
-### 2.7. Run application in Jarvice
+## 2.7. Run application in Jarvice
 
 ![GlobalProcess_step_7](img/apps_tutorial/GlobalProcess_step_7.svg)
 
@@ -530,7 +517,7 @@ Once application has finished to run, you will see it marked as **Completed**.
 
 ![Run_Application_step_5](img/apps_tutorial/Run_Application_step_5.png)
 
-### 2.8. Gather logs
+## 2.8. Gather logs
 
 ![GlobalProcess_step_8](img/apps_tutorial/GlobalProcess_step_8.svg)
 
@@ -556,11 +543,11 @@ Also, if too much issues, switch for a time to interactive application (see bell
 
 We can now proceed to more productive applications. Next examples will not be as detailed as this one as process is always the same.
 
-### 3. Important building guidelines
+# 3. Important building guidelines
 
 Before proceding to more examples, it is important to keep in mind few image building guidelines.
 
-#### 3.1. Repush image
+## 3.1. Repush image
 
 When you need to fix image and rebuild it, you need to delete local tag and create it again in order to be able to push again image.
 
@@ -589,7 +576,7 @@ docker push oxedions/hello_world:v1
 
 Don't forget to request a new pull in Jarvice interface to grab latest image.
 
-#### 3.2. Multi stages
+## 3.2. Multi stages
 
 Application images can be really big. Images builder should care about images size, and so optimize build process in order to save disk and bandwith.
 
@@ -695,7 +682,7 @@ We went from 401MB to 151MB. This is a huge size reduction. While with this smal
 
 For more details, please visit official documentation on multi stage builds: https://docs.docker.com/develop/develop-images/multistage-build/
 
-#### 3.3. End with NAE
+## 3.3. End with NAE
 
 We have seen that container images are multi layer images.
 
@@ -727,13 +714,13 @@ RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 
 For such a small image, it do not worth it, but for very large images, this small tip can have interesting benefit.
 
-### 3. Basic interactive job
+# 4. Basic interactive job
 
 Before reviweing available application parameters, next step is to be able to launch interactive jobs.
 
 Interactive jobs are very useful to debug when creating an application, as you can test launch application end point yourself, and debug into the Jarvice cluster context.
 
-### 3.1. Standard way
+## 4.1. Standard way
 
 Create a new application folder aside app-hello_world folder, called app-interactive_shell:
 
@@ -862,7 +849,7 @@ In the new tab, you now have an interactive bash shell. It is possible from here
 
 ![app_interactive_shell_step_4](img/apps_tutorial/app_interactive_shell_step_4.png)
 
-### 3.2. On an existing application image
+## 4.2. On an existing application image
 
 Sometime, in order to debug an app image, and launch entry point manually to check what is failing, it is useful to temporary switch it to an interactive shell.
 
@@ -986,12 +973,12 @@ Using this entry point starts an interactive shell, and allows to debug inside t
 
 Once issues are solved, AppDef will be restaured when pulling fixed image into Jarvice.
 
-## 3. Review application parameters
+# 5. Review application parameters
 
 Lets review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference and https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference for more details.
 
 
-## 3.1. Commands
+## 5.1. Commands
 
 ```json
 ...
@@ -1015,7 +1002,7 @@ Note: an * means entry is mandatory.
 * <u>**parameters***</u>: Parameters are used to construct the arguments passed to the command. If not commands, set it to `{}`
 * <u>**interactive**</u>: (default to `false`) defines if application execution should return to user an URL to interact with execution (should be true for gotty or desktop application).
 
-## 3.2. Commands parameters
+## 5.2. Commands parameters
 
 Commands parameters allows to:
 
@@ -1053,169 +1040,22 @@ It is possible to create a detailed environment for an application with a variet
 
 There are multiple available parameters types: `CONST`, `STR`, `INT`, `FLOAT`, `RANGE`, `BOOL`, `selection`, `FILE`, `UPLOAD`.
 
-Here is a detailed list. You do not need to understand all values for now. This list is here as a resource for next steps.
+A detailed list of available values/keys is available at https://jarvice.readthedocs.io/en/latest/appdef/#parameter-type-reference
 
-### 3.2.1. CONST
+In oder to simplify visual understanding, you can find bellow a table with a screenshot of what each type would generate in job user interface:
 
-`CONST` defines a string value that cannot be modified by user.
+| Type      |      Screenshot      |
+|-----------|----------------------|
+| CONST     | Nothing will be displayed in interface |
+| STR       | ![type_STR](img/apps_tutorial/type_STR.png) |
+| INT       | ![type_INT](img/apps_tutorial/type_INT.png) |
+| RANGE     | ![type_RANGE](img/apps_tutorial/type_RANGE.png) |
+| FLOAT     | ![type_FLOAT](img/apps_tutorial/type_FLOAT.png) |
+| BOOL      | ![type_BOOL](img/apps_tutorial/type_BOOL.png) |
+| selection | ![type_selection](img/apps_tutorial/type_selection.png) |
+| FILE      | ![type_FILE](img/apps_tutorial/type_FILE.png) |
+| UPLOAD    | ![type_UPLOAD](img/apps_tutorial/type_UPLOAD.png) |
 
-`CONST` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type, should be true) | |
-| value | string | * | Value of element | |
-
-### 3.2.2. STR
-
-`STR` defines a string value and is the default type if not specified
-
-![type_STR](img/apps_tutorial/type_STR.png)
-
-`STR` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| value | string | * | Default value of element | |
-
-### 3.2.3. INT
-
-`INT` defines an integer value.
-
-![type_INT](img/apps_tutorial/type_INT.png)
-
-`INT` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| value | integer | * | Default value of element | |
-| min | integer | * | Minimal value of element | |
-| max | integer | * | Maximal value of element | |
-
-### 3.2.4. FLOAT
-
-`FLOAT` defines a floating point value.
-
-![type_FLOAT](img/apps_tutorial/type_FLOAT.png)
-
-`FLOAT` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| value | float | * | Default value of element | |
-| min | float | * | Minimal value of element | |
-| max | float | * | Maximal value of element | |
-| precision | integer | | Maximum number of decimal digits allowed | |
-
-### 3.2.5. RANGE
-
-`RANGE` defines a range of possible integer values, as a slider.
-
-![type_RANGE](img/apps_tutorial/type_RANGE.png)
-
-`RANGE` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| value | integer | * | Default value of element | |
-| min | integer | * | Minimal value of element | |
-| max | integer | * | Maximal value of element | |
-| step | integer | * | Step to be used between values in the slider | |
-
-### 3.2.6. BOOL
-
-`BOOL` defines a boolean value which includes the parameter if true, or omits it if false.
-
-![type_BOOL](img/apps_tutorial/type_BOOL.png)
-
-`BOOL` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| value | boolean | * | Default value of element | |
-
-### 3.2.7. Selection
-
-`selection` defines a single selection list.
-
-![type_selection](img/apps_tutorial/type_selection.png)
-
-`selection` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| values | list | * | Possible values as a list. First value is default. | |
-| mvalues | list | | Parallel list of values in machine format. Index must match values. | [ ] |
-
-### 3.2.8. FILE
-
-`FILE` defines a file name stored on the cluster in user's /data folder.
-
-![type_FILE](img/apps_tutorial/type_FILE.png)
-
-`FILE` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| positional | boolean | | If element should be passed ordered as in AppDef file | true |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| filter | string | | Files extentions allowed. Ex: `"*.txt"`. If multiple, use `\|` separator: `"*.txt,*.md"`  | |
-
-### 3.2.9. UPLOAD
-
-`UPLOAD` defines a file to upload from a local computer to a Jarvice job.
-
-![type_UPLOAD](img/apps_tutorial/type_UPLOAD.png)
-
-`UPLOAD` type accepts the following settings:
-
-| Setting   |      Type      |  Mandatory | Description | Default |
-|-----------|----------------|:----------:|-------------|---------|
-| name | string | * | Element name | |
-| description | string | * | Element description | |
-| required | boolean | * | If element is required (not used for CONST type) | |
-| variable | boolean | | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
-| filter | string | | Files extentions allowed. Ex: `"*.txt"`. If multiple, use `\|` separator: `"*.txt,*.md"`  | |
-| target | string | | Sub path that will be used to mount a file under `/opt` in job | |
-| size | integer | | Maximum size allowed for file, in bytes (1024 = 1KB) | |
-
-### 3.2.10 Using parameters
 
 In order to understand all possible combinaison, lets create a specific application. This application makes no sens, this is for testing and understanding purposes.
 
@@ -1511,9 +1351,9 @@ You can see that:
 
 We have seen all possible and existing parameters. You can now use the ones needed to create tunable applications for Jarvice.
 
-# Non interactive application
+# 6. Non interactive application
 
-Non-interactive applications are probably the most common.
+Non-interactive applications are very common.
 
 Users specify some settings via provided application command parameters (input file or folder, solver to use, tunings, etc.) and launch job. Job executes then in background, and user can collect result once job has ended.
 
@@ -1521,7 +1361,9 @@ Users can also check application logs in their user space on Jarvice interface.
 
 Lets create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound, subtitles, etc.), and so other streams will be ignored.
 
-## Dockerfile
+Note that you can easily find video samples here: https://jell.yfish.us/
+
+## 6.1. Dockerfile
 
 We can already re-use the multi stages example above:
 
@@ -1538,7 +1380,9 @@ RUN tar xvJf ffmpeg-release-amd64-static.tar.xz;
 RUN cd ffmpeg-5.0.1-amd64-static; cp ffmpeg /usr/bin/ffmpeg;
 
 # Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
-FROM ubuntu:latest 
+FROM ubuntu:latest
+
+RUN apt-get update; apt-get install curl -y; apt-get clean;
 
 COPY --from=download_extract_ffmpeg /usr/bin/ffmpeg /usr/bin/ffmpeg
 
@@ -1549,7 +1393,7 @@ RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/ja
 RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 ```
 
-## AppDef
+## 6.2. AppDef
 
 Lets now create a related `AppDef.json` file:
 
@@ -1576,7 +1420,7 @@ Lets now create a related `AppDef.json` file:
             "path": "/usr/bin/ffmpeg",
             "interactive": false,
             "name": "Convert video",
-            "description": "Covert video to h265 using ffmpeg",
+            "description": "Convert video to h265 using ffmpeg",
             "parameters": {
                 "-i": {
                     "name": "Input file parameter",
@@ -1593,7 +1437,7 @@ Lets now create a related `AppDef.json` file:
                     "positional": true,
                     "required": true
                 },
-                "-c:v": {
+                "-c_v": {
                     "name": "Video codec parameter",
                     "description": "Video codec parameter",
                     "type": "CONST",
@@ -1613,7 +1457,7 @@ Lets now create a related `AppDef.json` file:
                     "name": "crf parameter",
                     "description": "crf parameter (quality)",
                     "type": "CONST",
-                    "value": "-c:v",
+                    "value": "-crf",
                     "positional": true,
                     "required": true
                 },
@@ -1646,11 +1490,295 @@ Lets now create a related `AppDef.json` file:
 }
 ```
 
-# Basic shell interactive application
+User will be able to set CRF video quality value, and output file path.
 
-# Basic UI interactive application
+## 6.3. Run application
 
-# Basic MPI application
+Build and upload to cluster application.
+
+Launch a job, using an input sample. In this test, we used jellyfish-3-mbps-hd-h264.mkv.
+
+Set CRF quality. We let 28 here as default.
+
+Then submit. Note that video processing benefits from multi cores, and so you should select 
+a machine with multiple cores. Memory doesn't matter here, 1Gb is enough.
+
+Once processed, you should see the following result:
+
+```
+INIT[1]: Initializing networking...
+INIT[1]: Reading keys...
+INIT[1]: Finalizing setup in application environment...
+INIT[1]: WARNING: Cross Memory Attach not available for MPI applications
+INIT[1]: Platform fabric and MPI libraries successfully deployed
+INIT[1]: Detected preferred MPI fabric provider: tcp
+INIT[1]: Securing application environment...
+INIT[1]: Configuring user: nimbix ...
+INIT[1]: /home/nimbix does not exist or is external
+INIT[1]: Waiting for job configuration before executing application...
+INIT[1]: hostname: jarvice-job-12180-z9ldv
+INIT[64]: HOME=/home/nimbix
+###############################################################################
+ffmpeg version 5.0.1-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2022 the FFmpeg developers
+  built with gcc 8 (Debian 8.3.0-6)
+  configuration: --enable-gpl --enable-version3 --enable-static --disable-debug --disable-ffplay --disable-indev=sndio --disable-outdev=sndio --cc=gcc --enable-fontconfig --enable-frei0r --enable-gnutls --enable-gmp --enable-libgme --enable-gray --enable-libaom --enable-libfribidi --enable-libass --enable-libvmaf --enable-libfreetype --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librubberband --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libvorbis --enable-libopus --enable-libtheora --enable-libvidstab --enable-libvo-amrwbenc --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libdav1d --enable-libxvid --enable-libzvbi --enable-libzimg
+  libavutil      57. 17.100 / 57. 17.100
+  libavcodec     59. 18.100 / 59. 18.100
+  libavformat    59. 16.100 / 59. 16.100
+  libavdevice    59.  4.100 / 59.  4.100
+  libavfilter     8. 24.100 /  8. 24.100
+  libswscale      6.  4.100 /  6.  4.100
+  libswresample   4.  3.100 /  4.  3.100
+  libpostproc    56.  3.100 / 56.  3.100
+Input #0, matroska,webm, from '/data/jellyfish-3-mbps-hd-h264.mkv':
+  Metadata:
+    encoder         : libebml v1.2.0 + libmatroska v1.1.0
+    creation_time   : 2016-02-06T03:58:03.000000Z
+  Duration: 00:00:30.03, start: 0.000000, bitrate: 2984 kb/s
+  Stream #0:0(eng): Video: h264 (High), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], 29.97 fps, 29.97 tbr, 1k tbn (default)
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> hevc (libx265))
+Press [q] to stop, [?] for help
+x265 [info]: HEVC encoder version 3.5+1-f0c1022b6
+x265 [info]: build info [Linux][GCC 8.3.0][64 bit] 8bit+10bit+12bit
+x265 [info]: using cpu capabilities: MMX2 SSE2Fast LZCNT SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+x265 [info]: Main profile, Level-4 (Main tier)
+x265 [info]: Thread pool created using 16 threads
+x265 [info]: Slices                              : 1
+x265 [info]: frame threads / pool features       : 4 / wpp(17 rows)
+x265 [info]: Coding QT: max CU size, min CU size : 64 / 8
+x265 [info]: Residual QT: max TU size, max depth : 32 / 1 inter / 1 intra
+x265 [info]: ME / range / subpel / merge         : hex / 57 / 2 / 3
+x265 [info]: Keyframe min / max / scenecut / bias  : 25 / 250 / 40 / 5.00 
+x265 [info]: Lookahead / bframes / badapt        : 20 / 4 / 2
+x265 [info]: b-pyramid / weightp / weightb       : 1 / 1 / 0
+x265 [info]: References / ref-limit  cu / depth  : 3 / off / on
+x265 [info]: AQ: mode / str / qg-size / cu-tree  : 2 / 1.0 / 32 / 1
+x265 [info]: Rate Control / qCompress            : CRF-40.0 / 0.60
+x265 [info]: tools: rd=3 psy-rd=2.00 early-skip rskip mode=1 signhide tmvp
+x265 [info]: tools: b-intra strong-intra-smoothing lslices=6 deblock sao
+Output #0, matroska, to '/data/out.mkv':
+  Metadata:
+    encoder         : Lavf59.16.100
+  Stream #0:0(eng): Video: hevc, yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 29.97 fps, 1k tbn (default)
+    Metadata:
+      encoder         : Lavc59.18.100 libx265
+    Side data:
+      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    1 fps=0.0 q=0.0 size=       3kB time=00:00:00.00 bitrate=N/A speed=   0x     frame=   25 fps=0.0 q=0.0 size=       3kB time=00:00:00.00 bitrate=N/A speed=   0x     frame=   28 fps= 11 q=0.0 size=       3kB time=00:00:00.00 bitrate=N/A speed=   0x     frame=   30 fps=9.5 q=0.0 size=       3kB time=00:00:00.00 bitrate=N/A speed=   0x     frame=   32 fps=7.7 q=41.8 size=       3kB time=-00:00:00.03 bitrate=N/A speed=N/A     frame=   35 fps=7.1 q=41.4 size=       3kB time=00:00:00.06 bitrate= 357.3kbits/s speed=0.frame=  900 fps=4.2 q=47.9 Lsize=    1994kB time=00:00:29.93 bitrate= 545.7kbits/s speed=0.138x    
+video:1984kB audio:0kB subtitle:0kB other streams:0kB global headers:2kB muxing overhead: 0.470304%
+x265 [info]: frame I:      4, Avg QP:40.24  kb/s: 2734.29 
+x265 [info]: frame P:    264, Avg QP:42.01  kb/s: 1366.43 
+x265 [info]: frame B:    632, Avg QP:46.71  kb/s: 181.45  
+x265 [info]: Weighted P-Frames: Y:5.7% UV:5.7%
+x265 [info]: consecutive B-frames: 1.5% 2.6% 71.3% 7.8% 16.8% 
+encoded 900 frames in 216.00s (4.17 fps), 540.39 kb/s, Avg QP:45.30
+```
+
+Launch Jarvice files manager, and see the compressed video:
+
+![app_ffmpeg_step_1](img/apps_tutorial/app_ffmpeg_step_1.png)
+
+Using h265 instead of h264, we reduced video size. This is however a very basic example, and video quality was also reduced. A real ffmpeg application would need much more 
+settings available to users. This was however enough as an example.
+
+# 7. Basic shell interactive application
+
+It is possible to obtain an interactive shell directly from the browser. This can be useful for applications that
+requires interactions with users (or have to be manually launched) and that do not require a full GUI desktop.
+
+We are going to create a very basic and naive python based calculator, as an example.
+
+## 7.1. Create image
+
+Create Dockerfile, that includes python3 and our basic application.
+
+```dockerfile
+FROM ubuntu:latest 
+
+RUN apt-get update \
+  && apt-get install -y python3-pip python3-dev curl \
+  && cd /usr/local/bin \
+  && ln -s /usr/bin/python3 python \
+  && pip3 install --upgrade pip
+
+COPY calculator.py /calculator.py
+
+RUN chmod +x /calculator.py;
+
+COPY NAE/AppDef.json /etc/NAE/AppDef.json
+
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
+
+RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
+```
+
+## 7.2. Create calculator.py file
+
+Create now the basic python based application, in file `calculator.py`:
+
+```python
+#!/usr/bin/env python3
+print('Calculator example')
+while True:
+    eval_output = eval(input("Enter any operation of your choice: "))
+    print("Result: " + str(eval_output))
+```
+
+## 7.3. Create AppDef
+
+Create AppDef file, with target path to gotty shell, and command to our application.
+
+```json
+{
+    "name": "Gotty shell command",
+    "description": "Run a command in a gotty shell on image",
+    "author": "Nimbix, Inc.",
+    "licensed": true,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "Gotty": {
+            "path": "/bin/gotty",
+            "interactive": true,
+            "name": "Gotty shell",
+            "description": "Start a command in a gotty shell",
+            "parameters": {
+                "command": {
+                    "name": "Command",
+                    "description": "Command to run inside image.",
+                    "type": "STR",
+                    "value": "/calculator.py",
+                    "positional": true,
+                    "required": true
+                }
+            }
+        }
+    },
+    "image": {
+        "type": "image/png",
+        "data": ""
+    }
+}
+```
+
+## 7.4. Launch and use
+
+Once builded and submitted to cluster, it is possible to join session by clicking on "Click here to connect".
+
+![app_gotty_step_1](img/apps_tutorial/app_gotty_step_1.png)
+
+It should open a new tab in your web browser, and connect you directly to a shell running the application:
+
+![app_gotty_step_2](img/apps_tutorial/app_gotty_step_2.png)
+
+Note also that you can replace application command path by a full shell instead of an application, like `/usr/bin/bash`, to fully manipulate image.
+
+When debugging an application, it can be a real added value to add a second entry to image, with a gotty shell combined to the bash shell to be able to interactively launch scripts and debug.
+
+# 8. Basic UI interactive application
+
+Some applications need a full GUI to be used, with a windows manager.
+
+It is possible to get a full XFCE desktop by adding needed dependencies during docker build step, and using the correct 
+command entry point.
+
+In this example, we are going to create a GIMP (image manipulation software) application.
+
+## 8.1. Create image
+
+Create Dockerfile, with a specific RUN that bootstrap Nimbix default desktop. We then install gimp.
+
+```dockerfile
+FROM ubuntu:latest
+
+# Install image-common tools and desktop from Nimbix
+RUN apt-get -y update && \
+    apt-get -y install wget curl software-properties-common && \
+    curl -H 'Cache-Control: no-cache' \
+        https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh \
+        | bash -s -- --setup-nimbix-desktop
+
+RUN apt-get -y install gimp;
+
+COPY NAE/AppDef.json /etc/NAE/AppDef.json
+
+RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
+
+RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
+```
+
+## 8.2. Create AppDef
+
+Create now AppDef file, with `/usr/local/bin/nimbix_desktop` as target path, and `/usr/bin/gimp` as main command.
+
+```json
+{
+    "name": "myapp",
+    "description": "",
+    "author": "",
+    "licensed": true,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "GUI": {
+            "path": "/usr/local/bin/nimbix_desktop",
+            "interactive": true,
+            "name": "Gimp GUI",
+            "description": "Run a GIMP in a GUI desktop, and connect interactively directly from your web browser (requires Nimbix Desktop in image).",
+            "parameters": {
+                "command": {
+                    "name": "Command",
+                    "description": "Command to run",
+                    "type": "STR",
+                    "value": "/usr/bin/gimp",
+                    "positional": true,
+                    "required": true
+                }
+            }
+        }
+    },
+    "image": {
+        "data": "",
+        "type": "image/png"
+    }
+}
+```
+
+## 8.3. Launch application
+
+Once application has been built and uploaded to Jarvice PushToCompute, submit a new job.
+
+Once job is started, simply click on job's "Click here to connect":
+
+![app_gimp_step_0](img/apps_tutorial/app_gimp_step_0.png)
+
+This will open a new tab in your browser, in which after few seconds you will 
+be connected to a full GUI desktop, with Gimp opened. If you close gimp window, job will terminate.
+
+![app_gimp_step_1](img/apps_tutorial/app_gimp_step_1.png)
+
+# 9. Basic MPI application
 
 MPI applications need a wrapper script to load native Jarvice OpenMPI runtime or to load application MPI runtime.
 
@@ -1660,7 +1788,7 @@ that folder in `launch.sh` script.
 
 We will assume our MPI application is stored inside `/opt/my_parallel_application/bin/mpi_application` folder.
 
-## Wrapper script
+## 9.1. Wrapper script
 
 Create folder app-mpi and NAE subfolder:
 
@@ -1731,6 +1859,11 @@ else
   echo "  - cores: $CORES"
 fi
 
+set -x
+cat /etc/JARVICE/cores
+cat /etc/JARVICE/nodes
+set +x
+
 # Load mpi environment
 echo "Loading Jarvice OpenMPI environment..."
 export PATH=/opt/JARVICE/openmpi/bin:$PATH
@@ -1747,13 +1880,13 @@ echo "First command explicitely shows who is running MPI (help understanding)."
 echo "Second command is the real application."
 date
 set -x
-/opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -n $CORES --hostfile /etc/JARVICE/cores hostname
-/opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -n $CORES --hostfile /etc/JARVICE/cores /opt/my_parallel_application/bin/mpi_application
+/opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -np $CORES --hostfile /etc/JARVICE/cores hostname
+/opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -np $CORES --hostfile /etc/JARVICE/cores /opt/my_parallel_application/bin/mpi_application
 set +x
 date
 ```
 
-## MPI application
+## 9.2. MPI application
 
 Lets now create a very basic MPI application, to be built and stored in our image.
 
@@ -1764,59 +1897,49 @@ Create file `collectives.c` with the following content:
 ```C
 #include <stddef.h>
 #include <mpi.h>
-    
+#include <stdio.h>
+
 // Grouped Calculs program
-    
-int main(int argc, char** argv) 
+
+int main(int argc, char** argv)
 {
     MPI_Init(NULL, NULL);
     int nb_mpi_processes;
     MPI_Comm_size(MPI_COMM_WORLD, &nb_mpi_processes);
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
+
     double val,sum_val,mul_val,max_val,min_val;
     val = (rank + 1)*1.0;
     double aval[8];
     double bval[2];
     double cval[4];
-    
+
     MPI_Allreduce ( &val , &sum_val , 1 , MPI_DOUBLE , MPI_SUM , MPI_COMM_WORLD );
     MPI_Allreduce ( &val , &mul_val , 1 , MPI_DOUBLE , MPI_PROD , MPI_COMM_WORLD );
     MPI_Allreduce ( &val , &max_val , 1 , MPI_DOUBLE , MPI_MAX , MPI_COMM_WORLD );
     MPI_Allreduce ( &val , &min_val , 1 , MPI_DOUBLE , MPI_MIN , MPI_COMM_WORLD );
-    
+
     // check
     printf("Process %d I have the values %lf %lf %lf %lf %lf\n",rank,val,sum_val,mul_val,max_val,min_val);
-    
+
     // OTHERS
     val = 0.0;
     if(rank==0) {val = 7777.0;}
     MPI_Bcast( &val , 1 , MPI_DOUBLE , 0 , MPI_COMM_WORLD);
-    
+
     // check
     printf("Process %d after BCAST %lf\n",rank,val);
-    
-    int n;
-    if(rank==3)
-    {
-        for(n=0;n<8;++n)
-            aval[n] = n*10.0;
-    }
-    MPI_Scatter( &aval , 2 , MPI_DOUBLE , &bval , 2 , MPI_DOUBLE , 3 , MPI_COMM_WORLD);
-    
-    // check
-    printf("Process %d after SCATTER %lf %lf\n",rank,bval[0],bval[1]);
-    
+
     MPI_Finalize(); // Close MPI
-    
+
     return 0;
 }
 ```
 
 We will build this code during docker build process.
 
-## AppDef file
+## 9.3. AppDef file
 
 The `AppDef.json` file should not be complex for this application. We simply need user to define a file so we can grab application case/input files folder. Create file `NAE/AppDef.json` with the following content:
 
@@ -1851,34 +1974,47 @@ The `AppDef.json` file should not be complex for this application. We simply nee
           "name": "Case or input files folder. Select any file in this folder to allow folder detection."
         }
       }
-    },
+    }
+  },
   "image": {
     "type": "image/png",
     "data": ""
-  },
+  }
 }
 ```
 
-## Dockerfile
+## 9.4. Dockerfile
 
-Since we are going to build our application here, we will need to do a multi-stage build, in oder to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content:
+Since we are going to build our application here, we will need to do a multi-stage build, in oder to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content, that also includes the Jarvice needed MPI tools:
 
 ```dockerfile
 # Stage 0, lets give it a name for convenience: download_extract_ffmpeg
 FROM ubuntu:latest AS build_stage
 
-RUN apt-get update; apt-get install gcc openmpi-bin openmpi-common libopenmpi-dev;
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update; apt-get install -y gcc openmpi-bin openmpi-common libopenmpi-dev;
 
 COPY collectives.c /collectives.c
 
 RUN cd /; mpicc collectives.c -o mpi_application;
 
 # Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
-FROM ubuntu:latest 
+FROM ubuntu:latest
+
+RUN apt-get -y update && \
+    apt-get -y install wget curl software-properties-common && \
+    curl -H 'Cache-Control: no-cache' \
+        https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh \
+        | bash && apt-get clean
 
 RUN mkdir -p /opt/my_parallel_application/bin/;
 
 COPY --from=build_stage /mpi_application /opt/my_parallel_application/bin/mpi_application
+
+COPY launch.sh /launch.sh
+
+RUN chmod +x /launch.sh
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
@@ -1889,17 +2025,91 @@ RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 
 And build application as usual. Create a repository, push it, and pull it into Jarvice PushToCompute.
 
-## Run JOB
+## 9.5. Run JOB
 
 For this very basic application, we do not really need an input folder, that was only here to 
-explain the process of user providing a file path in execution folder / workdir so script cat 
+explain the process of user providing a file path in execution folder / workdir so script can 
 retrieve it.
 
 Launch job by selecting any file, but be sure to select multiple nodes for this job.
 
 In the output, you should get:
 
+```
+INIT[1]: Initializing networking...
+INIT[1]: Reading keys...
+INIT[1]: Finalizing setup in application environment...
+INIT[1]: WARNING: Cross Memory Attach not available for MPI applications
+INIT[1]: Platform fabric and MPI libraries successfully deployed
+INIT[1]: Detected preferred MPI fabric provider: tcp
+INIT[1]: Securing application environment...
+INIT[1]: Configuring user: nimbix ...
+INIT[1]: Waiting for job configuration before executing application...
+INIT[1]: hostname: jarvice-job-12182-hhjgg
+INIT[1]: Configuring systemd to start JARVICE ping-based health check
+INIT[74]: HOME=/home/nimbix
+###############################################################################
+Sourcing JARVICE environment...
+Checking slave nodes are operational...
+Parallel workers ready in 0 second(s)
+Starting local sshd...
+ * Starting OpenBSD Secure Shell server sshd        [80G   [74G[ OK ]
+Processing computational environment...
+ - Using Case directory: /data
+MPI environment: 
+  - mpi_hosts list file: /etc/JARVICE/cores
+  - number of process per nodes: 4
+  - cores: 8
++ cat /etc/JARVICE/cores
+jarvice-job-12182-hhjgg
+jarvice-job-12182-hhjgg
+jarvice-job-12182-hhjgg
+jarvice-job-12182-hhjgg
+jarvice-job-12182-kwngf
+jarvice-job-12182-kwngf
+jarvice-job-12182-kwngf
+jarvice-job-12182-kwngf
++ cat /etc/JARVICE/nodes
+jarvice-job-12182-hhjgg
+jarvice-job-12182-kwngf
++ set +x
+Loading Jarvice OpenMPI environment...
+Entering case folder /data ...
+Executing application.
+First command explicitely shows who is running MPI (help understanding).
+Second command is the real application.
+Thu May  5 12:50:19 UTC 2022
++ /opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -np 8 --hostfile /etc/JARVICE/cores hostname
+jarvice-job-12182-hhjgg
+jarvice-job-12182-hhjgg
+jarvice-job-12182-hhjgg
+jarvice-job-12182-hhjgg
+jarvice-job-12182-kwngf
+jarvice-job-12182-kwngf
+jarvice-job-12182-kwngf
+jarvice-job-12182-kwngf
++ /opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -np 8 --hostfile /etc/JARVICE/cores /opt/my_parallel_application/bin/mpi_application
+Process 0 I have the values 1.000000 36.000000 40320.000000 8.000000 1.000000
+Process 0 after BCAST 7777.000000
+Process 1 I have the values 2.000000 36.000000 40320.000000 8.000000 1.000000
+Process 1 after BCAST 7777.000000
+Process 2 I have the values 3.000000 36.000000 40320.000000 8.000000 1.000000
+Process 3 I have the values 4.000000 36.000000 40320.000000 8.000000 1.000000
+Process 3 after BCAST 7777.000000
+Process 2 after BCAST 7777.000000
+Process 4 I have the values 5.000000 36.000000 40320.000000 8.000000 1.000000
+Process 5 I have the values 6.000000 36.000000 40320.000000 8.000000 1.000000
+Process 5 after BCAST 7777.000000
+Process 6 I have the values 7.000000 36.000000 40320.000000 8.000000 1.000000
+Process 7 I have the values 8.000000 36.000000 40320.000000 8.000000 1.000000
+Process 7 after BCAST 7777.000000
+Process 6 after BCAST 7777.000000
+Process 4 after BCAST 7777.000000
++ set +x
+Thu May  5 12:50:22 UTC 2022
+```
+
 This also validate that network is capable of running MPI jobs. Note however that we did not tested 
 network performances here. It is advised to run Intel MPI Benchmarks suite or OSU benchmarks suite to 
-further test network capailities.
+further test network capabilities.
 
