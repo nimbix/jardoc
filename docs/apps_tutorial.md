@@ -2008,7 +2008,7 @@ RUN apt-get update; apt-get install -y wget curl gcc g++ git make bash; apt-get 
 COPY collectives.c /collectives.c
 
 # Build the code using Jarvice MPI
-RUN RUN bash -c 'source /opt/JARVICE/jarvice_mpi.sh; cd /; mpicc collectives.c -o mpi_application;'
+RUN bash -c 'source /opt/JARVICE/jarvice_mpi.sh; cd /; mpicc collectives.c -o mpi_application;'
 
 # Create final image from Ubuntu
 FROM ubuntu:latest
