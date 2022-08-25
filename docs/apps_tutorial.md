@@ -1,15 +1,22 @@
 # Jarvice Applications Push to Compute tutorial
 
+![GlobalProcess](img/apps_tutorial/SuperNimbix.svg)
+
 This tutorial should allow end users to build their own applications (apps) for Jarvice clusters
 through Jarvice PushToCompute interface.
+
+This tutorial assumes user is building applications based on `appdefversion` version `1` (default).
 
 First part of the tutorial is dedicated to general knowledge 
 and how to build and deploy a basic application.
 
-Second part covers most standard used cases users could need
+Second part covers most standard use cases users could need
 to build their application.
 
-It is assumed user have already installed **docker** on its system.
+It is assumed user have already installed **docker** on its personal system.
+
+It is recommended to first read all sections from part 1 (Global view) to part 5 (Review application parameters) before proceeding to desired application target examples.
+Each of these general steps will help understand all features available, and provides key tips for new applications developers.
 
 Table of content:
 
@@ -62,14 +69,14 @@ Process global view can be reduced to this simple schema:
 
 ![GlobalProcess](img/apps_tutorial/GlobalProcess.svg)
 
-In order to explain in details this process, best way is to build an Hello World application, steps by steps.
+In order to explain in details this process, best way is to build a Hello World application, steps by steps.
 
 # 2. Hello world
 
-Objective of this Hello World application is simply to display an Hello World as output mesage of a Jarvice job.
+Objective of this Hello World application is simply to display a Hello World as output message of a Jarvice job.
 
-In order to achieve that, we will need to go through multiple steps. Process is not complexe, but need steps to be understood 
-in ordure to avoid basic issues.
+In order to achieve that, we will need to go through multiple steps.
+Process is not complex, but need steps to be understood in ordure to avoid basic issues.
 
 ## 2.1. Create Dockerfile
 
@@ -84,12 +91,12 @@ mkdir hello_world
 cd hello_world
 ```
 
-Create a Dockerfile. A Dockerfile is a multi steps description of how image should be created, and from what. 
+Create then a Dockerfile. A Dockerfile is a multi-steps description of how image should be created, and from what. 
 We are going to start from basic Ubuntu image, as this source image is a widely used starting point.
 
 To get more details on how this Dockerfile can be extended and used, refer to https://docs.docker.com/engine/reference/builder/ .
 
-Create file `Dockerfile` with the following content, that should be self explained:
+Create file `Dockerfile` with the following content, which should be self-explained:
 
 ```dockerfile
 # Use Ubuntu latest image as starting point.
@@ -149,6 +156,7 @@ And create here `AppDef.json` file with the following content:
     "description": "A very basic app thay says hello to world.",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 1,
     "classifications": [
         "Uncategorized"
     ],
@@ -186,14 +194,15 @@ And create here `AppDef.json` file with the following content:
 }
 ```
 
-Lets review key parts of this file (when not detailed, just keep it as it):
+Let’s review key parts of this file (when not detailed, just keep it as it):
 
 ```json
 {
     "name": "Hello World App",
-    "description": "A very basic app thay says hello to world.",
+    "description": "A very basic app that says hello to world.",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 1,
     "classifications": [
         "Uncategorized"
     ],
@@ -213,7 +222,8 @@ This first section of the file details general settings, like application name, 
 }
 ```
 
-Machines allows you to restrict usage of the application to a specific set of machines registered in Jarvice cluster. For example, if your application is GPU dedicated, it would make no sens to run it on non GPU nodes, and so only GPU able nodes should be added here.
+Machines allows you to restrict usage of the application to a specific set of machines registered in the targeted Jarvice cluster. For example, if your application is GPU dedicated, it would make no sense to run it on non-GPU nodes, and so only GPU able nodes should be added here.
+Note that only Jarvice cluster administrator can create machines profiles on its cluster. Please contact your JXE administrator to get a detailed list of available machines.
 
 ```json
 {
@@ -262,7 +272,7 @@ Refers to https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-refer
 }
 ```
 
-Paramaters are required and optionals parameters passed to entry point as arguments or available in `/etc/JARVICE/jobenv.sh` during run (which can be imported by scripts or users).
+Parameters are required and optional parameters passed to entry point as arguments or available in `/etc/JARVICE/jobenv.sh` during run (which can be imported by scripts or users).
 
 In this example, we are going to pass a `CONST` with value `"Hello World!"` as parameter to entry point. This will result in `/usr/bin/echo "Hello World!"` being called. Other parameters (positional, etc.) will be described later.
 
@@ -278,7 +288,7 @@ Refer to https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-refe
 }
 ```
 
-The last section, image, refer to logo that will be displayed inside Jarvice interface, for our application. It has to be encoded to text.
+The last section, image, refer to logo that will be displayed inside Jarvice interface, for our application. It has to be encoded as text.
 Let's add an image to our application. Download a basic sample from wikimedia:
 
 ```
@@ -293,7 +303,6 @@ base64 -w 0 128px-HelloWorld.svg.png
 
 Get the output, and add it into AppDef.json inside `images.data` value:
 
-
 ```json
 {
 ...
@@ -304,7 +313,7 @@ Get the output, and add it into AppDef.json inside `images.data` value:
 }
 ```
 
-Now that our AppDef file is ready, it is time to inject it into final image.
+Now that our AppDef file is ready, lets inject it into final image.
 
 ## 2.3. Finalize image
 
@@ -341,12 +350,14 @@ You can see here that we are missing a tool: `curl`. This tool is contained in p
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update; apt-get install curl -y;
+RUN apt-get update; apt-get install curl -y --no-install-recommends;
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
 RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
 ```
+
+Please note that we also added the `--no-install-recommends` to apt-get command. By default, apt-get or yum/dnf will try to install all recommended packages, generating huge images. 99% of time with app images, we do not need these packages. Setting `--no-install-recommends` for apt-get or `--nobest` for yum and dnf will sometime significantly reduce images sizes.
 
 And build again:
 
@@ -355,7 +366,7 @@ And build again:
 Sending build context to Docker daemon   16.9kB
 Step 1/4 : FROM ubuntu:latest
  ---> 7e0aa2d69a15
-Step 2/4 : RUN apt-get update; apt-get install curl -y;
+Step 2/4 : RUN apt-get update; apt-get install curl -y --no-install-recommends;
  ---> Running in d97271342b81
 ...
 Removing intermediate container d97271342b81
@@ -430,7 +441,7 @@ tutorial                                                           hello_world  
 :~$
 ```
 
-Now login to docker hub registry, using your credentials (or login to your private registry if not using docker, command may varie):
+Now login to docker hub registry, using your credentials (or login to your private registry if not using docker, command may vary):
 
 ```
 :~$ docker login
@@ -439,7 +450,7 @@ Login Succeeded
 :~$
 ```
 
-Now tag and push image. We are going to tag is as `v1` version. Do not copy as it the bellow command, replace `oxedions` by your docker hub user name to match your repository.
+Now tag and push image. We are going to tag it as `v1` version. Do not copy as it the bellow command, replace `oxedions` by your docker hub user name to match your repository.
 
 ```
 docker tag tutorial:hello_world oxedions/app-hello_world:v1
@@ -457,7 +468,7 @@ v1: digest: sha256:7c37fb5840d4677f5e8b45195b8aa64ef0059ccda9fcefc0df62db49e426d
 :~$
 ```
 
-Image is not pushed and can be pulled from Jarvice Push to Compute interface.
+Image is now pushed and can be pulled from Jarvice Push to Compute interface.
 
 ## 2.6. Pull image with Push to Compute
 
@@ -473,15 +484,15 @@ Then, click on **New** to create a new application.
 
 ![PushToCompute_step_2](img/apps_tutorial/PTC_step_2.png)
 
-Fill only `App ID` and `Docker repository`. Everything else will be automatically grabed from the AppDef.json file created with the application. Then click **OK**.
+Fill only `App ID` and `Docker repository`. Everything else will be automatically grabbed from the AppDef.json file created with the application. Then click **OK**.
 
 ![PushToCompute_step_3](img/apps_tutorial/PTC_step_3.png)
 
-Now that application is registered into Jarvice, we need to request an image pull, so that Jarvice will retrieve AppDef.json embed into image and update all application data. To do so, click on the small burger on the top left of the application, then **Pull**, confirm pull by clicking **OK**, and close Pull Responce windows. Then wait few seconds for image to be pulled.
+Now that application is registered into Jarvice, we need to request an image pull, so that Jarvice will retrieve AppDef.json embed into image and update all application data. To do so, click on the small burger on the top left of the application, then **Pull**, confirm pull by clicking **OK**, and close Pull response windows. Then wait few seconds for image to be pulled.
 
 ![PushToCompute_step_4](img/apps_tutorial/PTC_step_4.png)
 
-Once image has been pulled, you can see that application logo has been updated by our base64 encoded png, etc.
+Once image has been pulled, you can see that application logo has been updated by our base64 encoded png.
 
 ![PushToCompute_step_5](img/apps_tutorial/PTC_step_5.png)
 
@@ -509,7 +520,7 @@ Then click **Submit** to submit the application job and run the application.
 
 ![Run_Application_step_3](img/apps_tutorial/Run_Application_step_3.png)
 
-If all goes well, you are automatically redirected to **Dashboard** tab. If not, click on it on the right. You can see here that your job has been submitted, and is now queued. After few secondes/minutes, job will start and application will run. Note the job number here: 11776. This will be the reference for job logs later.
+If all goes well, you are automatically redirected to **Dashboard** tab. If not, click on it on the right. You can see here that your job has been submitted, and is now queued. After few seconds/minutes, job will start and application will run. Note the job number here: 11776. This will be the reference for job logs later.
 
 ![Run_Application_step_4](img/apps_tutorial/Run_Application_step_4.png)
 
@@ -521,11 +532,11 @@ Once application has finished to run, you will see it marked as **Completed**.
 
 ![GlobalProcess_step_8](img/apps_tutorial/GlobalProcess_step_8.svg)
 
-Now that our application as run, lets gather few logs about it. Note that if the application failed to run, Jarvice local Admininstrator have access to advanced logs that might help to debug.
+Now that our application as run, lets gather few logs about it. Note that if the application failed to run, Jarvice local Administrator have access to advanced logs that might help to debug.
 
 First, to grab job output, simply click on the small arrow on the right of the "completed" job card.
 
-We can happily see than our "Hello World!" message is here!!
+We can see that our "Hello World!" message is here.
 
 ![Gather_Logs_step_1](img/apps_tutorial/Gather_Logs_step_1.png)
 
@@ -539,33 +550,33 @@ Last part, it is possible to go into **Account** tab on the right, then **Team L
 
 This is the general process to create an application for Jarvice and inject it through PushToCompute. You may need to iterate time to time between image creation and application jobs, to fix application execution issues. This is an expected behavior.
 
-Also, if too much issues, switch for a time to interactive application (see bellow) to debug application, and then switch back to non interactive.
+Also, if too much issues, switch for a time to interactive application (seen later in this documentation) to debug application, and then switch back to non-interactive.
 
-We can now proceed to more productive applications. Next examples will not be as detailed as this one as process is always the same.
+We can now proceed to more productive applications and general guidelines. Next examples will not be as detailed as this one as process is always the same.
 
 # 3. Important building guidelines
 
-Before proceding to more examples, it is important to keep in mind few image building guidelines.
+Before proceeding to more examples, it is important to keep in mind few image building guidelines.
 
 ## 3.1. Repush image
 
 When you need to fix image and rebuild it, you need to delete local tag and create it again in order to be able to push again image.
 
-Lets take an example: we need to fix our hello_world application image, since we made a mistake in it.
+Let’s take an example: we need to fix our hello_world application image, since we made a mistake in it.
 
-Build fixed image, it will update local copy:
+First, delete local tag to remote repository:
+
+```
+docker rmi oxedions/app-hello_world:v1
+```
+
+Then build fixed image, it will update local copy:
 
 ```
 docker build --tag="tutorial:hello_world" -f Dockerfile .
 ```
 
 Note: sometime, you may want to force rebuilding all the steps, so forcing docker not using build cache. To do so, add `--no-cache` to `docker build` line.
-
-Then delete local tag to remote repository:
-
-```
-docker rmi oxedions/app-hello_world:v1
-```
 
 And tag and push again local copy:
 
@@ -574,29 +585,29 @@ docker tag tutorial:hello_world oxedions/hello_world:v1
 docker push oxedions/hello_world:v1
 ```
 
-Don't forget to request a new pull in Jarvice interface to grab latest image.
+Don't forget to request a new pull in Jarvice interface to grab latest image NAEs.
 
 ## 3.2. Multi stages
 
-Application images can be really big. Images builder should care about images size, and so optimize build process in order to save disk and bandwith.
+Application images can be really big. Images builder should care about images size, and so optimize build process in order to save disk, memory, and bandwidth.
 
 Docker containers images work with layers. Each step generates a layer that is stacked over others (like a git repository).
 This means that if user import (ADD/COPY/RUN wget) huge archives or files or installer binaries during process, even if file is deleted in a next step, this file will be 
 stored in image stack, and so will grow image size without usage.
 
-In order to prevent that, it is common and recommanded to use multi-stages builds.
+In order to prevent that, it is common and recommended to use multi-stages builds.
 
-Idea is simple: instead of having a single stage in Dockerfile, we create multiple, and import all what we need in the final stage from previous ones.
+Idea is simple: instead of having a single stage in Dockerfile, we create multiple, and import all what we need in the final stage from previous ones, as only this last stage will be in our final image.
 
 Lets take an example:
 
 We want to install Intel Parallel Studio Compilers. Archive is big (> 3GB).
 
-In stage 0 (counter start at 0), we ADD archive to image, and install Intel product into `/opt/intel` folder. Final image layers contains both installer archive, extracted archive content, and final installed product.
+In stage 0 (counter start at 0), we **ADD** archive to image, and install Intel product into `/opt/intel` folder. Final image layers contains both installer archive, extracted archive content, and final installed product.
 
-Then, in second stage we simply say "now copy all that is in `/opt/intel` in stage 0 into current stage, so final image of this stage only contains final installed product in its layers, we don't have archive and extracted archive in final application image layer, which saves a LOT of disk and bandwith.
+Then, in second stage we simply say "now copy all that is in `/opt/intel` from stage 0 into current stage, so final image of this stage only contains final installed product in its layers, we don't have archive and extracted archive in final application image layer, which saves a LOT of disks and bandwidth.
 
-Lets create a standard image that would download and install ffmpeg:
+As a simple example here, lets create a naive standard image that would download and install ffmpeg, the famous video processing tool:
 
 ```dockerfile
 FROM ubuntu:latest
@@ -624,9 +635,9 @@ tutorial                                                           ffmpeg       
 :~$
 ```
 
-401 MB, this is a lot for such a small program. Probleme here is: our image have in memory apt cache, few packages installed needed to download and extract archive, archive itself, and archive content that we do not need.
+401 MB, this is a lot for such a small program. Problem here is: our image has in memory apt cache, few packages installed needed to download and extract archive, archive itself, and archive content that we do not need.
 
-Lets update it to a multi-stage build now:
+Let’s update it to a multi-stage build now:
 
 ```dockerfile
 # Stage 0, lets give it a name for convenience: download_extract_ffmpeg
@@ -646,15 +657,15 @@ FROM ubuntu:latest
 COPY --from=download_extract_ffmpeg /usr/bin/ffmpeg /usr/bin/ffmpeg
 ```
 
-Note: we could also have `COPY --from=0`, stage number are accepted.
+Note: we could also have `COPY --from=0`, stage number are accepted. But using names is more convenient for large dockerfiles.
 
-Lets build again our image now, and we will need this time to prevent cache usage to be sure image is clean.
+Let’s build again our image now, and we will need this time to prevent cache usage to be sure image is done again from scratch.
 
 ```
 docker build --no-cache --tag="tutorial:ffmpeg" -f Dockerfile .
 ```
 
-And now lets check again image size:
+And now let’s check again image size:
 
 ```
 :~$ docker images | grep ffmpeg
@@ -678,15 +689,64 @@ We have our first 401MB image, without name, only ID, and our stage 1 image, as 
 docker rmi 8a182a98de1f
 ```
 
-We went from 401MB to 151MB. This is a huge size reduction. While with this small example image size does not really matter, with huges applications, this could have a significant impact.
+We went from 401MB to 151MB. This is a huge size reduction. While with this small example image size does not really matter, with huge applications, this could have a significant impact.
 
 For more details, please visit official documentation on multi stage builds: https://docs.docker.com/develop/develop-images/multistage-build/
 
-## 3.3. End with NAE
+## 3.3. Optimize packages installation
 
-We have seen that container images are multi layer images.
+Most of the time, final image will need to have few packages installed.
+In order to reduce size of image, and prevent waste, two actions can be done:
 
-When pulling an image into Jarvice, Jarvice system needs to grab NAE content (AppDef.json file) from layers. To do so, it will search in each layer, starting from last one, for files. This process can take a long time. To speedup pull process, it is recommanded to always perform NAE copy at last stage of a build, or to simply add a "touch" line that will simply contains copy of files:
+* Prevent recommended/best packages
+* Pipe all packages management on the same line, ending with cache clean
+
+As an example, lets create an image with Python 3 and curl installed. A basic Dockerfile would be:
+
+```
+FROM ubuntu:latest
+
+RUN apt-get update
+RUN apt-get install python3 curl -y
+```
+
+Build image:
+
+```
+docker build --tag "size" -f Dockerfile .
+```
+
+The result image will be of size:
+
+```
+:~$ docker images | grep size
+size                                                               latest                                              0bf03cdd01d2   12 seconds ago   159MB
+:~$ ls
+```
+
+Now, simple tune image by adding `--no-install-recommends` and having all packages task, including cache clean, as a single RUN task.
+
+```
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install python3 curl -y --no-install-recommends && apt-get clean
+```
+
+Resulting image size is now:
+
+```
+:~$ docker images | grep size
+size                                                               latest                                              79b6275b8518   About a minute ago   150MB
+:~$ ls
+```
+
+We saved 9MB. With bigger packages, like desktop applications, size reduction is even larger and can sometime leads to around 30-40% size reduction.
+
+## 3.4. End with NAE
+
+We have seen that container images are multi layers images.
+
+When pulling an image into Jarvice, Jarvice system needs to grab NAE content (AppDef.json file) from layers. To do so, it will search in each layer, starting from last one, for files. This process can take a long time. To speedup pull process, it is recommended to always perform NAE copy at last stage of a build, or to simply add a "touch" line that will simply contains copy of files:
 
 ```dockerfile
 RUN mkdir -p /etc/NAE && touch /etc/NAE/screenshot.png /etc/NAE/screenshot.txt /etc/NAE/license.txt /etc/NAE/AppDef.json
@@ -703,7 +763,7 @@ So, for hello world application, this would be:
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update; apt-get install curl -y;
+RUN apt-get update && apt-get install curl -y --no-install-recommends && apt-get clean
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
@@ -716,9 +776,10 @@ For such a small image, it do not worth it, but for very large images, this smal
 
 # 4. Basic interactive job
 
-Before reviweing available application parameters, next step is to be able to launch interactive jobs.
+Before reviewing available application parameters, next step is to be able to launch interactive jobs.
 
-Interactive jobs are very useful to debug when creating an application, as you can test launch application end point yourself, and debug into the Jarvice cluster context.
+Interactive jobs are very useful to debug when creating an application, as you can test launch application end point yourself,
+and debug directly inside the Jarvice cluster context.
 
 ## 4.1. Standard way
 
@@ -735,9 +796,9 @@ Now, create here a Dockerfile with the following content:
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update; apt-get install curl -y;
+RUN apt-get update && apt-get install curl -y --no-install-recommends && apt-get clean
 
-RUN echo "Sarah Connor ?" > /knock_knock ;
+RUN echo "Sarah Connor?" > /knock ;
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
@@ -751,6 +812,7 @@ Then create AppDef.json in NAE folder with the following content:
     "name": "Interactive application",
     "description": "Run a command in a gotty shell on image",
     "author": "Me",
+    "appdefversion": 2,
     "licensed": false,
     "classifications": [
         "Uncategorized"
@@ -766,20 +828,12 @@ Then create AppDef.json in NAE folder with the following content:
     ],
     "commands": {
         "Gotty": {
-            "path": "/bin/gotty",
+            "path": "/bin/bash",
             "interactive": true,
+            "webshell": true,
             "name": "Gotty shell",
             "description": "Start a command in a gotty shell",
-            "parameters": {
-                "command": {
-                    "name": "Command",
-                    "description": "Command to run inside image.",
-                    "type": "STR",
-                    "value": "/bin/bash",
-                    "positional": true,
-                    "required": true
-                }
-            }
+            "parameters": {}
         }
     },
     "image": {
@@ -789,7 +843,7 @@ Then create AppDef.json in NAE folder with the following content:
 }
 ```
 
-We are going to use the /bin/gotty entry point, that is live embed into applications when running images on Jarvice clusters.
+Note that `webshell` and `interactive` keys were set to **true**. This will trigger an interactive shell on the `/bin/bash` path.
 
 Now build application:
 
@@ -801,7 +855,7 @@ Step 1/5 : FROM ubuntu:latest
 Step 2/5 : RUN apt-get update; apt-get install curl -y;
  ---> Using cache
  ---> 88667cf55ce3
-Step 3/5 : RUN echo "Sarah Connor ?" > /knock_knock ;
+Step 3/5 : RUN echo "Sarah Connor?" > /knock_knock ;
  ---> Running in 12a077247095
 Removing intermediate container 12a077247095
  ---> b4218b95fca0
@@ -829,13 +883,13 @@ docker tag tutorial:interactive_shell oxedions/app-interactive_shell:v1
 docker push oxedions/app-interactive_shell:v1
 ```
 
-Once image is pushed, add application into Jarvice as before. Note that this time, we didn't base64 encoded a pgn image, so default image is used.
+Once image is pushed, add application into Jarvice as before. Note that this time, we didn't base64 encoded a png image, so default image is used.
 
 When clicking on application card, you should now have:
 
 ![app_interactive_shell_step_1](img/apps_tutorial/app_interactive_shell_step_1.png)
 
-Click on **Gotty Shell**, and in the next window, observe that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
+Click on **Gotty Shell**s.
 
 ![app_interactive_shell_step_2](img/apps_tutorial/app_interactive_shell_step_2.png)
 
@@ -855,7 +909,7 @@ Sometime, in order to debug an app image, and launch entry point manually to che
 
 There is no need to rebuild the image for that, we can live hack the AppDef inside Jarvice interface.
 
-Lets take our hello world application. Click on its burger, and select **Edit**.
+Let’s take our hello world application. Click on its burger, and select **Edit**.
 
 ![app_interactive_shell_step_5](img/apps_tutorial/app_interactive_shell_step_5.png)
 
@@ -971,11 +1025,11 @@ Now, when clicking on application to launch it, you can observe we have a second
 
 Using this entry point starts an interactive shell, and allows to debug inside the image.
 
-Once issues are solved, AppDef will be restaured when pulling fixed image into Jarvice.
+Once issues are solved, AppDef will be restored when pulling fixed image into Jarvice.
 
 # 5. Review application parameters
 
-Lets review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference and https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference for more details.
+Let’s review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference and https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference for more details.
 
 
 ## 5.1. Commands
@@ -1042,7 +1096,7 @@ There are multiple available parameters types: `CONST`, `STR`, `INT`, `FLOAT`, `
 
 A detailed list of available values/keys is available at https://jarvice.readthedocs.io/en/latest/appdef/#parameter-type-reference
 
-In oder to simplify visual understanding, you can find bellow a table with a screenshot of what each type would generate in job user interface:
+In order to simplify visual understanding, you can find bellow a table with a screenshot of what each type would generate in job user interface:
 
 | Type      |      Screenshot      |
 |-----------|----------------------|
@@ -1057,7 +1111,7 @@ In oder to simplify visual understanding, you can find bellow a table with a scr
 | UPLOAD    | ![type_UPLOAD](img/apps_tutorial/type_UPLOAD.png) |
 
 
-In order to understand all possible combinaison, lets create a specific application. This application makes no sens, this is for testing and understanding purposes.
+In order to understand all possible combination, lets create a specific application. This application makes no sense, this is for testing and understanding purposes.
 
 Note: if you want to play with parameters, remember that you can directly edit AppDef Json in Jarvice UI by editing application. For testing purposed, do not bother building and pushing/pulling an image, edit directly in Jarvice UI.
 
@@ -1094,7 +1148,7 @@ echo Checking job environment
 cat /etc/JARVICE/jobenv.sh
 
 echo
-echo Checking job informations
+echo Checking job information
 cat /etc/JARVICE/jobinfo.sh
 
 echo
@@ -1314,7 +1368,7 @@ Checking job environment
 const_3=\c\o\n\s\t\_\3\_\v\a\l\u\e
 str_2=\s\t\r\_\2\_\v\a\l\u\e
 
-Checking job informations
+Checking job information
 :
 JOB_NAME="20220420201746-IZP8L-bleveugle-reverse_engineer-bleveugle_s1"
 JOB_LABEL=
@@ -1334,7 +1388,7 @@ Script end
 
 You can see that:
 
-* `const_2` value was passed first in arguments, because `positional` is `false`, and was a combinaison of the main entry key and its value. This is useful to define parameters like `-c blue`:
+* `const_2` value was passed first in arguments, because `positional` is `false`, and was a combination of the main entry key and its value. This is useful to define parameters like `-c blue`:
 ```
                   "-c": {
                     "name": "define color",
@@ -1359,7 +1413,7 @@ Users specify some settings via provided application command parameters (input f
 
 Users can also check application logs in their user space on Jarvice interface.
 
-Lets create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound, subtitles, etc.), and so other streams will be ignored.
+Let’s create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound, subtitles, etc.), and so other streams will be ignored.
 
 Note that you can easily find video samples here: https://jell.yfish.us/
 
@@ -1368,7 +1422,7 @@ Note that you can easily find video samples here: https://jell.yfish.us/
 We can already re-use the multi stages example above:
 
 ```dockerfile
-# Stage 0, lets give it a name for convenience: download_extract_ffmpeg
+# Stage 0, let’s give it a name for convenience: download_extract_ffmpeg
 FROM ubuntu:latest AS download_extract_ffmpeg
 
 RUN apt-get update; apt-get install tar xz-utils wget -y;
@@ -1395,12 +1449,12 @@ RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 
 ## 6.2. AppDef
 
-Lets now create a related `AppDef.json` file:
+Let’s now create a related `AppDef.json` file:
 
 ```json
 {
-    "name": "Video convertion",
-    "description": "A basic video convertion app, for a tutorial",
+    "name": "Video conversion",
+    "description": "A basic video conversion app, for a tutorial",
     "author": "Me",
     "licensed": false,
     "classifications": [
@@ -1587,7 +1641,7 @@ settings available to users. This was however enough as an example.
 It is possible to obtain an interactive shell directly from the browser. This can be useful for applications that
 requires interactions with users (or have to be manually launched) and that do not require a full GUI desktop.
 
-We are going to create a very basic and naive python based calculator, as an example.
+We are going to create a very basic and naive python-based calculator, as an example.
 
 ## 7.1. Create image
 
@@ -1674,7 +1728,7 @@ Create AppDef file, with target path to gotty shell, and command to our applicat
 
 ## 7.4. Launch and use
 
-Once builded and submitted to cluster, it is possible to join session by clicking on "Click here to connect".
+Once built and submitted to cluster, it is possible to join session by clicking on "Click here to connect".
 
 ![app_gotty_step_1](img/apps_tutorial/app_gotty_step_1.png)
 
@@ -1876,7 +1930,7 @@ cd "$CASE_FOLDER"
 # Execute command, add verbosity to see exact command executed
 # Also use full path for binaries, even mpirun, to avoid issues on slave nodes
 echo "Executing application."
-echo "First command explicitely shows who is running MPI (help understanding)."
+echo "First command explicitly shows who is running MPI (help understanding)."
 echo "Second command is the real application."
 date
 set -x
@@ -1888,7 +1942,7 @@ date
 
 ## 9.2. MPI application
 
-Lets now create a very basic MPI application, to be built and stored in our image.
+Let’s now create a very basic MPI application, to be built and stored in our image.
 
 In order for this test to be valid, a simple hello world is not enough, we need to at least establish a communication between nodes to ensure all goes well. Simplest way to do that is by using collective communications.
 
@@ -1985,7 +2039,7 @@ The `AppDef.json` file should not be complex for this application. We simply nee
 
 ## 9.4. Dockerfile
 
-Since we are going to build our application here, we will need to do a multi-stage build, in oder to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content, that also includes the Jarvice needed MPI tools:
+Since we are going to build our application here, we will need to do a multi-stage build, in order to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content, that also includes the Jarvice needed MPI tools:
 
 ```dockerfile
 # Stage 0, lets give it a name for convenience: download_extract_ffmpeg
@@ -2109,7 +2163,7 @@ Process 4 after BCAST 7777.000000
 Thu May  5 12:50:22 UTC 2022
 ```
 
-This also validate that network is capable of running MPI jobs. Note however that we did not tested 
+This also validate that network is capable of running MPI jobs. Note however that we did not test 
 network performances here. It is advised to run Intel MPI Benchmarks suite or OSU benchmarks suite to 
 further test network capabilities.
 
