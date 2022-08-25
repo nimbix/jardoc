@@ -156,7 +156,6 @@ And create here `AppDef.json` file with the following content:
     "description": "A very basic app thay says hello to world.",
     "author": "Me",
     "licensed": false,
-    "appdefversion": 1,
     "classifications": [
         "Uncategorized"
     ],
@@ -202,7 +201,6 @@ Let’s review key parts of this file (when not detailed, just keep it as it):
     "description": "A very basic app that says hello to world.",
     "author": "Me",
     "licensed": false,
-    "appdefversion": 1,
     "classifications": [
         "Uncategorized"
     ],
@@ -812,7 +810,6 @@ Then create AppDef.json in NAE folder with the following content:
     "name": "Interactive application",
     "description": "Run a command in a gotty shell on image",
     "author": "Me",
-    "appdefversion": 2,
     "licensed": false,
     "classifications": [
         "Uncategorized"
@@ -828,12 +825,20 @@ Then create AppDef.json in NAE folder with the following content:
     ],
     "commands": {
         "Gotty": {
-            "path": "/bin/bash",
+            "path": "/bin/gotty",
             "interactive": true,
-            "webshell": true,
             "name": "Gotty shell",
             "description": "Start a command in a gotty shell",
-            "parameters": {}
+            "parameters": {
+                "command": {
+                    "name": "Command",
+                    "description": "Command to run inside image.",
+                    "type": "STR",
+                    "value": "/bin/bash",
+                    "positional": true,
+                    "required": true
+                }
+            }
         }
     },
     "image": {
@@ -842,8 +847,6 @@ Then create AppDef.json in NAE folder with the following content:
     }
 }
 ```
-
-Note that `webshell` and `interactive` keys were set to **true**. This will trigger an interactive shell on the `/bin/bash` path.
 
 Now build application:
 
@@ -889,8 +892,8 @@ When clicking on application card, you should now have:
 
 ![app_interactive_shell_step_1](img/apps_tutorial/app_interactive_shell_step_1.png)
 
-Click on **Gotty Shell**s.
-
+ Click on **Gotty Shell**, and in the next window, observe that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
+ 
 ![app_interactive_shell_step_2](img/apps_tutorial/app_interactive_shell_step_2.png)
 
 Click on **Submit** to launch the job.
