@@ -1934,8 +1934,7 @@ set +x
 
 # Load mpi environment
 echo "Loading Jarvice OpenMPI environment..."
-export PATH=/opt/JARVICE/openmpi/bin:$PATH
-export LD_LIBRARY_PATH=/opt/JARVICE/openmpi/lib:$LD_LIBRARY_PATH
+source /opt/JARVICE/jarvice_mpi.sh;
 
 # Enter case directory
 echo "Entering case folder $CASE_FOLDER ..."
@@ -1959,6 +1958,8 @@ date
 Let’s now create a very basic MPI application, to be built and stored in our image.
 
 In order for this test to be valid, a simple hello world is not enough, we need to at least establish a communication between nodes to ensure all goes well. Simplest way to do that is by using collective communications.
+
+We are going to use Jarvice-MPI (OpenMPI provided by Nimbix) to build and run our application.
 
 Create file `collectives.c` with the following content:
 
@@ -2056,20 +2057,31 @@ The `AppDef.json` file should not be complex for this application. We simply nee
 Since we are going to build our application here, we will need to do a multi-stage build, in order to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content, that also includes the Jarvice needed MPI tools:
 
 ```dockerfile
-# Stage 0, lets give it a name for convenience: download_extract_ffmpeg
-FROM ubuntu:latest AS build_stage
+# Load jarvice_mpi image as JARVICE_MPI
+FROM us-docker.pkg.dev/jarvice/images/jarvice_mpi:4.1 as JARVICE_MPI
+
+# Multistage to optimise, as image does not need to contain jarvice_mpi 
+# components, these are side loaded during job containers init.
+FROM ubuntu:latest as build_stage
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update; apt-get install -y gcc openmpi-bin openmpi-common libopenmpi-dev;
+# Grab jarvice_mpi from JARVICE_MPI
+COPY --from=JARVICE_MPI /opt/JARVICE /opt/JARVICE
 
+# Install needed dependencies to download and build MPI codes
+RUN apt-get update; apt-get install -y wget curl gcc g++ git make bash; apt-get clean;
+
+# Copy our code into image
 COPY collectives.c /collectives.c
 
-RUN cd /; mpicc collectives.c -o mpi_application;
+# Build the code using Jarvice MPI
+RUN bash -c 'source /opt/JARVICE/jarvice_mpi.sh; cd /; mpicc collectives.c -o mpi_application;'
 
-# Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
+# Create final image from Ubuntu
 FROM ubuntu:latest
 
+# Install Nimbix environment
 RUN apt-get -y update && \
     apt-get -y install wget curl software-properties-common && \
     curl -H 'Cache-Control: no-cache' \
@@ -2180,3 +2192,5 @@ Thu May  5 12:50:22 UTC 2022
 This also validate that network is capable of running MPI jobs. Note however that we did not test 
 network performances here. It is advised to run Intel MPI Benchmarks suite or OSU benchmarks suite to 
 further test network capabilities before production.
+
+An example is provided here: https://github.com/nimbix/mpi-common

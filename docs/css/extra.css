@@ -122,6 +122,12 @@ So we 1500x700 is the "minimum" resolution and here are the rules:
     }
 }
 
+@media only screen and (min-width: 76.25em) {
+    .wy-nav-content{
+        max-width: 1200px;
+    }
+  }
+
 /* No underline on links */
 a
 {

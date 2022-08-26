@@ -135,9 +135,27 @@ NOTE:
 
 ## Parameter Type Reference
 
+Each parameter type accepts multiple values. Some values are generic to all:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| name        | string  | *          | Value name | |
+| description | string  | *          | Value description | |
+| positional  | boolean |            | If value should be passed ordered as in AppDef file | true |
+| required    | boolean | *          | If value is required (implicitely true for CONST type) | |
+| variable    | boolean |            | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
+
 ### CONST
 
-`CONST` defines a constant value and supports substitutions as well - the user may not modify these paraemters.  When the type is `CONST`, the `value` key may be either an actual value or one of the following substitutions:
+`CONST` defines a constant value and supports substitutions as well - the user may not modify these parameters.
+
+In addition to generic values, `CONST` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value       | string  | *          | Value of element | |
+
+When the type is `CONST`, the `value` key may be either an actual value or one of the following substitutions:
 
 * `%APIURL%` – public API URL \*
 * `%APIUSER%` – username of user who submitted the call \*
@@ -160,59 +178,104 @@ NOTE:
 
 ### STR
 
-`STR` defines a string value and is the default `type` if not specified.  The `value` key is an arbitrary default value to populate, which the user can edit; this may also be blank.
+`STR` defines a string value and is the default `type` if not specified. 
+
+In addition to generic values, `STR` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value       | string  | *          | Is the default value (which can be left blank to require an explicit value set) | |
+
+The `value` key is an arbitrary default value to populate, which the user can edit; this may also be blank.
 
 ### INT
 
-`INT` defines an integer value and supports the following keys:
+`INT` defines an integer value.
 
-* `value` is the default value (which can be left blank to require an explicit value set)
-* `min` is the minimum number
-* `max` is the maximum number
+In addition to generic values, `INT` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value       | integer | *          | Is the default value (which can be left blank to require an explicit value set) | |
+| min         | integer | *          | The minimum number allowed | |
+| max         | integer | *          | The maximum number allowed | |
+
+### RANGE
+
+`RANGE` defines an integer value using a slider.
+
+In addition to generic values, `RANGE` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value       | integer | *          | Is the default value on which slider will be set | |
+| min         | integer | *          | The minimum number allowed on the slider | |
+| max         | integer | *          | The maximum number allowed on the slider | |
+| step        | integer | *          | Set the step between values on the slider (for example `2` to force even/odd numbers only) | |
 
 The portal will express this as a slider widget.
 
 ### FLOAT
 
-`FLOAT` defines a floating point value and supports the following keys:
+`FLOAT` defines a floating point value.
 
-* `value` is the default value (which can be left blank to require an explicit value set)
-* `min` is the minimum number
-* `max` is the maximum number
-* `precision` is the maximum number of decimal digits allowed (values will be truncated to this)
+In addition to generic values, `FLOAT` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value       | float   | *          | Is the default value (which can be left blank to require an explicit value set) | |
+| min         | float   | *          | The minimum number allowed | |
+| max         | float   | *          | The maximum number allowed | |
+| precision   | integer | *          | Is the maximum number of decimal digits allowed (values will be truncated to this) | |
 
 ### BOOL
 
-`BOOL` defines a boolean value which includes the parameter if true, or omits it if false; this is useful for optional command line parameters.  It supports the following keys:
+`BOOL` defines a boolean value which includes the parameter if true, or omits it if false; this is useful for optional command line parameters.
 
-* `value` is the default, which must be set to true or false; once submitted, if true, the parameter will be listed on the command line, or not listed if false
+In addition to generic values, `BOOL` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value       | boolean | *          | Is the default, which must be set to true or false; once submitted, if true, the parameter will be listed on the command line, or not listed if false | |
 
 Boolean parameters are represented as checkbox widgets in the user portal.
 
 ### selection
 
-`selection` defines a single selection list and supports the following keys:
+`selection` defines a single selection list.
 
-* `values` is a list of values; the default will be the first one listed; if empty string is submitted (and is a valid selection), the parameter will not be listed
-* `mvalues` is a parallel list of values in machine format; if specified, the index of `values` will be used to fetch the actual value to pass into the application from the `values` list; it must have the same exact dimension as the `values` list; if not specified, only the `values` list will be used
+In addition to generic values, `selection` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| value**s**  | list    | *          | Is a list of values; the default will be the first one listed; if empty string is submitted (and is a valid selection), the parameter will not be listed | |
+| mvalues | list    |           | Is a parallel list of values in machine format; if specified, the index of `values` will be used to fetch the actual value to pass into the application from the `values` list; it must have the same exact dimension as the `values` list; if not specified, only the `values` list will be used | [ ] |
 
 Selection lists are represented as drop down widgets in the user portal.
 
 ### FILE
 
-`FILE` defines a file name, and supports the following keys:
+`FILE` defines a file name.
 
-* `filter` is a list of wildcards to filter by (standard shell wildcard syntax); if there is more than one wildcard specified, use the \| (vertical bar) to separate them - e.g. to support C and Python files, use `*.c|*.py`
+In addition to generic values, `FILE` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| filter      | string  |            | Is a list of wildcards to filter by (standard shell wildcard syntax); if there is more than one wildcard specified, use the \| (vertical bar) to separate them - e.g. to support C and Python files, use `*.c|*.py` | |
 
 If the selected storage vault is listable (e.g. a `FILE` vault), the user portal will provide a file picker widget.
 
 ### UPLOAD
 
-`UPLOAD` defines a file to upload from a local computer to a JARVICE job and supports the following keys:
+`UPLOAD` defines a file to upload from a local computer to a JARVICE job.
 
-* `target` specifies the sub path that will be used to mount a file under `/opt` in a JARVICE job
-* `filter` is an extension of a MIME Type used to browse files on a local computer - e.g. to browse JSON files, use `.json`
-* `size` specifies the maximum size allowed for an upload file in bytes - e.g. 1024 to enforce a limit of 1KB
+In addition to `name`, `description` and `required` generic values (not `positional` and `variable` as it makes no sense here), `UPLOAD` also accept the following:
+
+| Value       | Type    |  Mandatory | Description | Default |
+|-------------|---------|:----------:|-------------|---------|
+| target      | string  | *          | Specifies the sub path that will be used to mount a file under `/opt` in a JARVICE job | |
+| filter      | string  |            | Is an extension of a MIME Type used to browse files on a local computer - e.g. to browse JSON files, use `.json` | |
+| size        | integer |            | Specifies the maximum size allowed for an upload file in bytes - e.g. 1024 to enforce a limit of 1KB | |
 
 The `target` key is required and only 1 `UPLOAD` parameter is supported for each command. The `variable` and `positional` parameter keys do not apply to `UPLOAD` parameters.
 

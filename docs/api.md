@@ -215,6 +215,41 @@ Note that application name is the application ID, not necessarily the same as th
 
 
 ---
+## /jarvice/projects
+
+(JXE/System Admins only) Returns all JARVICE projects and members
+
+##### Parameters
+
+* ```username``` - name of user to authenticate
+
+* ```apikey``` - API key for user to authenticate
+
+#### Response
+
+On success, a JSON payload, e.g.:
+
+```
+{
+    "john-projectFoo": [
+        "john",
+        "doe",
+        "jarvice"
+    ],
+    "nimbix-projectBar": [
+        "nimbix",
+        "jane"
+    ]
+}
+```
+
+#### Additional Notes
+
+1. Endpoint is for JARVICE XE System Administrators only
+
+2. Project name contains the project owner, `<owner>-<project-name>`
+
+---
 ## /jarvice/billing
 
 (JXE/System Admins only) Returns billing report for JARVICE users
