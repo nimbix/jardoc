@@ -892,7 +892,7 @@ When clicking on application card, you should now have:
 
 ![app_interactive_shell_step_1](img/apps_tutorial/app_interactive_shell_step_1.png)
 
- Click on **Gotty Shell**, and in the next window, observe that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
+Click on **Gotty Shell**, and in the next window, observe that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
  
 ![app_interactive_shell_step_2](img/apps_tutorial/app_interactive_shell_step_2.png)
 
@@ -908,15 +908,15 @@ In the new tab, you now have an interactive bash shell. It is possible from here
 
 ## 4.2. On an existing application image
 
-Sometime, in order to debug an app image, and launch entry point manually to check what is failing, it is useful to temporary switch it to an interactive shell.
+Sometime, in order to debug an app image, and launch entry point manually to check what is failing, it is useful to temporary switch it to an interactive shell. This basically allows you to "enter" the image inside the running context, and debug interactively.
 
-There is no need to rebuild the image for that, we can live hack the AppDef inside Jarvice interface.
+There is no need to rebuild the image for that, we can live "hack" the AppDef inside Jarvice interface.
 
 Let’s take our hello world application. Click on its burger, and select **Edit**.
 
 ![app_interactive_shell_step_5](img/apps_tutorial/app_interactive_shell_step_5.png)
 
-Now, go into tab **APPDEFF** and copy all curent AppDef content from the text area. Edit this json into a text editor, and "hack" it this way:
+Now, go into tab **APPDEFF** and copy all curent AppDef content from the text area. Edit this json into a text editor, and "hack" it this way (explanations follow):
 
 ```json
 {
@@ -999,7 +999,7 @@ Basically, only changes made are the additional command entry added:
             }
         },                        <<<<<< We added a comma here
         "Gotty": {                <<<<<< We added a second command entry
-            "path": "/bin/gotty",
+            "path": "/bin/gotty", <<<<<< We request a gotty interactive shell
             "interactive": true,
             "name": "Gotty shell",
             "description": "Enter an interactive shell",
@@ -1008,7 +1008,7 @@ Basically, only changes made are the additional command entry added:
                     "name": "Command",
                     "description": "Command to run inside image.",
                     "type": "STR",
-                    "value": "/bin/bash",
+                    "value": "/bin/bash", <<<<<< We request a bash shell, but could be sh if bash not in image
                     "positional": true,
                     "required": true
                 }
@@ -1022,20 +1022,23 @@ Then click on **LOAD FROM FILE** and select the hacked json file. This will upda
 
 ![app_interactive_shell_step_6](img/apps_tutorial/app_interactive_shell_step_6.png)
 
-Now, when clicking on application to launch it, you can observe we have a second possible entry point into image:
+Now, when clicking on application to launch it, you can observe we have a second possible entry point into image (you may need to refresh page):
 
 ![app_interactive_shell_step_7](img/apps_tutorial/app_interactive_shell_step_7.png)
 
-Using this entry point starts an interactive shell, and allows to debug inside the image.
+Using this entry point starts an interactive shell, and allows to debug inside the image: once logged, you can start manually the desired command, here `/usr/bin/echo Hello World!`.
 
 Once issues are solved, AppDef will be restored when pulling fixed image into Jarvice.
 
 # 5. Review application parameters
 
-Let’s review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference and https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference for more details.
+Let’s review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to [Appdf commands object reference](https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference) and [Appdf parameters object reference](https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference) for more details.
 
+Target here is to test most of the possibilities offered.
 
 ## 5.1. Commands
+
+Let's focus on commands, which is the level above parameters:
 
 ```json
 ...
@@ -1051,20 +1054,26 @@ Let’s review now available parameters in AppDef for commands entry. We will no
 ...
 ```
 
-Note: an * means entry is mandatory.
+Basic commands can take the following settings: (note: an * means key is mandatory)
 
 * <u>**path***</u>: Command entry point which is run when application start.
 * <u>**name***</u>: Command’s name, which is used as the title of the command in the Jarvice interface.
 * <u>**description***</u>: Description of the command’s functionality that is used in the Jarvice interface.
-* <u>**parameters***</u>: Parameters are used to construct the arguments passed to the command. If not commands, set it to `{}`
 * <u>**interactive**</u>: (default to `false`) defines if application execution should return to user an URL to interact with execution (should be true for gotty or desktop application).
+* <u>**parameters***</u>: Parameters are used to construct the arguments passed to the command. If no parameters are needed, set it to `{}`
+
+When using standalone binary applications, no parameters are needed. However, most of the time, some 
+additional settings are required by applications' binary (input file path, parameters, etc.).
+You may also wish that user could define some application settings.
+
+This is where parameters are needed.
 
 ## 5.2. Commands parameters
 
 Commands parameters allows to:
 
 * Force specific read only values to be passed to application's entry point as arguments (CONST)
-* Allows users to tune settings to be passed to application's entry point or scripts
+* Allows users to tune settings to be passed to application's entry point or scripts (with mandatory or optional values)
 
 Remember the Command parameter to be set for interactive gotty shell example:
 
@@ -1097,7 +1106,7 @@ It is possible to create a detailed environment for an application with a variet
 
 There are multiple available parameters types: `CONST`, `STR`, `INT`, `FLOAT`, `RANGE`, `BOOL`, `selection`, `FILE`, `UPLOAD`.
 
-A detailed list of available values/keys is available at https://jarvice.readthedocs.io/en/latest/appdef/#parameter-type-reference
+[A detailed list of available values/keys is available.](https://jarvice.readthedocs.io/en/latest/appdef/#parameter-type-reference)
 
 In order to simplify visual understanding, you can find bellow a table with a screenshot of what each type would generate in job user interface:
 
@@ -1116,7 +1125,7 @@ In order to simplify visual understanding, you can find bellow a table with a sc
 
 In order to understand all possible combination, lets create a specific application. This application makes no sense, this is for testing and understanding purposes.
 
-Note: if you want to play with parameters, remember that you can directly edit AppDef Json in Jarvice UI by editing application. For testing purposed, do not bother building and pushing/pulling an image, edit directly in Jarvice UI.
+Note: if you want to play with parameters, remember that you can directly edit AppDef Json in Jarvice UI by editing application. For testing purposed, do not bother building and pushing/pulling an image: simply edit directly in Jarvice UI by pushing updated AppDef jsons.
 
 Create a new application called app-reverse_engineer, with the following Dockerfile:
 
@@ -1171,7 +1180,7 @@ echo Script end
 
 Note: we are using `cat` and not `echo` to display parameters, to avoid echo evaluating some values.
 
-Create the following `AppDef.json` file with all possible types present, sometime combined with different settings.
+Create the following `AppDef.json` file with all possible types available, sometime combined with different settings.
 
 ```json
 {
@@ -1402,7 +1411,7 @@ You can see that:
                     "required": true
                 },
 ```
-* `const_3` and `str_2` were not passed as arguments, but instead are available in file `/etc/JARVICE/jobenv.sh`, which can be sourced from scripts.
+* `const_3` and `str_2` were not passed as arguments, but instead are available in file `/etc/JARVICE/jobenv.sh`, which can be sourced from scripts to be used as variables.
 * Other values were passed in the same order than defined in the AppDef file as arguments.
 * Uploaded file was correctly uploaded as `/opt/file.txt`.
 
@@ -1416,9 +1425,9 @@ Users specify some settings via provided application command parameters (input f
 
 Users can also check application logs in their user space on Jarvice interface.
 
-Let’s create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound, subtitles, etc.), and so other streams will be ignored.
+Let’s create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound streams, subtitles, etc. will be ignored).
 
-Note that you can easily find video samples here: https://jell.yfish.us/
+Note that you can easily find video samples here: [jell.yfish.us](https://jell.yfish.us/).
 
 ## 6.1. Dockerfile
 
@@ -1553,7 +1562,7 @@ User will be able to set CRF video quality value, and output file path.
 
 Build and upload to cluster application.
 
-Launch a job, using an input sample. In this test, we used jellyfish-3-mbps-hd-h264.mkv.
+Launch a job, using an input sample. In this test, we used `jellyfish-3-mbps-hd-h264.mkv` file.
 
 Set CRF quality. We let 28 here as default.
 
@@ -1739,7 +1748,7 @@ It should open a new tab in your web browser, and connect you directly to a shel
 
 ![app_gotty_step_2](img/apps_tutorial/app_gotty_step_2.png)
 
-Note also that you can replace application command path by a full shell instead of an application, like `/usr/bin/bash`, to fully manipulate image.
+Note also that you can replace application command path (`/calculator.py` here) by a full shell instead of an application, like `/usr/bin/bash`, to fully manipulate image.
 
 When debugging an application, it can be a real added value to add a second entry to image, with a gotty shell combined to the bash shell to be able to interactively launch scripts and debug.
 
@@ -1831,7 +1840,9 @@ Once job is started, simply click on job's "Click here to connect":
 ![app_gimp_step_0](img/apps_tutorial/app_gimp_step_0.png)
 
 This will open a new tab in your browser, in which after few seconds you will 
-be connected to a full GUI desktop, with Gimp opened. If you close gimp window, job will terminate.
+be connected to a full GUI desktop, with Gimp opened.
+
+BEWARE! If you close gimp window, job will terminate.
 
 ![app_gimp_step_1](img/apps_tutorial/app_gimp_step_1.png)
 
@@ -2168,5 +2179,4 @@ Thu May  5 12:50:22 UTC 2022
 
 This also validate that network is capable of running MPI jobs. Note however that we did not test 
 network performances here. It is advised to run Intel MPI Benchmarks suite or OSU benchmarks suite to 
-further test network capabilities.
-
+further test network capabilities before production.
