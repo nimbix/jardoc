@@ -5,7 +5,7 @@
 This tutorial should allow end users to build their own applications (apps) for Jarvice clusters
 through Jarvice PushToCompute interface.
 
-This tutorial assumes user is building applications based on `appdefversion` version `1` (default).
+This tutorial assumes user is building applications based on `appdefversion` version `2`.
 
 First part of the tutorial is dedicated to general knowledge 
 and how to build and deploy a basic application.
@@ -19,47 +19,47 @@ It is recommended to first read all sections from part 1 (Global view) to part 5
 Each of these general steps will help understand all features available, and provides key tips for new applications developers.
 
 Table of content:
-
-- [Jarvice Applications Push to Compute tutorial](#jarvice-applications-push-to-compute-tutorial)
 - [1. Global view](#1-global-view)
 - [2. Hello world](#2-hello-world)
-  - [2.1. Create Dockerfile](#21-create-dockerfile)
-  - [2.2. Create AppDef.json](#22-create-appdefjson)
-  - [2.3. Finalize image](#23-finalize-image)
-  - [2.4. Register to registry (optional)](#24-register-to-registry-optional)
-  - [2.5. Push image](#25-push-image)
-  - [2.6. Pull image with Push to Compute](#26-pull-image-with-push-to-compute)
-  - [2.7. Run application in Jarvice](#27-run-application-in-jarvice)
-  - [2.8. Gather logs](#28-gather-logs)
+  * [2.1. Create Dockerfile](#21-create-dockerfile)
+  * [2.2. Create AppDef.json](#22-create-appdefjson)
+  * [2.3. Finalize image](#23-finalize-image)
+  * [2.4. Register to registry (optional)](#24-register-to-registry--optional-)
+  * [2.5. Push image](#25-push-image)
+  * [2.6. Pull image with Push to Compute](#26-pull-image-with-push-to-compute)
+  * [2.7. Run application in Jarvice](#27-run-application-in-jarvice)
+  * [2.8. Gather logs](#28-gather-logs)
 - [3. Important building guidelines](#3-important-building-guidelines)
-  - [3.1. Repush image](#31-repush-image)
-  - [3.2. Multi stages](#32-multi-stages)
-  - [3.3. End with NAE](#33-end-with-nae)
+  * [3.1. Repush image](#31-repush-image)
+  * [3.2. Multi stages](#32-multi-stages)
+  * [3.3. Optimize packages installation](#33-optimize-packages-installation)
+  * [3.4. End with NAE](#34-end-with-nae)
 - [4. Basic interactive job](#4-basic-interactive-job)
-  - [4.1. Standard way](#41-standard-way)
-  - [4.2. On an existing application image](#42-on-an-existing-application-image)
+  * [4.1. Standard way](#41-standard-way)
+  * [4.2. On an existing application image](#42-on-an-existing-application-image)
 - [5. Review application parameters](#5-review-application-parameters)
-  - [5.1. Commands](#51-commands)
-  - [5.2. Commands parameters](#52-commands-parameters)
+  * [5.1. Commands](#51-commands)
+  * [5.2. Commands parameters](#52-commands-parameters)
+  * [5.3. Commands parameters advanced settings](#53-commands-parameters-advanced-settings)
 - [6. Non interactive application](#6-non-interactive-application)
-  - [6.1. Dockerfile](#61-dockerfile)
-  - [6.2. AppDef](#62-appdef)
-  - [6.3. Run application](#63-run-application)
+  * [6.1. Dockerfile](#61-dockerfile)
+  * [6.2. AppDef](#62-appdef)
+  * [6.3. Run application](#63-run-application)
 - [7. Basic shell interactive application](#7-basic-shell-interactive-application)
-  - [7.1. Create image](#71-create-image)
-  - [7.2. Create calculator.py file](#72-create-calculatorpy-file)
-  - [7.3. Create AppDef](#73-create-appdef)
-  - [7.4. Launch and use](#74-launch-and-use)
+  * [7.1. Create image](#71-create-image)
+  * [7.2. Create calculator.py file](#72-create-calculatorpy-file)
+  * [7.3. Create AppDef](#73-create-appdef)
+  * [7.4. Launch and use](#74-launch-and-use)
 - [8. Basic UI interactive application](#8-basic-ui-interactive-application)
-  - [8.1. Create image](#81-create-image)
-  - [8.2. Create AppDef](#82-create-appdef)
-  - [8.3. Launch application](#83-launch-application)
-- [9. Basic MPI application](#9-basic-mpi-application)
-  - [9.1. Wrapper script](#91-wrapper-script)
-  - [9.2. MPI application](#92-mpi-application)
-  - [9.3. AppDef file](#93-appdef-file)
-  - [9.4. Dockerfile](#94-dockerfile)
-  - [9.5. Run JOB](#95-run-job)
+  * [8.1. Create image](#81-create-image)
+  * [8.2. Create AppDef](#82-create-appdef)
+  * [8.3. Launch application](#83-launch-application)
+- [9. MPI application](#9-mpi-application)
+  * [9.1. Basic benchmark application](#91-basic-benchmark-application)
+  * [9.2. Using another MPI implementation](#92-using-another-mpi-implementation)
+- [10. Script based application](#10-script-based-application)
+  * [10.1. Plain text script](#101-plain-text-script)
+  * [10.2. Base64 encoded script](#102-base64-encoded-script)
 
 # 1. Global view
 
@@ -156,6 +156,7 @@ And create here `AppDef.json` file with the following content:
     "description": "A very basic app thay says hello to world.",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -201,6 +202,7 @@ Let’s review key parts of this file (when not detailed, just keep it as it):
     "description": "A very basic app that says hello to world.",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -299,7 +301,7 @@ And encode it with base64:
 base64 -w 0 128px-HelloWorld.svg.png
 ```
 
-Get the output, and add it into AppDef.json inside `images.data` value:
+Get the output (which can be very large for big images), and add it into AppDef.json inside `images.data` value:
 
 ```json
 {
@@ -404,9 +406,9 @@ Next step is to push image to a registry.
 
 This step is optional.
 
-If you do not own a registry, or do not own an account on a third party registry, you will need to obtain one.
+If you do not own a registry, or do not own an account on a third-party registry, you will need to obtain one.
 
-In this tutorial, we are going to get a free account from https://hub.docker.com/ . There are other free registry available on the market, this is only an example. Note that by default, a free account on https://hub.docker.com/ allows unlimited public repositories, but only a single private repository. If you need to host multiple private images, you will need to consider another solution.
+In this tutorial, we are going to get a free account from https://hub.docker.com/ . There are others free registry available on the market, this is only an example. Note that by default, a free account on https://hub.docker.com/ allows unlimited public repositories, but only a single private repository. If you need to host multiple private images, you will need to consider another solution.
 
 Create an account on https://hub.docker.com/.
 
@@ -597,7 +599,7 @@ In order to prevent that, it is common and recommended to use multi-stages build
 
 Idea is simple: instead of having a single stage in Dockerfile, we create multiple, and import all what we need in the final stage from previous ones, as only this last stage will be in our final image.
 
-Lets take an example:
+Let’s take an example:
 
 We want to install Intel Parallel Studio Compilers. Archive is big (> 3GB).
 
@@ -770,7 +772,7 @@ RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/ja
 RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 ```
 
-For such a small image, it do not worth it, but for very large images, this small tip can have interesting benefit.
+For such a small image, it does not worth it, but for very large images, this small tip can have interesting benefit.
 
 # 4. Basic interactive job
 
@@ -796,7 +798,7 @@ FROM ubuntu:latest
 
 RUN apt-get update && apt-get install curl -y --no-install-recommends && apt-get clean
 
-RUN echo "Sarah Connor?" > /knock ;
+RUN echo "Sarah Connor?" > /knock_knock ;
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
@@ -808,9 +810,10 @@ Then create AppDef.json in NAE folder with the following content:
 ```json
 {
     "name": "Interactive application",
-    "description": "Run a command in a gotty shell on image",
+    "description": "Start bash command in a gotty",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -825,20 +828,11 @@ Then create AppDef.json in NAE folder with the following content:
     ],
     "commands": {
         "Gotty": {
-            "path": "/bin/gotty",
-            "interactive": true,
-            "name": "Gotty shell",
-            "description": "Start a command in a gotty shell",
-            "parameters": {
-                "command": {
-                    "name": "Command",
-                    "description": "Command to run inside image.",
-                    "type": "STR",
-                    "value": "/bin/bash",
-                    "positional": true,
-                    "required": true
-                }
-            }
+            "path": "/bin/bash",
+            "webshell": true,
+            "name": "Gotty Shell",
+            "description": "Start bash command in a gotty",
+            "parameters": {}
         }
     },
     "image": {
@@ -924,6 +918,7 @@ Now, go into tab **APPDEFF** and copy all curent AppDef content from the text ar
     "description": "A very basic app thay says hello to world.",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -954,20 +949,11 @@ Now, go into tab **APPDEFF** and copy all curent AppDef content from the text ar
             }
         },
         "Gotty": {
-            "path": "/bin/gotty",
-            "interactive": true,
+            "path": "/bin/bash",
+            "webshell": true,
             "name": "Gotty shell",
             "description": "Enter an interactive shell",
-            "parameters": {
-                "command": {
-                    "name": "Command",
-                    "description": "Command to run inside image.",
-                    "type": "STR",
-                    "value": "/bin/bash",
-                    "positional": true,
-                    "required": true
-                }
-            }
+            "parameters": {}
         }
     },
     "image": {
@@ -977,46 +963,7 @@ Now, go into tab **APPDEFF** and copy all curent AppDef content from the text ar
 }
 ```
 
-Basically, only changes made are the additional command entry added:
-
-```json
-...
-    "commands": {
-        "Hello": {
-            "path": "/usr/bin/echo",
-            "interactive": false,
-            "name": "Echo with arguments",
-            "description": "Execute /usr/bin/echo with 'Hello World!' as argument.",
-            "parameters": {
-                "message": {
-                    "name": "message",
-                    "description": "hello world message",
-                    "type": "CONST",
-                    "value": "Hello World!",
-                    "positional": true,
-                    "required": true
-                }
-            }
-        },                        <<<<<< We added a comma here
-        "Gotty": {                <<<<<< We added a second command entry
-            "path": "/bin/gotty", <<<<<< We request a gotty interactive shell
-            "interactive": true,
-            "name": "Gotty shell",
-            "description": "Enter an interactive shell",
-            "parameters": {
-                "command": {
-                    "name": "Command",
-                    "description": "Command to run inside image.",
-                    "type": "STR",
-                    "value": "/bin/bash", <<<<<< We request a bash shell, but could be sh if bash not in image
-                    "positional": true,
-                    "required": true
-                }
-            }
-        }
-    },
-...
-```
+Basically, only changes made are the additional command entry added called **Gotty**.
 
 Then click on **LOAD FROM FILE** and select the hacked json file. This will update application AppDef inside the Jarvice cluster.
 
@@ -1059,7 +1006,12 @@ Basic commands can take the following settings: (note: an * means key is mandato
 * <u>**path***</u>: Command entry point which is run when application start.
 * <u>**name***</u>: Command’s name, which is used as the title of the command in the Jarvice interface.
 * <u>**description***</u>: Description of the command’s functionality that is used in the Jarvice interface.
-* <u>**interactive**</u>: (default to `false`) defines if application execution should return to user an URL to interact with execution (should be true for gotty or desktop application).
+* <u>**interactive**</u>: (default to `false`) defines if application execution should return to user an URL to interact with execution (automatically forced to true if webshell or desktop are set to true).
+* <u>**webshell***</u>: (default to `false`) run command inside a gotty shell.
+* <u>**desktop***</u>: (default to `false`) run command inside Jarvice Xfce desktop (assumes image includes https://github.com/nimbix/jarvice-desktop).
+* <u>**mpirun***</u>: (default to `false`) run command under mpi environment.
+* <u>**verboseinit***</u>: (default to `false`) enable verbose init app execution phase, including parameters passed to command.
+* <u>**cmdscript***</u>: if set, will trigger cmdscript execution mode. Value of this key will be written into a file matching **path** set above, and executed. This allows injecting scripts directly from AppDef json. User can pass a single line plain text script, or a base64 encoded script (auto detected, allows multilines scripts).
 * <u>**parameters***</u>: Parameters are used to construct the arguments passed to the command. If no parameters are needed, set it to `{}`
 
 When using standalone binary applications, no parameters are needed. However, most of the time, some 
@@ -1080,17 +1032,17 @@ Remember the Command parameter to be set for interactive gotty shell example:
 ```json
 ...
     "commands": {
-        "Gotty": {
-            "path": "/bin/gotty",
+        "echo": {
+            "path": "/bin/echo",
             "interactive": true,
-            "name": "Gotty shell",
-            "description": "Enter an interactive shell",
+            "name": "Say hello",
+            "description": "Say hello example",
             "parameters": {
                 "command": {   <<<<<<<<<<<<<< This
-                    "name": "Command",
-                    "description": "Command to run inside image.",
+                    "name": "To who?",
+                    "description": "Say hello to who?",
                     "type": "STR",
-                    "value": "/bin/bash",
+                    "value": "hello world!",
                     "positional": true,
                     "required": true
                 }
@@ -1188,6 +1140,7 @@ Create the following `AppDef.json` file with all possible types available, somet
     "description": "A environment test application",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -1347,7 +1300,7 @@ In **GENERAL**, you can observe all parameters set in our AppDef file.
 
 ![reverse_engineer_step_2](img/apps_tutorial/reverse_engineer_step_2.png)
 
-Observe also in **OPTIONAL** tab the non required `STR` value set in AppDef.
+Observe also in **OPTIONAL** tab the non-required `STR` value set in AppDef.
 
 ![reverse_engineer_step_3](img/apps_tutorial/reverse_engineer_step_3.png)
 
@@ -1417,6 +1370,57 @@ You can see that:
 
 We have seen all possible and existing parameters. You can now use the ones needed to create tunable applications for Jarvice.
 
+## 5.3. Commands parameters advanced settings
+
+It is possible to use conditionals on parameters keys, combined with a boolean value, in order to trigger specific parameters only when needed.
+
+Scenario. We have an application that accepts 2 
+kind of licences : either a full file path, or a remote server (ip:port).
+
+We can create a boolean, to only pass to application needed value (and prevent possible user miss-usage).
+
+```json
+            "parameters": {
+                "license": {
+                    "name": "License argument",
+                    "description": "License argument",
+                    "type": "CONST",
+                    "value": "-i",
+                    "required": true
+                },
+                "license_file_path": {
+                    "name": "License file path",
+                    "description": "License file path provided by your beloved administrator",
+                    "type": "STR",
+                    "value": "",
+                    "if": [
+                        "license_is_file"
+                    ],
+                    "required": false
+                },
+                "license_server": {
+                    "name": "License server",
+                    "description": "License server ip:port to reach",
+                    "type": "STR",
+                    "value": "black",
+                    "variable": true,
+                    "ifnot": [
+                        "license_is_file"
+                    ],
+                    "required": false
+                },
+                "license_is_file": {
+                    "name": "Use a file based license",
+                    "description": "Use a file based license instead of a remote server?",
+                    "type": "BOOL",
+                    "value": false,
+                    "required": true
+                }
+            }
+```
+
+In this specific case, if `license_is_file` boolean is true, then command will be: `-i license_file_path.value`, else it will be `-i license_server.value`.
+
 # 6. Non interactive application
 
 Non-interactive applications are very common.
@@ -1469,6 +1473,7 @@ Let’s now create a related `AppDef.json` file:
     "description": "A basic video conversion app, for a tutorial",
     "author": "Me",
     "licensed": false,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -1681,7 +1686,7 @@ RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 
 ## 7.2. Create calculator.py file
 
-Create now the basic python based application, in file `calculator.py`:
+Create now the basic python-based application, in file `calculator.py`:
 
 ```python
 #!/usr/bin/env python3
@@ -1698,9 +1703,10 @@ Create AppDef file, with target path to gotty shell, and command to our applicat
 ```json
 {
     "name": "Gotty shell command",
-    "description": "Run a command in a gotty shell on image",
+    "description": "Run a command in a gotty webshell on image",
     "author": "Nimbix, Inc.",
     "licensed": true,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -1715,20 +1721,12 @@ Create AppDef file, with target path to gotty shell, and command to our applicat
     ],
     "commands": {
         "Gotty": {
-            "path": "/bin/gotty",
+            "path": "/calculator.py",
+            "webshell": true,
             "interactive": true,
-            "name": "Gotty shell",
-            "description": "Start a command in a gotty shell",
-            "parameters": {
-                "command": {
-                    "name": "Command",
-                    "description": "Command to run inside image.",
-                    "type": "STR",
-                    "value": "/calculator.py",
-                    "positional": true,
-                    "required": true
-                }
-            }
+            "name": "Interactive webshell",
+            "description": "Start a command in a gotty webshell",
+            "parameters": {}
         }
     },
     "image": {
@@ -1759,21 +1757,21 @@ Some applications need a full GUI to be used, with a windows manager.
 It is possible to get a full XFCE desktop by adding needed dependencies during docker build step, and using the correct 
 command entry point.
 
-In this example, we are going to create a GIMP (image manipulation software) application.
+In this example, we are going to create a GIMP (image manipulation software) application. Note that we are using here Ubuntu, but you can also use any RHEL derivate distribution. Refer to https://github.com/nimbix/jarvice-desktop for more details.
 
 ## 8.1. Create image
 
-Create Dockerfile, with a specific RUN that bootstrap Nimbix default desktop. We then install gimp.
+Create Dockerfile, with a specific `RUN` that bootstraps Nimbix default desktop. We then install gimp.
 
 ```dockerfile
 FROM ubuntu:latest
 
-# Install image-common tools and desktop from Nimbix
+# Install jarvice-desktop tools and desktop from Nimbix repository
 RUN apt-get -y update && \
-    apt-get -y install wget curl software-properties-common && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install curl --no-install-recommends && \
     curl -H 'Cache-Control: no-cache' \
-        https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh \
-        | bash -s -- --setup-nimbix-desktop
+        https://raw.githubusercontent.com/nimbix/jarvice-desktop/master/install-nimbix.sh \
+        | bash
 
 RUN apt-get -y install gimp;
 
@@ -1786,7 +1784,7 @@ RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 
 ## 8.2. Create AppDef
 
-Create now AppDef file, with `/usr/local/bin/nimbix_desktop` as target path, and `/usr/bin/gimp` as main command.
+Create now AppDef file, with `/usr/bin/gimp` as target path:
 
 ```json
 {
@@ -1794,6 +1792,7 @@ Create now AppDef file, with `/usr/local/bin/nimbix_desktop` as target path, and
     "description": "",
     "author": "",
     "licensed": true,
+    "appdefversion": 2,
     "classifications": [
         "Uncategorized"
     ],
@@ -1808,20 +1807,12 @@ Create now AppDef file, with `/usr/local/bin/nimbix_desktop` as target path, and
     ],
     "commands": {
         "GUI": {
-            "path": "/usr/local/bin/nimbix_desktop",
+            "path": "/usr/bin/gimp",
+            "desktop": true,
             "interactive": true,
             "name": "Gimp GUI",
             "description": "Run a GIMP in a GUI desktop, and connect interactively directly from your web browser (requires Nimbix Desktop in image).",
-            "parameters": {
-                "command": {
-                    "name": "Command",
-                    "description": "Command to run",
-                    "type": "STR",
-                    "value": "/usr/bin/gimp",
-                    "positional": true,
-                    "required": true
-                }
-            }
+            "parameters": {}
         }
     },
     "image": {
@@ -1842,21 +1833,17 @@ Once job is started, simply click on job's "Click here to connect":
 This will open a new tab in your browser, in which after few seconds you will 
 be connected to a full GUI desktop, with Gimp opened.
 
-BEWARE! If you close gimp window, job will terminate.
+BEWARE! If you close gimp window (so end execution of `/usr/bin/gimp`), job will terminate.
 
 ![app_gimp_step_1](img/apps_tutorial/app_gimp_step_1.png)
 
-# 9. Basic MPI application
+# 9. MPI application
 
-MPI applications need a wrapper script to load native Jarvice OpenMPI runtime or to load application MPI runtime.
+Jarvice embed an OpenMPI version of MPI, that can be used to build and run MPI applications. It is also possible for users to use their own MPI libraries and runtime, but this is out of the scope of this tutorial. However, some advices are given bellow.
 
-MPI applications most of the time need to be launched from a specific directory. In order to achieve that,
-we will propose user to pick a specific file in the target folder, and we will launch MPI application from 
-that folder in `launch.sh` script.
+## 9.1. Basic benchmark application
 
-We will assume our MPI application is stored inside `/opt/my_parallel_application/bin/mpi_application` folder.
-
-## 9.1. Wrapper script
+In this example, we are going to download and build the Intel MPI Benchmark tool, and run it in parallel on the cluster.
 
 Create folder app-mpi and NAE subfolder:
 
@@ -1864,7 +1851,122 @@ Create folder app-mpi and NAE subfolder:
 mkdir app-mpi/NAE/ -p
 ```
 
-Then in app-mpi, create file launch.sh with the following content:
+Then create the Dockerfile.
+We are going to extract Jarvice OpenMPI from jarvice_mpi image, and use it to build our application.
+There is no need to keep Jarvice OpenMPI in final image, as it is automatically side-loaded (available) during
+execution on cluster.
+
+```dockerfile
+# Load jarvice_mpi image as JARVICE_MPI
+FROM us-docker.pkg.dev/jarvice/images/jarvice_mpi:4.1 as JARVICE_MPI
+
+# Multistage to optimise, as image does not need to contain jarvice_mpi 
+# components, these are side loaded during job containers init.
+FROM ubuntu:latest as buffer
+
+# Grab jarvice_mpi from JARVICE_MPI
+COPY --from=JARVICE_MPI /opt/JARVICE /opt/JARVICE
+
+# Install needed dependencies to download and build Intel MPI Benchmark
+RUN apt-get update; apt-get install -y wget curl gcc g++ git make bash; apt-get clean;
+
+# Build IMB-MPI1 which is enough for basic testing
+# Note that we are sourcing Jarcice OpenMPI environment using the provided /opt/JARVICE/jarvice_mpi.sh
+RUN bash -c 'git clone https://github.com/intel/mpi-benchmarks.git; cd mpi-benchmarks; \
+    source /opt/JARVICE/jarvice_mpi.sh; sed -i 's/mpiicc/mpicc/' src_cpp/Makefile; \
+    sed -i 's/mpiicpc/mpicxx/' src_cpp/Makefile; make IMB-MPI1;'
+
+# Create final image from Ubuntu
+FROM ubuntu:latest
+
+# Grab MPI benchmarks binaries built before using jarvice-mpi
+COPY --from=buffer /mpi-benchmarks/IMB-MPI1 /IMB-MPI1
+
+# Integrate AppDef file
+COPY NAE/AppDef.json /etc/NAE/AppDef.json
+```
+
+And create the AppDef.json file with the following content:
+
+```json
+{
+    "name": "mpiapp",
+    "description": "An mpi application",
+    "author": "Me",
+    "licensed": false,
+    "appdefversion": 2,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "imb": {
+            "path": "/IMB-MPI1",
+            "mpirun": true,
+            "verboseinit": true,
+            "interactive": false,
+            "name": "Intel Mpi Benchmark",
+            "description": "Run the Intel MPI Benchmark MPI1 over multiple nodes.",
+            "parameters": {}
+        }
+    },
+    "image": {
+        "data": "",
+        "type": "image/png"
+    }
+}
+```
+
+Then simply build the image, push it, and load it into Jarvice Push to Compute.
+
+Note that we set `mpirun` to **true**, to allow native Jarvice MPI parallel execution.
+
+Note also that we set `verboseinit` to **true**. This is optional and allows us to see exactly what is executed at start.
+
+At job submission, use Machine type select box, and Cores range selector to choose more than 1 machine. Then submit the job.
+
+![app_mpi_step_1](img/apps_tutorial/app_mpi_step_1.png)
+
+If all goes well, you should see the MPI benchmark running on the cluster. It should not take more than few minutes. If it hangs, you may have network issues to investigate with your cluster administrator.
+
+![app_mpi_step_2](img/apps_tutorial/app_mpi_step_2.png)
+
+Note that at execution start, verboseinit allowed to see few interesting steps:
+
+We can see the executed command:
+
+```
+INIT[1]: VERBOSE - argv[3] : PATH=/opt/JARVICE/openmpi/bin/:/opt/JARVICE/bin/:$PATH LD_LIBRARY_PATH=/opt/JARVICE/openmpi/lib/:/opt/JARVICE/lib/:$LD_LIBRARY_PATH /opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -N 4  --hostfile /etc/JARVICE/nodes /IMB-MPI1
+```
+
+And also the ssh connectivity test between nodes, to ensure smooth MPI execution:
+
+```
+INIT[1]: Starting SSHD server...
+INIT[1]: Checking all nodes can be reached through ssh...
+INIT[1]: VERBOSE - Attempting ssh connection to jarvice-job-101593-fw84g.
+INIT[1]: VERBOSE - Success connecting to jarvice-job-101593-fw84g.
+INIT[1]: VERBOSE - Attempting ssh connection to jarvice-job-101593-vwzk7.
+INIT[1]: VERBOSE - Success connecting to jarvice-job-101593-vwzk7.
+INIT[1]: SSH test success!
+```
+
+## 9.2. Using another MPI implementation
+
+If you wish to use your own MPI implementation (Intel MPI, HPCX, etc), you need to 
+uses your own script as path to start your application.
+
+You can rely on the following example, as a starting point. Note that in the current script, as an example,
+we also added a CASE_FOLDER variable, to be passed by user, to be able to set a working
+directory. This can be useful with some applications.
 
 ```bash
 #!/usr/bin/env bash
@@ -1872,23 +1974,6 @@ Then in app-mpi, create file launch.sh with the following content:
 echo "Sourcing JARVICE environment..."
 [[ -r /etc/JARVICE/jobenv.sh ]] && source /etc/JARVICE/jobenv.sh
 [[ -r /etc/JARVICE/jobinfo.sh ]] && source /etc/JARVICE/jobinfo.sh
-
-# Wait for slaves...max of 60 seconds
-echo "Checking slave nodes are operational..."
-SLAVE_CHECK_TIMEOUT=60
-TOOLSDIR="/usr/local/JARVICE/tools/bin"
-${TOOLSDIR}/python_ssh_test ${SLAVE_CHECK_TIMEOUT}
-ERR=$?
-if [[ ${ERR} -gt 0 ]]; then
-  echo "One or more slaves failed to start" 1>&2
-  exit ${ERR}
-fi
-
-# start SSHd
-echo "Starting local sshd..."
-if [[ -x /usr/sbin/sshd ]]; then
-  sudo service ssh start
-fi
 
 # Gather job environment and process input
 echo "Processing computational environment..."
@@ -1927,11 +2012,6 @@ else
   echo "  - cores: $CORES"
 fi
 
-set -x
-cat /etc/JARVICE/cores
-cat /etc/JARVICE/nodes
-set +x
-
 # Load mpi environment
 echo "Loading Jarvice OpenMPI environment..."
 source /opt/JARVICE/jarvice_mpi.sh;
@@ -1953,244 +2033,158 @@ set +x
 date
 ```
 
-## 9.2. MPI application
+And the CASE_FOLDER associated would be a parameter in AppDef.json:
 
-Let’s now create a very basic MPI application, to be built and stored in our image.
-
-In order for this test to be valid, a simple hello world is not enough, we need to at least establish a communication between nodes to ensure all goes well. Simplest way to do that is by using collective communications.
-
-We are going to use Jarvice-MPI (OpenMPI provided by Nimbix) to build and run our application.
-
-Create file `collectives.c` with the following content:
-
-```C
-#include <stddef.h>
-#include <mpi.h>
-#include <stdio.h>
-
-// Grouped Calculs program
-
-int main(int argc, char** argv)
-{
-    MPI_Init(NULL, NULL);
-    int nb_mpi_processes;
-    MPI_Comm_size(MPI_COMM_WORLD, &nb_mpi_processes);
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    double val,sum_val,mul_val,max_val,min_val;
-    val = (rank + 1)*1.0;
-    double aval[8];
-    double bval[2];
-    double cval[4];
-
-    MPI_Allreduce ( &val , &sum_val , 1 , MPI_DOUBLE , MPI_SUM , MPI_COMM_WORLD );
-    MPI_Allreduce ( &val , &mul_val , 1 , MPI_DOUBLE , MPI_PROD , MPI_COMM_WORLD );
-    MPI_Allreduce ( &val , &max_val , 1 , MPI_DOUBLE , MPI_MAX , MPI_COMM_WORLD );
-    MPI_Allreduce ( &val , &min_val , 1 , MPI_DOUBLE , MPI_MIN , MPI_COMM_WORLD );
-
-    // check
-    printf("Process %d I have the values %lf %lf %lf %lf %lf\n",rank,val,sum_val,mul_val,max_val,min_val);
-
-    // OTHERS
-    val = 0.0;
-    if(rank==0) {val = 7777.0;}
-    MPI_Bcast( &val , 1 , MPI_DOUBLE , 0 , MPI_COMM_WORLD);
-
-    // check
-    printf("Process %d after BCAST %lf\n",rank,val);
-
-    MPI_Finalize(); // Close MPI
-
-    return 0;
-}
+```json
+        "case_folder": {
+          "required": true,
+          "type": "STR",
+          "value": "",
+          "name": "Case folder."
+        }
 ```
+# 10. Script based application
 
-We will build this code during docker build process.
+It is possible to directly inject script to be executed into the AppDef.json file, allowing advanced usage of application images.
 
-## 9.3. AppDef file
+Note that by default, you cannot execute any privilege escalation, and so sudo cannot be used to install packages for example in such scripts.
+It is however possible, if allowed by cluster administrator, to enable privilege execution during apps execution. This feature is however out of the scope of this tutorial.
 
-The `AppDef.json` file should not be complex for this application. We simply need user to define a file so we can grab application case/input files folder. Create file `NAE/AppDef.json` with the following content:
+## 10.1. Plain text script
+
+First possibility is to use plain text script.
+
+In this example, we are not going to create an image. We will only rely on Ubuntu default image, and directly inject our AppDef.json into Push To Compute interface.
+
+Create on your local system file `AppDef_script.json` with the following content:
 
 ```json
 {
-  "name": "MPI application",
-  "description": "A test MPI application",
-  "author": "Me",
-  "licensed": true,
-  "classifications": [
-    "Unclassified"
-  ],
-  "machines": [
-    "*"
-  ],
-  "vault-types": [
+    "name": "Script test",
+    "description": "Script test",
+    "author": "Me",
+    "licensed": false,
+    "appdefversion": 2,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
         "FILE",
         "BLOCK",
         "BLOCK_ARRAY",
         "OBJECT"
-  ],
-  "commands": {
-    "run_mpi": {
-      "path": "/launch.sh",
-      "interactive": true,
-      "name": "Launch MPI job",
-      "description": "Run a collective MPI job.",
-      "parameters": {
-        "case_folder": {
-          "required": true,
-          "type": "FILE",
-          "name": "Case or input files folder. Select any file in this folder to allow folder detection."
+    ],
+    "commands": {
+        "Script_raw": {
+            "path": "/myscript.sh",
+            "interactive": false,
+            "name": "Script Raw",
+            "description": "Run a raw script",
+            "cmdscript": "#!/bin/sh\necho I love pizza\necho I am running on $(hostname)",
+            "parameters": {}
         }
-      }
+    },
+    "image": {
+        "data": "",
+        "type": "image/png"
     }
-  },
-  "image": {
-    "type": "image/png",
-    "data": ""
-  }
 }
 ```
 
-## 9.4. Dockerfile
+Note that we added a key called `cmdscript` that contains our script content, and `path` will be the path were script content will be written before being executed.
 
-Since we are going to build our application here, we will need to do a multi-stage build, in order to save space (we do not need to have compilers in the final image). Create `Dockerfile` file with the following content, that also includes the Jarvice needed MPI tools:
+Now, create a new App, and in first tab, GENERAL, set an App ID, and use docker.io/ubuntu:latest as app base image.
 
-```dockerfile
-# Load jarvice_mpi image as JARVICE_MPI
-FROM us-docker.pkg.dev/jarvice/images/jarvice_mpi:4.1 as JARVICE_MPI
+![app_script_raw_step_1](img/apps_tutorial/app_script_raw_step_1.png)
 
-# Multistage to optimise, as image does not need to contain jarvice_mpi 
-# components, these are side loaded during job containers init.
-FROM ubuntu:latest as build_stage
+Then go to tab APPDEF, and upload `AppDef_script.json` file created before.
 
-ARG DEBIAN_FRONTEND=noninteractive
+![app_script_raw_step_2](img/apps_tutorial/app_script_raw_step_2.png)
 
-# Grab jarvice_mpi from JARVICE_MPI
-COPY --from=JARVICE_MPI /opt/JARVICE /opt/JARVICE
+Then validate.
+Our application is ready.
 
-# Install needed dependencies to download and build MPI codes
-RUN apt-get update; apt-get install -y wget curl gcc g++ git make bash; apt-get clean;
+Submit a job, and you should see the script executing.
 
-# Copy our code into image
-COPY collectives.c /collectives.c
+However, since json format do not support multiline strings, this is a one-line script, which can be a pain when dealing with large scripts.
 
-# Build the code using Jarvice MPI
-RUN bash -c 'source /opt/JARVICE/jarvice_mpi.sh; cd /; mpicc collectives.c -o mpi_application;'
+When using complex scripts, you can base64 encode them (see below).
 
-# Create final image from Ubuntu
-FROM ubuntu:latest
+## 10.2. Base64 encoded script
 
-# Install Nimbix environment
-RUN apt-get -y update && \
-    apt-get -y install wget curl software-properties-common && \
-    curl -H 'Cache-Control: no-cache' \
-        https://raw.githubusercontent.com/nimbix/image-common/master/install-nimbix.sh \
-        | bash && apt-get clean
+When dealing with complex scripts, it might be simpler to base64 encode them, so that you can pass them as a single line string into a json file.
 
-RUN mkdir -p /opt/my_parallel_application/bin/;
+Jarvice will auto-detect that script provided is encoded, and will decode it on the fly.
 
-COPY --from=build_stage /mpi_application /opt/my_parallel_application/bin/mpi_application
+Create a file called `myscript.sh` with the following content:
 
-COPY launch.sh /launch.sh
-
-RUN chmod +x /launch.sh
-
-COPY NAE/AppDef.json /etc/NAE/AppDef.json
-
-RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
-
-RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
+```bash
+#!/bin/bash
+for i in 1 2 3 4 5
+do
+   echo "Welcome $i times"
+done
 ```
 
-And build application as usual. Create a repository, push it, and pull it into Jarvice PushToCompute.
-
-## 9.5. Run JOB
-
-For this very basic application, we do not really need an input folder, that was only here to 
-explain the process of user providing a file path in execution folder / workdir so script can 
-retrieve it.
-
-Launch job by selecting any file, but be sure to select multiple nodes for this job.
-
-In the output, you should get:
+Then, encode it:
 
 ```
-INIT[1]: Initializing networking...
-INIT[1]: Reading keys...
-INIT[1]: Finalizing setup in application environment...
-INIT[1]: WARNING: Cross Memory Attach not available for MPI applications
-INIT[1]: Platform fabric and MPI libraries successfully deployed
-INIT[1]: Detected preferred MPI fabric provider: tcp
-INIT[1]: Securing application environment...
-INIT[1]: Configuring user: nimbix ...
-INIT[1]: Waiting for job configuration before executing application...
-INIT[1]: hostname: jarvice-job-12182-hhjgg
-INIT[1]: Configuring systemd to start JARVICE ping-based health check
-INIT[74]: HOME=/home/nimbix
-###############################################################################
-Sourcing JARVICE environment...
-Checking slave nodes are operational...
-Parallel workers ready in 0 second(s)
-Starting local sshd...
- * Starting OpenBSD Secure Shell server sshd        [80G   [74G[ OK ]
-Processing computational environment...
- - Using Case directory: /data
-MPI environment: 
-  - mpi_hosts list file: /etc/JARVICE/cores
-  - number of process per nodes: 4
-  - cores: 8
-+ cat /etc/JARVICE/cores
-jarvice-job-12182-hhjgg
-jarvice-job-12182-hhjgg
-jarvice-job-12182-hhjgg
-jarvice-job-12182-hhjgg
-jarvice-job-12182-kwngf
-jarvice-job-12182-kwngf
-jarvice-job-12182-kwngf
-jarvice-job-12182-kwngf
-+ cat /etc/JARVICE/nodes
-jarvice-job-12182-hhjgg
-jarvice-job-12182-kwngf
-+ set +x
-Loading Jarvice OpenMPI environment...
-Entering case folder /data ...
-Executing application.
-First command explicitely shows who is running MPI (help understanding).
-Second command is the real application.
-Thu May  5 12:50:19 UTC 2022
-+ /opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -np 8 --hostfile /etc/JARVICE/cores hostname
-jarvice-job-12182-hhjgg
-jarvice-job-12182-hhjgg
-jarvice-job-12182-hhjgg
-jarvice-job-12182-hhjgg
-jarvice-job-12182-kwngf
-jarvice-job-12182-kwngf
-jarvice-job-12182-kwngf
-jarvice-job-12182-kwngf
-+ /opt/JARVICE/openmpi/bin/mpirun -x PATH -x LD_LIBRARY_PATH -np 8 --hostfile /etc/JARVICE/cores /opt/my_parallel_application/bin/mpi_application
-Process 0 I have the values 1.000000 36.000000 40320.000000 8.000000 1.000000
-Process 0 after BCAST 7777.000000
-Process 1 I have the values 2.000000 36.000000 40320.000000 8.000000 1.000000
-Process 1 after BCAST 7777.000000
-Process 2 I have the values 3.000000 36.000000 40320.000000 8.000000 1.000000
-Process 3 I have the values 4.000000 36.000000 40320.000000 8.000000 1.000000
-Process 3 after BCAST 7777.000000
-Process 2 after BCAST 7777.000000
-Process 4 I have the values 5.000000 36.000000 40320.000000 8.000000 1.000000
-Process 5 I have the values 6.000000 36.000000 40320.000000 8.000000 1.000000
-Process 5 after BCAST 7777.000000
-Process 6 I have the values 7.000000 36.000000 40320.000000 8.000000 1.000000
-Process 7 I have the values 8.000000 36.000000 40320.000000 8.000000 1.000000
-Process 7 after BCAST 7777.000000
-Process 6 after BCAST 7777.000000
-Process 4 after BCAST 7777.000000
-+ set +x
-Thu May  5 12:50:22 UTC 2022
+base64 -w 0 myscript.sh
 ```
 
-This also validate that network is capable of running MPI jobs. Note however that we did not test 
-network performances here. It is advised to run Intel MPI Benchmarks suite or OSU benchmarks suite to 
-further test network capabilities before production.
+You should obtain:
 
-An example is provided here: https://github.com/nimbix/mpi-common
+```
+IyEvYmluL2Jhc2gKZm9yIGkgaW4gMSAyIDMgNCA1CmRvCiAgIGVjaG8gIldlbGNvbWUgJGkgdGltZXMiCmRvbmUKCg==
+```
+
+Note that to decode it, you can use:
+
+```
+echo "IyEvYmluL2Jhc2gKZm9yIGkgaW4gMSAyIDMgNCA1CmRvCiAgIGVjaG8gIldlbGNvbWUgJGkgdGltZXMiCmRvbmUKCg==" | base64 -d
+```
+
+Now, update file `AppDef_script.json` and replace previous text script by the base64 encoded string:
+
+```json
+{
+    "name": "Script test",
+    "description": "Script test",
+    "author": "Me",
+    "licensed": false,
+    "appdefversion": 2,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "Script_raw": {
+            "path": "/myscript.sh",
+            "interactive": false,
+            "name": "Script Raw",
+            "description": "Run a raw script",
+            "cmdscript": "IyEvYmluL2Jhc2gKZm9yIGkgaW4gMSAyIDMgNCA1CmRvCiAgIGVjaG8gIldlbGNvbWUgJGkgdGltZXMiCmRvbmUKCg==",
+            "parameters": {}
+        }
+    },
+    "image": {
+        "data": "",
+        "type": "image/png"
+    }
+}
+```
+
+Edit script_raw app, and upload this new file to replace previous AppDef, and save.
+
+Then launch a new job. You should see the script execution.
