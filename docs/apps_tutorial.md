@@ -1964,7 +1964,9 @@ INIT[1]: SSH test success!
 If you wish to use your own MPI implementation (Intel MPI, HPCX, etc), you need to 
 uses your own script as path to start your application.
 
-You can rely on the following example, as a starting point. Note that in the current script, as an example,
+You can rely on the following example, as a starting point, and also refer to the "MPI Application Configuration Guide" of this documentation.
+
+Note that in the current script, as an example,
 we also added a CASE_FOLDER variable, to be passed by user, to be able to set a working
 directory. This can be useful with some applications.
 

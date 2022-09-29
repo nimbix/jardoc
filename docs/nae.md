@@ -4,7 +4,7 @@ When a user launches an application, JARVICE starts containers on all nodes sele
 
 If the job is interactive (meaning the endpoint accepts connections from the outside world), JARVICE provisions a public network address translation to the first (master) node in the job.  Other nodes are not accessible publicly.
 
-JARVICE runs endpoint commands as the user `nimbix`.  This user may gain `root` privileges using the `sudo` command without password if the image is set up correctly (see [Docker Images on JARVICE](docker.md) for additional details).
+JARVICE runs endpoint commands as the user `nimbix`. If running under `appdefversion` == 1, this user may gain `root` privileges using the `sudo` command without password if the image is set up correctly (see [Docker Images on JARVICE](docker.md) for additional details). If running under `appdefversion` >= 2, privilege escalation is restricted by default and only allowed if cluster administrator specificaly allowed it.
 
 NOTE: It is possible to replace the `nimbix` user using the [`identity` object](appdef.md#reference) within an Appdef or using the [JARVICE API](api.md#jarvicesubmit).
 
