@@ -15,7 +15,7 @@ These API endpoints allow you to submit jobs and control their execution.  Jobs 
 
 
 ---
-## /jarvice/action
+## /jarvice/action (deprecated)
 
 Executes an application-defined command inside a running job.  The command runs asynchronously and its standard output/standard error is accessible with [/jarvice/tail](#jarvicetail) while the job is running.
 
