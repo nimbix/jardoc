@@ -98,7 +98,7 @@ JARVICE provides a high performance container engine used to deploy large scale 
 ## Best Practices
 
 1. Use wrapper scripts for commands to set environment variables, etc.
-2. Use `sudo` to gain privileges - the `nimbix` user supports passwordless `sudo` if the image is set up properly with [image-common](https://github.com/nimbix/image-common).
+2. Use `sudo` to gain privileges - the `nimbix` user supports passwordless `sudo` if the image is set up properly with [image-common](https://github.com/nimbix/image-common) (Note: `appdefversion` >= 2 does not allow privilege escalation by default).
 3. Store persistent data in `/data`, but as user `nimbix` only.  Data in this directory persists after your image exits, and the user may transfer files to and from this directory without having to run your application.
 4. Docker build stages should be performed as `root` rather than `nimbix`.
 5. Avoid changing file ownership in Docker build stages and consider using `0666/0777` permissions while keeping `root:root` ownership. Use workflow scripts to change file ownership at runtime if stricter permissions are required.

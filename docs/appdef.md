@@ -76,6 +76,8 @@ Key|Type|Required/Optional|Description
 
 NOTE: Commands are named by the key of the JSON object defining the command.
 
+NOTE2: `*²` taggued values are available in `appdefversion` > 2 only.
+
 Key|Type|Required/Optional|Description
 ---|---|---|---
 `path`|string|required|Command entry point which is run in the Nimbix Application Environment when the application starts. For a graphical application, this could be `/usr/local/bin/nimbix_desktop` followed by a positional constant parameter with value `/usr/bin/xterm`; For a batch application, this could be the path to a batch script.  Be sure to use a full path here, not just an executable name that you assume to be in `${PATH}`.
@@ -89,6 +91,10 @@ Key|Type|Required/Optional|Description
 `parameters`|parameter (object)|required|Parameters are used to construct the arguments passed to the command identified by the `path` key of the command argument.  If the command takes no parameters, this key should still be included and set to `{}`
 `machines`|list of strings|optional|Machines can be any machine type available on Nimbix, or accepted lazy expansions. For example, `ng*` would make all x86 GPU machine types available for this application. Including machines in this section overrides the machines defined in global scope and apply specifically to a given command, allowing differnet commands to offer different machine types to run on
 `variables`|variable (object)|optional|Defines user and application-defined environment variables which will be available in `etc/JARVICE/jobenv.sh`.  These variables are set at the account level by Support and not user managed.
+`webshell *²`|boolean|optional| If true, command will run in interactive mode, inside a shell reachable through http via JXE web interface.
+`desktop *²`|boolean|optional| If true, command will run in interactive mode, inside a GUI desktop reachable through http via JXE web interface. Note that this assumes jarvice-desktop was setup properly inside application image (see https://github.com/nimbix/jarvice-desktop).
+`verboseinit *²`|boolean|optional| If true, init phase of application execution will expose more data (debug usage mainly).
+`cmdscript *²`|string|optional| If set and not empty, content will be written inside `path` and executed. `cmdscript` string can be a single line script, or a base64 encoded script (allowing large and/or multilines scripts, base64 is auto-detected).
 
 ## `parameters` Object Reference
 
@@ -137,13 +143,17 @@ NOTE:
 
 Each parameter type accepts multiple values. Some values are generic to all:
 
-| Value       | Type    |  Mandatory | Description | Default |
-|-------------|---------|:----------:|-------------|---------|
-| name        | string  | *          | Value name | |
-| description | string  | *          | Value description | |
-| positional  | boolean |            | If value should be passed ordered as in AppDef file | true |
-| required    | boolean | *          | If value is required (implicitely true for CONST type) | |
-| variable    | boolean |            | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
+NOTE2: `*²` taggued values are available in `appdefversion` > 2 only.
+
+| Value         | Type    |  Mandatory | Description | Default |
+|---------------|---------|:----------:|-------------|---------|
+| `name`        | string  | *          | Value name | |
+| `description` | string  | *          | Value description | |
+| `positional`  | boolean |            | If value should be passed ordered as in AppDef file | true |
+| `required`    | boolean | *          | If value is required (implicitely true for CONST type) | |
+| `variable`    | boolean |            | If element should be provided by /etc/JARVICE/jobenv.sh instead of passed as argument | false |
+| `if *²`       | array of strings |            | List of boolean values that need to be **all** `true` so that this parameter is present at execution | |
+| `ifnot *²`    | array of strings |            | List of boolean values that need to be **all** `false` so that this parameter is present at execution | |
 
 ### CONST
 
