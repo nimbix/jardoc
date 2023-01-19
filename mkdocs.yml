@@ -1,5 +1,19 @@
 site_name: JARVICE
-theme: readthedocs
+theme:
+  name: material
+  features:
+    - navigation.instant
+plugins:
+    - search
+    # - with-pdf:
+    #     author: Nimbix
+    #     copyright: '@2021 Nimbix'
+    #     cover: true
+    #     back_cover: false
+    #     cover_title: Jarvice
+    #     cover_subtitle: documentation
+    #     toc_level: 2
+    #     output_path: pdf/jarvice.pdf
 extra_css:
     - css/extra.css
 nav:
