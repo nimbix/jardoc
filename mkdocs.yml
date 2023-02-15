@@ -10,7 +10,8 @@ theme:
     - toc.follow
 markdown_extensions:
   - toc:
-      permalink: false
+      permalink: true
+      toc_depth: 2
 plugins:
     - search
     # - with-pdf:
