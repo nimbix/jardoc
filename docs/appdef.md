@@ -11,13 +11,13 @@ The JARVICE Application Definition (AppDef) is a simple JSON object which is use
 
 By using a simple, declarative JSON object, the AppDef makes designing work flows and user experiences easy on JARVICE. No prior experience designing web interfaces or APIs is required to deploy a multi-node high performance computing application which leverages the built-in capabilities of JARVICE on the Nimbix Cloud.
 
-# Examples
+## Examples
 
 Nimbix provides various examples in the form of real-world applications - open source deployed on the Nimbix Cloud using JARVICE mechanisms.  By convention, the `AppDef.json` file typically lives in the `NAE` directory at the top of the source tree.  Most repositories in the [Nimbix GitHub account](https://github.com/nimbix) Include both an AppDef as well as directives in their respective `Dockerfile` to deploy it.  You can even start with the default AppDef generated when creating a new application and modify it for your specific workflow - see *Building and Deploying* in the [CI/CD Pipeline](cicd.md) section for more information on this.  The *Container metadata* section of the [Nimbix Application Environment](nae.md) section also describes how to store and validate `AppDef.json` files in your Docker image.  Please note that JARVICE ignores invalid AppDefs when deploying, and will also fail to build an application with an invalid AppDef.
 
-# Reference
+## Reference
 
-## Environment and Configuration
+### Environment and Configuration
 
 Key|Type|Required/Optional|Description
 ---|---|---|---
@@ -25,7 +25,7 @@ Key|Type|Required/Optional|Description
 `variables`|variable (object)|optional|Defines user and application-defined environment variables which will be available in `/etc/JARVICE/jobenv.sh`. This can be overridden in a command that is defined in the `commands` section.  These variables are set at the account level by Support and not user managed.
 `identity`|identity (object)|optional|Defines user identity to use within the JARVICE environment.
 
-## Storage and Machine Options
+### Storage and Machine Options
 
 Key|Type|Required/Optional|Description
 ---|---|---|---
@@ -33,7 +33,7 @@ Key|Type|Required/Optional|Description
 `scale_max`|integer|optional|Defines the maximum number of machines allowed for this application. This can be overridden in a command that is defined in the `commands` section.  Typical use is to limit applications to run on a single machine rather than allow the user to launch jobs with multiple nodes for applications that may not support it.
 `vault-types`|list of strings|required|(If the application workflow does not support persistent storage, this should be `"vault-types”: [ “NONE” ]`); Defines what storage vaults are supported by the application. Must be one or more of of: `BLOCK`, `BLOCK_ARRAY`, `FILE`, or `NONE`.
 
-## Service Catalog Information
+### Service Catalog Information
 
 Key|Type|Required/Optional|Description
 ---|---|---|---
@@ -44,35 +44,35 @@ Key|Type|Required/Optional|Description
 `classifications`|string|required|Defines the categories used for sorting and searching applications.
 `image`|image (object)|required|Defines the application icon.
 
-## User-interface Hinting
+### User-interface Hinting
 
 Key|Type|Required/Optional|Description
 ---|---|---|---
 `hints`|list of strings|optional|Provides "hints" to the user interface, typically used by the Task Builder to influence labeling and default selections; note that hints are suggestions only and may not be supported on all platforms.  This can be overridden in a command that is defined in the `commands` section, to support per-command hints.
 
-### Supported `hints`
+#### Supported `hints`
 
-#### VAULT:*vault-name*
+##### VAULT:*vault-name*
 
 Specifies that if available, the default vault for the user should be changed to *vault-name* for this command or app.  Example: `VAULT:projects`.  If the vault is not available, the user's default will be preselected instead.
 
-#### SCALE_NODES
+##### SCALE_NODES
 
 Specifies that the scaling slider should show nodes rather than cores as the unis, which may be more appropriate for some types of resources than cores.
 
-#### SCALE_CORES
+##### SCALE_CORES
 
 Specifies that the scaling slider should show cores rather than nodes as the units, which is the default if not specified as a hint.
 
 
-## `image` Object Reference
+### `image` Object Reference
 
 Key|Type|Required/Optional|Description
 ---|---|---|---
 `data`|string|required|Base64 image data. This can easily be generated with: `cat image.png | base64 -w0`; Alternatively, the image can be uploaded directly in the PushToCompute&trade; section of the portal.
 `type`|string|required|This identifies the media type, e.g., `image/png`
 
-## `commands` Object Reference
+### `commands` Object Reference
 
 NOTE: Commands are named by the key of the JSON object defining the command.
 
@@ -96,7 +96,7 @@ Key|Type|Required/Optional|Description
 `verboseinit *²`|boolean|optional| If true, init phase of application execution will expose more data (debug usage mainly).
 `cmdscript *²`|string|optional| If set and not empty, content will be written inside `path` and executed. `cmdscript` string can be a single line script, or a base64 encoded script (allowing large and/or multilines scripts, base64 is auto-detected).
 
-## `parameters` Object Reference
+### `parameters` Object Reference
 
 Parameters are used to construct the arguments passed to the command identified by the `path` key of the `command` object.
 
@@ -110,7 +110,7 @@ Key|Type|Required/Optional|Description
 `positional`|boolean|optional|True indicates the value of the parameter should be passed as a positional argument, ordered by the order of JSON objects in the parameters section.
 (parameter dependent fields)|–|varies by parameter type|See the parameter definition table below for keys and values required by parameter type.
 
-## `variables` Object Reference
+### `variables` Object Reference
 
 Variables are designed to be used as environment variables and are written to `/etc/JARVICE/jobenv.sh`; these are set in the account itself and managed by Support.  The key of the variable becomes the name of the variable when the job is launched.
 
@@ -122,7 +122,7 @@ Key|Type|Required/Optional|Description
 `inherit`|boolean|required|If true, the value of an account variable can be inherited from a team’s payer account.
 `required`|boolean|optional|If true, the application will not launch if the variable is not defined.
 
-## `identity` Object Reference
+### `identity` Object Reference
 
 Identity is used to configure a username, group, UID, and/or GID for the Nimbix Application Environment (NAE). These setting will replace the `nimbix` user created by [image-common](https://github.com/nimbix/image-common).
 
@@ -139,7 +139,7 @@ NOTE:
 * Setting `uid/gid` as root (0:0) is NOT supported.
 * Using `uid/gid` values less than `1000` may collide with system users/services and should be avoided.
 
-## Parameter Type Reference
+### Parameter Type Reference
 
 Each parameter type accepts multiple values. Some values are generic to all:
 
@@ -155,7 +155,7 @@ NOTE2: `*²` taggued values are available in `appdefversion` > 2 only.
 | `if *²`       | array of strings |            | List of boolean values that need to be **all** `true` so that this parameter is present at execution | |
 | `ifnot *²`    | array of strings |            | List of boolean values that need to be **all** `false` so that this parameter is present at execution | |
 
-### CONST
+#### CONST
 
 `CONST` defines a constant value and supports substitutions as well - the user may not modify these parameters.
 
@@ -186,7 +186,7 @@ When the type is `CONST`, the `value` key may be either an actual value or one o
 
 \* these substitutions are only available if the application is certified by Nimbix or the user calling the API owns the application; they are intended to facilitate job submission from inside jobs and should be used with care since this action can incur additional usage charges.
 
-### STR
+#### STR
 
 `STR` defines a string value and is the default `type` if not specified. 
 
@@ -198,7 +198,7 @@ In addition to generic values, `STR` also accept the following:
 
 The `value` key is an arbitrary default value to populate, which the user can edit; this may also be blank.
 
-### INT
+#### INT
 
 `INT` defines an integer value.
 
@@ -210,7 +210,7 @@ In addition to generic values, `INT` also accept the following:
 | min         | integer | *          | The minimum number allowed | |
 | max         | integer | *          | The maximum number allowed | |
 
-### RANGE
+#### RANGE
 
 `RANGE` defines an integer value using a slider.
 
@@ -225,7 +225,7 @@ In addition to generic values, `RANGE` also accept the following:
 
 The portal will express this as a slider widget.
 
-### FLOAT
+#### FLOAT
 
 `FLOAT` defines a floating point value.
 
@@ -238,7 +238,7 @@ In addition to generic values, `FLOAT` also accept the following:
 | max         | float   | *          | The maximum number allowed | |
 | precision   | integer | *          | Is the maximum number of decimal digits allowed (values will be truncated to this) | |
 
-### BOOL
+#### BOOL
 
 `BOOL` defines a boolean value which includes the parameter if true, or omits it if false; this is useful for optional command line parameters.
 
@@ -250,7 +250,7 @@ In addition to generic values, `BOOL` also accept the following:
 
 Boolean parameters are represented as checkbox widgets in the user portal.
 
-### selection
+#### selection
 
 `selection` defines a single selection list.
 
@@ -263,7 +263,7 @@ In addition to generic values, `selection` also accept the following:
 
 Selection lists are represented as drop down widgets in the user portal.
 
-### FILE
+#### FILE
 
 `FILE` defines a file name.
 
@@ -275,7 +275,7 @@ In addition to generic values, `FILE` also accept the following:
 
 If the selected storage vault is listable (e.g. a `FILE` vault), the user portal will provide a file picker widget.
 
-### UPLOAD
+#### UPLOAD
 
 `UPLOAD` defines a file to upload from a local computer to a JARVICE job.
 
