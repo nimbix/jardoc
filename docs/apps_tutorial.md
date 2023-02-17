@@ -20,49 +20,49 @@ Each of these general steps will help understand all features available, and pro
 
 Table of content:
 
-- [1. Global view](#1-global-view)
-- [2. Hello world](#2-hello-world)
-    * [2.1. Create Dockerfile](#21-create-dockerfile)
-    * [2.2. Create AppDef.json](#22-create-appdefjson)
-    * [2.3. Finalize image](#23-finalize-image)
-    * [2.4. Register to registry (optional)](#24-register-to-registry--optional-)
-    * [2.5. Push image](#25-push-image)
-    * [2.6. Pull image with Push to Compute](#26-pull-image-with-push-to-compute)
-    * [2.7. Run application in Jarvice](#27-run-application-in-jarvice)
-    * [2.8. Gather logs](#28-gather-logs)
-- [3. Important building guidelines](#3-important-building-guidelines)
-    * [3.1. Repush image](#31-repush-image)
-    * [3.2. Multi stages](#32-multi-stages)
-    * [3.3. Optimize packages installation](#33-optimize-packages-installation)
-    * [3.4. End with NAE](#34-end-with-nae)
-- [4. Basic interactive job](#4-basic-interactive-job)
-    * [4.1. Standard way](#41-standard-way)
-    * [4.2. On an existing application image](#42-on-an-existing-application-image)
-- [5. Review application parameters](#5-review-application-parameters)
-    * [5.1. Commands](#51-commands)
-    * [5.2. Commands parameters](#52-commands-parameters)
-    * [5.3. Commands parameters advanced settings](#53-commands-parameters-advanced-settings)
-- [6. Non interactive application](#6-non-interactive-application)
-    * [6.1. Dockerfile](#61-dockerfile)
-    * [6.2. AppDef](#62-appdef)
-    * [6.3. Run application](#63-run-application)
-- [7. Basic shell interactive application](#7-basic-shell-interactive-application)
-    * [7.1. Create image](#71-create-image)
-    * [7.2. Create calculator.py file](#72-create-calculatorpy-file)
-    * [7.3. Create AppDef](#73-create-appdef)
-    * [7.4. Launch and use](#74-launch-and-use)
-- [8. Basic UI interactive application](#8-basic-ui-interactive-application)
-    * [8.1. Create image](#81-create-image)
-    * [8.2. Create AppDef](#82-create-appdef)
-    * [8.3. Launch application](#83-launch-application)
-- [9. MPI application](#9-mpi-application)
-    * [9.1. Basic benchmark application](#91-basic-benchmark-application)
-    * [9.2. Using another MPI implementation](#92-using-another-mpi-implementation)
-- [10. Script based application](#10-script-based-application)
-    * [10.1. Plain text script](#101-plain-text-script)
-    * [10.2. Base64 encoded script](#102-base64-encoded-script)
+- [1. Global view](##1-global-view)
+- [2. Hello world](##2-hello-world)
+    * [2.1. Create Dockerfile](##21-create-dockerfile)
+    * [2.2. Create AppDef.json](##22-create-appdefjson)
+    * [2.3. Finalize image](##23-finalize-image)
+    * [2.4. Register to registry (optional)](##24-register-to-registry--optional-)
+    * [2.5. Push image](##25-push-image)
+    * [2.6. Pull image with Push to Compute](##26-pull-image-with-push-to-compute)
+    * [2.7. Run application in Jarvice](##27-run-application-in-jarvice)
+    * [2.8. Gather logs](##28-gather-logs)
+- [3. Important building guidelines](##3-important-building-guidelines)
+    * [3.1. Repush image](##31-repush-image)
+    * [3.2. Multi stages](##32-multi-stages)
+    * [3.3. Optimize packages installation](##33-optimize-packages-installation)
+    * [3.4. End with NAE](##34-end-with-nae)
+- [4. Basic interactive job](##4-basic-interactive-job)
+    * [4.1. Standard way](##41-standard-way)
+    * [4.2. On an existing application image](##42-on-an-existing-application-image)
+- [5. Review application parameters](##5-review-application-parameters)
+    * [5.1. Commands](##51-commands)
+    * [5.2. Commands parameters](##52-commands-parameters)
+    * [5.3. Commands parameters advanced settings](##53-commands-parameters-advanced-settings)
+- [6. Non interactive application](##6-non-interactive-application)
+    * [6.1. Dockerfile](##61-dockerfile)
+    * [6.2. AppDef](##62-appdef)
+    * [6.3. Run application](##63-run-application)
+- [7. Basic shell interactive application](##7-basic-shell-interactive-application)
+    * [7.1. Create image](##71-create-image)
+    * [7.2. Create calculator.py file](##72-create-calculatorpy-file)
+    * [7.3. Create AppDef](##73-create-appdef)
+    * [7.4. Launch and use](##74-launch-and-use)
+- [8. Basic UI interactive application](##8-basic-ui-interactive-application)
+    * [8.1. Create image](##81-create-image)
+    * [8.2. Create AppDef](##82-create-appdef)
+    * [8.3. Launch application](##83-launch-application)
+- [9. MPI application](##9-mpi-application)
+    * [9.1. Basic benchmark application](##91-basic-benchmark-application)
+    * [9.2. Using another MPI implementation](##92-using-another-mpi-implementation)
+- [10. Script based application](##10-script-based-application)
+    * [10.1. Plain text script](##101-plain-text-script)
+    * [10.2. Base64 encoded script](##102-base64-encoded-script)
 
-# 1. Global view
+## 1. Global view
 
 In order to use Jarvice cluster, users need to build their own application container image, then push it to a registry accessible from the cluster, pull it using PushToCompute interface, and then simply submit jobs.
 
@@ -72,14 +72,14 @@ Process global view can be reduced to this simple schema:
 
 In order to explain in details this process, best way is to build a Hello World application, steps by steps.
 
-# 2. Hello world
+## 2. Hello world
 
 Objective of this Hello World application is simply to display a Hello World as output message of a Jarvice job.
 
 In order to achieve that, we will need to go through multiple steps.
 Process is not complex, but need steps to be understood in ordure to avoid basic issues.
 
-## 2.1. Create Dockerfile
+### 2.1. Create Dockerfile
 
 ![GlobalProcess_step_1](img/apps_tutorial/GlobalProcess_step_1.svg)
 
@@ -136,7 +136,7 @@ UBUNTU_CODENAME=focal
 
 We can see here that image contains Ubuntu 20.04 release.
 
-## 2.2. Create AppDef.json
+### 2.2. Create AppDef.json
 
 ![GlobalProcess_step_2](img/apps_tutorial/GlobalProcess_step_2.svg)
 
@@ -316,7 +316,7 @@ Get the output (which can be very large for big images), and add it into AppDef.
 
 Now that our AppDef file is ready, lets inject it into final image.
 
-## 2.3. Finalize image
+### 2.3. Finalize image
 
 ![GlobalProcess_step_3](img/apps_tutorial/GlobalProcess_step_3.svg)
 
@@ -401,7 +401,7 @@ Our image is ready.
 
 Next step is to push image to a registry.
 
-## 2.4. Register to registry (optional)
+### 2.4. Register to registry (optional)
 
 ![GlobalProcess_step_4](img/apps_tutorial/GlobalProcess_step_4.svg)
 
@@ -428,7 +428,7 @@ Pull command is displayed on repository page:
 
 ![DockerHub_step_3](img/apps_tutorial/docker_hub_step_3.png)
 
-## 2.5. Push image
+### 2.5. Push image
 
 ![GlobalProcess_step_5](img/apps_tutorial/GlobalProcess_step_5.svg)
 
@@ -471,7 +471,7 @@ v1: digest: sha256:7c37fb5840d4677f5e8b45195b8aa64ef0059ccda9fcefc0df62db49e426d
 
 Image is now pushed and can be pulled from Jarvice Push to Compute interface.
 
-## 2.6. Pull image with Push to Compute
+### 2.6. Pull image with Push to Compute
 
 ![GlobalProcess_step_6](img/apps_tutorial/GlobalProcess_step_6.svg)
 
@@ -503,7 +503,7 @@ It is possible to check application logs / history to see pull process. To do so
 
 Application is now ready to be run in Jarvice.
 
-## 2.7. Run application in Jarvice
+### 2.7. Run application in Jarvice
 
 ![GlobalProcess_step_7](img/apps_tutorial/GlobalProcess_step_7.svg)
 
@@ -529,7 +529,7 @@ Once application has finished to run, you will see it marked as **Completed**.
 
 ![Run_Application_step_5](img/apps_tutorial/Run_Application_step_5.png)
 
-## 2.8. Gather logs
+### 2.8. Gather logs
 
 ![GlobalProcess_step_8](img/apps_tutorial/GlobalProcess_step_8.svg)
 
@@ -555,11 +555,11 @@ Also, if too much issues, switch for a time to interactive application (seen lat
 
 We can now proceed to more productive applications and general guidelines. Next examples will not be as detailed as this one as process is always the same.
 
-# 3. Important building guidelines
+## 3. Important building guidelines
 
 Before proceeding to more examples, it is important to keep in mind few image building guidelines.
 
-## 3.1. Repush image
+### 3.1. Repush image
 
 When you need to fix image and rebuild it, you need to delete local tag and create it again in order to be able to push again image.
 
@@ -588,7 +588,7 @@ docker push oxedions/hello_world:v1
 
 Don't forget to request a new pull in Jarvice interface to grab latest image NAEs.
 
-## 3.2. Multi stages
+### 3.2. Multi stages
 
 Application images can be really big. Images builder should care about images size, and so optimize build process in order to save disk, memory, and bandwidth.
 
@@ -694,7 +694,7 @@ We went from 401MB to 151MB. This is a huge size reduction. While with this smal
 
 For more details, please visit official documentation on multi stage builds: https://docs.docker.com/develop/develop-images/multistage-build/
 
-## 3.3. Optimize packages installation
+### 3.3. Optimize packages installation
 
 Most of the time, final image will need to have few packages installed.
 In order to reduce size of image, and prevent waste, two actions can be done:
@@ -743,7 +743,7 @@ size                                                               latest       
 
 We saved 9MB. With bigger packages, like desktop applications, size reduction is even larger and can sometime leads to around 30-40% size reduction.
 
-## 3.4. End with NAE
+### 3.4. End with NAE
 
 We have seen that container images are multi layers images.
 
@@ -775,14 +775,14 @@ RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 
 For such a small image, it does not worth it, but for very large images, this small tip can have interesting benefit.
 
-# 4. Basic interactive job
+## 4. Basic interactive job
 
 Before reviewing available application parameters, next step is to be able to launch interactive jobs.
 
 Interactive jobs are very useful to debug when creating an application, as you can test launch application end point yourself,
 and debug directly inside the Jarvice cluster context.
 
-## 4.1. Standard way
+### 4.1. Standard way
 
 Create a new application folder aside app-hello_world folder, called app-interactive_shell:
 
@@ -901,7 +901,7 @@ In the new tab, you now have an interactive bash shell. It is possible from here
 
 ![app_interactive_shell_step_4](img/apps_tutorial/app_interactive_shell_step_4.png)
 
-## 4.2. On an existing application image
+### 4.2. On an existing application image
 
 Sometime, in order to debug an app image, and launch entry point manually to check what is failing, it is useful to temporary switch it to an interactive shell. This basically allows you to "enter" the image inside the running context, and debug interactively.
 
@@ -978,13 +978,13 @@ Using this entry point starts an interactive shell, and allows to debug inside t
 
 Once issues are solved, AppDef will be restored when pulling fixed image into Jarvice.
 
-# 5. Review application parameters
+## 5. Review application parameters
 
 Let’s review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to [Appdf commands object reference](https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference) and [Appdf parameters object reference](https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference) for more details.
 
 Target here is to test most of the possibilities offered.
 
-## 5.1. Commands
+### 5.1. Commands
 
 Let's focus on commands, which is the level above parameters:
 
@@ -1021,7 +1021,7 @@ You may also wish that user could define some application settings.
 
 This is where parameters are needed.
 
-## 5.2. Commands parameters
+### 5.2. Commands parameters
 
 Commands parameters allows to:
 
@@ -1322,7 +1322,7 @@ INIT[1]: /home/nimbix does not exist or is external
 INIT[1]: Waiting for job configuration before executing application...
 INIT[1]: hostname: jarvice-job-11859-nw2fm
 INIT[64]: HOME=/home/nimbix
-###############################################################################
+################################################################################
 
 Launch script is starting
 
@@ -1371,7 +1371,7 @@ You can see that:
 
 We have seen all possible and existing parameters. You can now use the ones needed to create tunable applications for Jarvice.
 
-## 5.3. Commands parameters advanced settings
+### 5.3. Commands parameters advanced settings
 
 It is possible to use conditionals on parameters keys, combined with a boolean value, in order to trigger specific parameters only when needed.
 
@@ -1422,7 +1422,7 @@ We can create a boolean, to only pass to application needed value (and prevent p
 
 In this specific case, if `license_is_file` boolean is true, then command will be: `-i license_file_path.value`, else it will be `-i license_server.value`.
 
-# 6. Non interactive application
+## 6. Non interactive application
 
 Non-interactive applications are very common.
 
@@ -1434,7 +1434,7 @@ Let’s create a very basic **ffmpeg** application that will be used to convert 
 
 Note that you can easily find video samples here: [jell.yfish.us](https://jell.yfish.us/).
 
-## 6.1. Dockerfile
+### 6.1. Dockerfile
 
 We can already re-use the multi stages example above:
 
@@ -1464,7 +1464,7 @@ RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/ja
 RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 ```
 
-## 6.2. AppDef
+### 6.2. AppDef
 
 Let’s now create a related `AppDef.json` file:
 
@@ -1564,7 +1564,7 @@ Let’s now create a related `AppDef.json` file:
 
 User will be able to set CRF video quality value, and output file path.
 
-## 6.3. Run application
+### 6.3. Run application
 
 Build and upload to cluster application.
 
@@ -1590,7 +1590,7 @@ INIT[1]: /home/nimbix does not exist or is external
 INIT[1]: Waiting for job configuration before executing application...
 INIT[1]: hostname: jarvice-job-12180-z9ldv
 INIT[64]: HOME=/home/nimbix
-###############################################################################
+################################################################################
 ffmpeg version 5.0.1-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2022 the FFmpeg developers
   built with gcc 8 (Debian 8.3.0-6)
   configuration: --enable-gpl --enable-version3 --enable-static --disable-debug --disable-ffplay --disable-indev=sndio --disable-outdev=sndio --cc=gcc --enable-fontconfig --enable-frei0r --enable-gnutls --enable-gmp --enable-libgme --enable-gray --enable-libaom --enable-libfribidi --enable-libass --enable-libvmaf --enable-libfreetype --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librubberband --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libvorbis --enable-libopus --enable-libtheora --enable-libvidstab --enable-libvo-amrwbenc --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libdav1d --enable-libxvid --enable-libzvbi --enable-libzimg
@@ -1654,14 +1654,14 @@ Launch Jarvice files manager, and see the compressed video:
 Using h265 instead of h264, we reduced video size. This is however a very basic example, and video quality was also reduced. A real ffmpeg application would need much more 
 settings available to users. This was however enough as an example.
 
-# 7. Basic shell interactive application
+## 7. Basic shell interactive application
 
 It is possible to obtain an interactive shell directly from the browser. This can be useful for applications that
 requires interactions with users (or have to be manually launched) and that do not require a full GUI desktop.
 
 We are going to create a very basic and naive python-based calculator, as an example.
 
-## 7.1. Create image
+### 7.1. Create image
 
 Create Dockerfile, that includes python3 and our basic application.
 
@@ -1685,7 +1685,7 @@ RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/ja
 RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 ```
 
-## 7.2. Create calculator.py file
+### 7.2. Create calculator.py file
 
 Create now the basic python-based application, in file `calculator.py`:
 
@@ -1697,7 +1697,7 @@ while True:
     print("Result: " + str(eval_output))
 ```
 
-## 7.3. Create AppDef
+### 7.3. Create AppDef
 
 Create AppDef file, with target path to gotty shell, and command to our application.
 
@@ -1737,7 +1737,7 @@ Create AppDef file, with target path to gotty shell, and command to our applicat
 }
 ```
 
-## 7.4. Launch and use
+### 7.4. Launch and use
 
 Once built and submitted to cluster, it is possible to join session by clicking on "Click here to connect".
 
@@ -1751,7 +1751,7 @@ Note also that you can replace application command path (`/calculator.py` here) 
 
 When debugging an application, it can be a real added value to add a second entry to image, with a gotty shell combined to the bash shell to be able to interactively launch scripts and debug.
 
-# 8. Basic UI interactive application
+## 8. Basic UI interactive application
 
 Some applications need a full GUI to be used, with a windows manager.
 
@@ -1760,7 +1760,7 @@ command entry point.
 
 In this example, we are going to create a GIMP (image manipulation software) application. Note that we are using here Ubuntu, but you can also use any RHEL derivate distribution. Refer to https://github.com/nimbix/jarvice-desktop for more details.
 
-## 8.1. Create image
+### 8.1. Create image
 
 Create Dockerfile, with a specific `RUN` that bootstraps Nimbix default desktop. We then install gimp.
 
@@ -1783,7 +1783,7 @@ RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/ja
 RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 ```
 
-## 8.2. Create AppDef
+### 8.2. Create AppDef
 
 Create now AppDef file, with `/usr/bin/gimp` as target path:
 
@@ -1823,7 +1823,7 @@ Create now AppDef file, with `/usr/bin/gimp` as target path:
 }
 ```
 
-## 8.3. Launch application
+### 8.3. Launch application
 
 Once application has been built and uploaded to Jarvice PushToCompute, submit a new job.
 
@@ -1838,11 +1838,11 @@ BEWARE! If you close gimp window (so end execution of `/usr/bin/gimp`), job will
 
 ![app_gimp_step_1](img/apps_tutorial/app_gimp_step_1.png)
 
-# 9. MPI application
+## 9. MPI application
 
 Jarvice embed an OpenMPI version of MPI, that can be used to build and run MPI applications. It is also possible for users to use their own MPI libraries and runtime, but this is out of the scope of this tutorial. However, some advices are given bellow.
 
-## 9.1. Basic benchmark application
+### 9.1. Basic benchmark application
 
 In this example, we are going to download and build the Intel MPI Benchmark tool, and run it in parallel on the cluster.
 
@@ -1960,7 +1960,7 @@ INIT[1]: VERBOSE - Success connecting to jarvice-job-101593-vwzk7.
 INIT[1]: SSH test success!
 ```
 
-## 9.2. Using another MPI implementation
+### 9.2. Using another MPI implementation
 
 If you wish to use your own MPI implementation (Intel MPI, HPCX, etc), you need to 
 uses your own script as path to start your application.
@@ -2046,14 +2046,14 @@ And the CASE_FOLDER associated would be a parameter in AppDef.json:
           "name": "Case folder."
         }
 ```
-# 10. Script based application
+## 10. Script based application
 
 It is possible to directly inject script to be executed into the AppDef.json file, allowing advanced usage of application images.
 
 Note that by default, you cannot execute any privilege escalation, and so sudo cannot be used to install packages for example in such scripts.
 It is however possible, if allowed by cluster administrator, to enable privilege execution during apps execution. This feature is however out of the scope of this tutorial.
 
-## 10.1. Plain text script
+### 10.1. Plain text script
 
 First possibility is to use plain text script.
 
@@ -2116,7 +2116,7 @@ However, since json format do not support multiline strings, this is a one-line 
 
 When using complex scripts, you can base64 encode them (see below).
 
-## 10.2. Base64 encoded script
+### 10.2. Base64 encoded script
 
 When dealing with complex scripts, it might be simpler to base64 encode them, so that you can pass them as a single line string into a json file.
 

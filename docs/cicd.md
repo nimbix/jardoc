@@ -11,13 +11,13 @@ This pipeline consists of various elements:
 
 While Docker images may be built and pushed locally or built by 3rd party services (e.g. Docker Hub automated builds), JARVICE's PushToCompute&trade; provides multiplatform build services for **x86_64**, **ARM** and **ppc64le** (64-bit Little Endian IBM POWER) as an integrated function.
 
-# Pipeline Description
+## Pipeline Description
 
 ![PushToCompute&trade; pipeline](pipeline.svg)
 
 The pipeline produces a JARVICE application from a Docker image, which in turn is compiled from Git source, as described above.  Users may pull the Docker image to run and test locally at any time.  The pipeline may also be automated using Web Hooks, to the point where a single `git push` can trigger an end to end build and deployment of the application to the JARVICE platform.
 
-# Authorizing JARVICE
+## Authorizing JARVICE
 
 Users may authorize JARVICE to access private Git repositories and/or Docker images.
 
@@ -33,7 +33,7 @@ To log in to a Docker registry (which is often required even to push public imag
 
 This widget supports both DockerHub style username/password logins as well as Google Container Registry style JSON key logins.  If you are using a different registry, please make sure to change the *Server* entry to match the registry you are using to log into.  Generally speaking this should be the same value you would pass into the `docker login` command in your shell.
 
-# Creating the Application
+## Creating the Application
 
 ![New app](newapp.png)
 
@@ -78,7 +78,7 @@ Example 3: combination of examples 1 and 2:
 
 To assign a custom graphic as the application icon, click the *CHANGE ICON* button and choose one from a local folder.  There is a 64KB file size restriction on such icons.  You may change the icon later if needed.
 
-# Building and Deploying
+## Building and Deploying
 
 Once you have an application in your *PushToCompute&trade;* page, you can click its context menu (the "hamburger menu" at the top left corner of the application card) to perform actions on it, e.g.:
 
@@ -100,7 +100,7 @@ Once you have an application in your *PushToCompute&trade;* page, you can click 
 
 *Download AppDef* downloads the application's `AppDef.json`, which you can modify to change application metadata and endpoints.  The default `AppDef.json` provides standard endpoints and basic metadata.  You can upload changes by placing `/etc/NAE/AppDef.json` in your Docker image.  For reference on the application definition format (AppDef), please see the [Application Definition Guide](appdef.md) section.
 
-# Running the Application
+## Running the Application
 
 To run the application, simply click in the body of the card as you would other JARVICE applications.  This will launch the task builder.  If you are using the default AppDef, you will see 3 endpoints: *Batch*, *Server*, and *GUI*.
 
@@ -110,11 +110,11 @@ To run the application, simply click in the body of the card as you would other 
 
 *GUI* is used to execute a GUI command inside a graphical session accessible via browser (HTML5) or VNC client.  This endpoint only functions if your image includes the Nimbix Desktop.
 
-# Updating the Application
+## Updating the Application
 
 You may update your application at any time by executing any portion of the pipeline (e.g. *Build*, *Build+Pull*, or *Pull*).  The application image is available immediately after a pull completes.
 
-# Automating the Pipeline
+## Automating the Pipeline
 
 All functions described above in *Building and Deploying* can be triggered via HTTP GET from other services.  You will see a confirmation dialog that allows youto copy a Web Hook URL to the clipboard before performing the action, e.g.:
 

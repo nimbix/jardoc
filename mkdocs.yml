@@ -3,6 +3,15 @@ theme:
   name: material
   features:
     - navigation.instant
+    - navigation.sections
+    - navigation.tracking
+    - navigation.path
+    - toc.integrate
+    - toc.follow
+markdown_extensions:
+  - toc:
+      permalink: true
+      toc_depth: 2
 plugins:
     - search
     # - with-pdf:

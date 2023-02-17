@@ -8,52 +8,52 @@ JARVICE runs endpoint commands as the user `nimbix`. If running under `appdefver
 
 NOTE: It is possible to replace the `nimbix` user using the [`identity` object](appdef.md#reference) within an Appdef or using the [JARVICE API](api.md#jarvicesubmit).
 
-# Runtime Directories and Files
+## Runtime Directories and Files
 
 Certain directories and files have special meaning on JARVICE:
 
-## /data
+### /data
 
 This is where all persistent files should be stored; the user has access to this directory outside of your application as well.
 
-## /tmp
+### /tmp
 
 Place all temporary files here for best performance; typically this volume provides at least 100GB of disk space on the Nimbix Cloud.  All files in this volume are wiped when your application exits.
 
-## /home/nimbix
+### /home/nimbix
 
 This directory is ephemeral and should not be used for storing persistent data.  If your application is designed to default to the home directory for persistent storage, either add a symbolic link to `/data` under `/home/nimbix` or change your configuration to default to `/data`
 
 NOTE: The `/home/nimbix` will be replaced if the [`identity` object](appdef.md#reference) exists in an Appdef file or is set using the [JARVICE API](api.md#jarvicesubmit).
 
 
-## /etc/JARVICE
+### /etc/JARVICE
 
 This directory contains generated files from the container engine itself.  The most common files are:
 
-### /etc/JARVICE/nodes
+#### /etc/JARVICE/nodes
 
 Contains a list of compute nodes, one per line, that make up this job.  The "master" node is always first.  This is especially relevant for multinode jobs.  All entries in this list are resolvable by all nodes, and if `ssh` is supported in the application image, passwordless `ssh` trust is automatically established across all nodes in the job.`  This file may be passed verbatim to certain commands such as `mpirun` for parallel applications, for example.
 
-### /etc/JARVICE/cores
+#### /etc/JARVICE/cores
 
 Similar to `/etc/JARVICE/nodes`, but contains one entry per core, sorted in the order of the compute nodes in the job.  For example if a job runs on 2 16 core nodes, there will be 32 entries in this file - the first 16 for the master node, and the second 16 for the slave node.  Each core entry is identical for the given node.
 
-### /etc/JARVICE/jobinfo.sh
+#### /etc/JARVICE/jobinfo.sh
 
 Provides job information available to the application, and can be sourced into a shell script.
 
-### /etc/JARVICE/jobenv.sh
+#### /etc/JARVICE/jobenv.sh
 
 Provides account variables as environment variables for the application, and can be sourced into a shell script.  Account variables are managed for end users by Nimbix Support and are frequently used to describe license server addresses and keys.
 
-# Container metadata
+## Container metadata
 
-## /etc/NAE
+### /etc/NAE
 
 The directory `/etc/NAE` contains certain metadata files for the JARVICE system; these are managed by the application developer and are part of the Docker image:
 
-### /etc/NAE/AppDef.json
+#### /etc/NAE/AppDef.json
 
 This is the AppDef - if present a pull into JARVICE replaces the endpoint and metadata definitions on file.  You may download the AppDef from the JARVICE portal as described in [CI/CD Pipeline](cicd.md), and modify it per the [Application Definition Guide](appdef.md) section.  The JARVICE API also provides a validation endpoint that can interrupt the `docker build` if it fails.  You may call this endpoint manually as well.  The following example snippet inserts an AppDef into a Docker image and validates it at build time:
 
@@ -64,27 +64,27 @@ RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/ja
 
 The example above assumes that `AppDef.json` contains a valid application definition and lives adjacent to the Dockerfile in the repository.
 
-### /etc/NAE/screenshot.png
+#### /etc/NAE/screenshot.png
 
 A screenshot or graphic to display in the "large" card - when an application card is clicked.  This should be 960x540 resolution for optimal results.
 
-### /etc/NAE/screenshot.txt
+#### /etc/NAE/screenshot.txt
 
 A description of the `/etc/NAE/screenshot.png` screenshot or graphic.
 
-### /etc/NAE/license.txt
+#### /etc/NAE/license.txt
 
 End user license agreement for your application.
 
-### /etc/NAE/url.txt
+#### /etc/NAE/url.txt
 
 The URL to provide when a user clicks on a running application - this is used to connect the end user to whatever service the application provides.  Substitutions are supported as well.  For example, `https://%PUBLICADDR%/` in `/etc/url.txt` sends the user to the public IP address of the running application when they connect (%PUBLICADDR% is a substitution).
 
-### /etc/NAE/help.html
+#### /etc/NAE/help.html
 
 HTML help to pop up when the user clicks the help button while the application is running.
 
-# Metadata optimization for PushToCompute
+## Metadata optimization for PushToCompute
 
 The `/etc/NAE/screenshot.png`, `/etc/NAE/screenshot.txt`,
 `/etc/NAE/license.txt`, and `/etc/NAE/AppDef.json` files are loaded by JARVICE
