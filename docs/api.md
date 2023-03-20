@@ -144,6 +144,54 @@ On success, a JSON payload indicating the job name and job number (with ```name`
 
 5. ```ipaddr``` will be validated by the underlying platform for authorization for the user; it may also fail if the address is already assigned (but this won't be known until the job starts running).
 
+---
+## /jarvice/batch
+
+Submits a batch job for processing. The body is in JSON format similar to ```/jarvice/submit``` with the addition of the ```container``` blob:
+
+```json
+{
+    "machine": {
+        "type": "n0",
+        "nodes": 1
+    },
+    "vault": {
+        "name": "<vault>",
+        "readonly": false,
+        "force": false
+    },
+    "container": {
+        "image": "library/ubuntu:focal",
+        "jobscript": "sleep 30 && hostname",
+        "pullsecret": "<pullsecret>"
+    },
+    "user": {
+        "username": "<username>",
+        "apikey": "<apikey>"
+    }
+}
+```
+
+NOTE: Public containers from DockerHub must include the ```library/``` prefix. e.g. ```library/ubuntu:latest```
+
+
+##### Parameters
+
+**POST only**: JSON payload to run the compute job, generated as specified above.  Please note that authentication is performed from the ```username``` and ```apikey``` values in the JSON itself.
+
+##### Response
+
+On success, a JSON payload indicating the job name and job number (with ```name``` and ```number``` keys).
+
+##### Additional Notes
+
+1. All boolean values default to ```false``` if not specified
+
+2. The ```nodes``` parameter in the machine section defaults to ```1``` if not specified
+
+3. Even if a ```vault``` section is specified, ```password``` is optional and should only be supplied for encrypted block vaults
+
+4. Even if ```vault``` section is specified, vault ```objects``` is optional and applies only to object storage vaults; it indicates which objects should be moved into the environments's backing store for processing. If ```readonly``` is set to ```false```, JARVICE automatically copies any new or changed objects from the backing store back to the object storage on normal job completion (but not immediate termination with [/jarvice/terminate](#jarviceterminate)).
 
 ---
 ### /jarvice/terminate
