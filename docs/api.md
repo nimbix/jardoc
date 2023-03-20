@@ -255,6 +255,8 @@ Returns information about available application(s).
 
 * ```name``` (optional) - name of application to return information for (default, if not specified: all)
 
+* ```version``` (optional) - filter applications by appdef version (default, if not specified: 1)
+
 ###### Response
 
 On success, a JSON payload with application information for each available application, or for the specific application name if available. The application name is used as the dictionary key, and the data subkey contains the raw definition in JSON format. The ```price``` value is the application price itself, not including underlying machine price (which is available by querying the machine type using [/jarvice/machines](#jarvicemachines)).
