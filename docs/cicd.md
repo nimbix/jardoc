@@ -1,5 +1,28 @@
 # PushToCompute Pipeline Overview
 
+**IMPORTANT NOTE: the following information is deprecated and has been replaced with the [Applications Tutorial](/apps_tutorial), which covers the new "v2" application standard in JARVICE.**
+
+## What's new in "v2"?
+
+The "v2" application standard replaces the traditional Nimbix Application Environment-based mechanisms, hereafter "v1".  While the "v1" standard is to be considered deprecated, it will continue to be supported without new enhancements for the forseeable future.  However, all new applications should follow the "v2" standard, as described in the above mentioned [Applications Tutorial](/apps_tutorial).
+
+For most applications, the changes are minimal and in fact, "v2" greatly simplifies many mechanisms by making them platform-defined.  It focuses on security and portability across different environments.  The following table summarizes key differences:
+
+Capability|v1?|v2?|Notes
+---|---|---|---
+`root` and `sudo` allowed in container|yes|**no**|applications should run as unprivileged user for increased security; this user is defined at runtime, and should not be hardcoded; application bits should be installed in the container with world-readable permissions, as if installing on an isolated system
+SSH between container instances fully automated|no|**yes**|applications should not attempt to start `sshd` as this is now performed automatically; connectivity testing also takes place before the application starts, to minimize initialization failures
+Writing or modifying files to ephemeral space|yes (if permissions established at build time)|**no**|applications should not attempt to write to files outside of `$HOME` or `/tmp`, and consider each space limited; persistent data should be written to `/data`
+Opinionated endpoints for MPI, desktops, etc.|no|**yes**|applications can take advantage of simplified mechanisms, as described in the tutorial, rather than complex wrapper scripts to invoke various application endpoints
+Shell-style parameters and variable expansion in AppDef|no|**yes**|applications benefit from reduced scripting requirements thanks to improved parameter mechanisms, as described in the tutorial
+Arbitrary, hardcoded service ports|yes|**no**|applications should not hardcode service ports as these may be dynamically assigned outside of dedicated network namespaces; refer to the tutorial for details
+`image-common` required|yes|**no**|applications need not install `image-common` in containers but do require the new, lighter-weight [jarvice-desktop](https://github.com/nimbix/jarvice-desktop) if providing remote visualization capabilities
+New features|no|**yes**|the "v2" standard will continue to evolve with new features and capabilities, while the "v1"-compatible mechanisms (including `image-common`), is deprecated
+
+Note that not all differences may be covered in the above table.  For additional details and the most up-to-date information, please see the [Applications Tutorial](/apps_tutorial).
+
+**HERE FOLLOWS DEPRECATED INFORMATION**
+
 JARVICE provides an end-to-end continuous integration/continuous deployment (CI/CD) pipeline for compiling, deploying, testing, and maintaining containerized cloud computing applications.  This is all part of the PushToCompute&trade; feature of the platform.
 
 This pipeline consists of various elements:
