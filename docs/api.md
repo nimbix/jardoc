@@ -345,6 +345,29 @@ On success, a CSV file containing generated billing report
 5. ```startdate``` and ```enddate``` are required if ```timeperiod``` is set to ```range```
 
 ---
+### /jarvice/audit
+
+(JXE/System Admins only) Query audit log
+
+###### Parameters
+
+* ```apikey``` - API key for user to authenticate
+
+* ```username``` - name of user to authenticate
+
+* ```quser``` - (optional) user to query events for (root for system events)
+
+* ```category``` - (optional) category to query (apps, dockerpull, ip, job, limit, settings, team, user, or vault)
+
+* ```resource``` - (optional) arbitrary resource to associate with event
+
+* ```lines``` - (optional) number of entries to query
+
+##### Response
+
+On success, the requested query in ```text/plain format``` (with single ```\n``` for line breaks), up to and including the number of lines requested; if the total length of the output is less than lines requested, the entire query is returned.
+
+---
 ### /jarvice/connect
 
 Requests the network address and user ```nimbix``` password (if set), for an interactive job.
