@@ -61,6 +61,8 @@ curl.exe -X POST http://localhost:5000/node -H 'Content-Type: application/json' 
 
 These API endpoints allow you to submit jobs and control their execution.  Jobs run on one or more compute nodes and launch the image of an application from the service catalog.
 
+Note that a full example of a job submission is available in [Jarvice Job Receip page](recipe.md), in Step by step batch job example.
+
 ### Global jobs queries
 
 ---

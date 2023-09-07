@@ -1,11 +1,13 @@
 # Overview
 
+## Full script
+
 The script below provides a good example of how to use the various JARVICE API
 endpoints to control and interact with a job in the Nimbix Public Cloud.  The
 example is a bit superfluous, but that is with the intent of showing how to
 use as many of the JARVICE API endpoints as possible:
 
-## [jarvice-job-exec](recipe/jarvice-job-exec)
+### [jarvice-job-exec](recipe/jarvice-job-exec)
 ```
 #!/bin/bash
 
@@ -272,7 +274,7 @@ Available [options]:
  --job-plugin-skip	Skip execution of jarvice_job_plugin
 ```
 
-# Custom job execution with *jarvice-job-exec*
+## Custom job execution with *jarvice-job-exec*
 
 As seen above, with the *--job-json* argument, it is possible to submit a
 JARVICE job with custom JSON using a local file.  The
@@ -314,7 +316,7 @@ When specifying custom JSON with a *username* and *apikey* in it, it is no
 longer necessary to use the *--username* and *--apikey* arguments when
 executing *jarvice-job-exec*.
 
-## [jarvice-filemanager-plugin.sh](recipe/jarvice-filemanager-plugin.sh)
+### [jarvice-filemanager-plugin.sh](recipe/jarvice-filemanager-plugin.sh)
 
 When executing *jarvice-job-exec* with the *--job-plugin* flag, it is possible
 to provide customized code for interacting with the job.  The following example
@@ -369,3 +371,175 @@ executed like so to customize JARVICE job execution and interaction:
 ./jarvice-job-exec --job-json ./jarvice-job.json --job-plugin ./jarvice-filemanager-plugin.sh -- --up ./filename /data/filename --down /data/filename ./filename
 ```
 
+## Step by step batch job example
+
+In this section, we are going to submit an example job, interact with it, and close it. All endpoints details are given in the API page of this documentation.
+Note also that you need to adapt the api HTTP URL to your cluster.
+
+First step is to submit a job. We are going to submit a very simple job, that will download a movie sample in H264, and convert it in H265 using FFMPEG. We will use a public docker hub ffmpeg image for that.
+
+First, lets create our json file for the job (file will be written as `ffmpeg_job.json` file):
+
+```json
+{
+  "machine": {
+    "type": "n1",
+    "nodes": 1
+  },
+  "vault": {
+    "name": "ephemeral",
+    "readonly": false,
+    "force": false
+  },
+  "user": {
+    "username": "me",
+    "apikey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  },
+  "container": {
+        "image": "jrottenberg/ffmpeg:latest",
+        "jobscript": "/usr/local/bin/ffmpeg -stats -i https://test-videos.co.uk/vids/jellyfish/mp4/h264/1080/Jellyfish_1080_10s_2MB.mp4 -c:v libx265 -f mp4 $HOME/test.mp4"
+  }
+}
+```
+
+Remember to adapt machine, vault, and user dicts to your needs.
+
+Then lets submit a batch job:
+
+```
+me@localhost:~$ curl -H 'Content-Type: application/json' -X POST -d @ffmpeg_job.json https://jarvice-development-api.jarvicedev.com/jarvice/batch
+{
+    "name": "20230906104200-995TB-jarvice-batch-me_s1",
+    "number": 123065
+me@localhost:~$
+```
+
+You can see we got as response a job name. We will use it in next steps.
+
+Now lets request the status of our job:
+
+```
+me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/status?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
+{
+    "123065": {
+        "job_name": "20230906104200-995TB-jarvice-batch-me_s1",
+        "job_status": "PROCESSING STARTING",
+        "job_substatus": 0,
+        "job_start_time": 1693996925,
+        "job_end_time": 0,
+        "job_submit_time": 1693996920,
+        "job_application": "jarvice-batch",
+        "job_command": "Batch",
+        "job_walltime": null,
+        "job_project": null
+    }
+}me@localhost:~$ 
+```
+
+We can see that the job still havent started yet. If we wait some time and come back with the same command:
+
+```
+me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/status?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
+{
+    "123065": {
+        "job_name": "20230906104200-995TB-jarvice-batch-me_s1",
+        "job_status": "COMPLETED",
+        "job_substatus": 0,
+        "job_start_time": 1693996925,
+        "job_end_time": 1693996942,
+        "job_submit_time": 1693996920,
+        "job_application": "jarvice-batch",
+        "job_command": "Batch",
+        "job_walltime": "00:00:17",
+        "job_project": null
+    }
+me@localhost:~$
+```
+
+We can now see it is completed.
+
+Lest request the logs output for this job now:
+
+```
+me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/output?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
+
+INIT[1]: Configuring user: nimbix nimbix 505...
+INIT[1]: Initializing networking...
+INIT[1]: WARNING: Cross Memory Attach not available for MPI applications
+INIT[1]: Platform fabric and MPI libraries successfully deployed
+INIT[1]: Detected preferred MPI fabric provider: tcp
+INIT[1]: Reading keys...
+INIT[1]: Finalizing setup in application environment...
+INIT[1]: Waiting for job configuration before executing application...
+INIT[1]: hostname: jarvice-job-123065-x9m4v
+INIT[1]: Injecting static ssh client.
+INIT[1]: Starting SSHD server...
+INIT[1]: Checking all nodes can be reached through ssh...
+INIT[1]: SSH test success!
+###############################################################################
+
+ffmpeg version 4.1 Copyright (c) 2000-2018 the FFmpeg developers
+  built with gcc 5.4.0 (Ubuntu 5.4.0-6ubuntu1~16.04.11) 20160609
+  configuration: --disable-debug --disable-doc --disable-ffplay --enable-shared --enable-avresample --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-gpl --enable-libass --enable-libfreetype --enable-libvidstab --enable-libmp3lame --enable-libopenjpeg --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx265 --enable-libxvid --enable-libx264 --enable-nonfree --enable-openssl --enable-libfdk_aac --enable-libkvazaar --enable-libaom --extra-libs=-lpthread --enable-postproc --enable-small --enable-version3 --extra-cflags=-I/opt/ffmpeg/include --extra-ldflags=-L/opt/ffmpeg/lib --extra-libs=-ldl --prefix=/opt/ffmpeg
+  libavutil      56. 22.100 / 56. 22.100
+  libavcodec     58. 35.100 / 58. 35.100
+  libavformat    58. 20.100 / 58. 20.100
+  libavdevice    58.  5.100 / 58.  5.100
+  libavfilter     7. 40.101 /  7. 40.101
+  libavresample   4.  0.  0 /  4.  0.  0
+  libswscale      5.  3.100 /  5.  3.100
+  libswresample   3.  3.100 /  3.  3.100
+  libpostproc    55.  3.100 / 55.  3.100
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'https://test-videos.co.uk/vids/jellyfish/mp4/h264/1080/Jellyfish_1080_10s_2MB.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+  Duration: 00:00:10.01, start: 0.000000, bitrate: 1676 kb/s
+    Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p, 1920x1080 [SAR 1:1 DAR 16:9], 1672 kb/s, 29.97 fps, 29.97 tbr, 11988 tbn, 59.94 tbc (default)
+    Metadata:
+      handler_name    : VideoHandler
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> hevc (libx265))
+Press [q] to stop, [?] for help
+x265 [info]: HEVC encoder version 2.3
+x265 [info]: build info [Linux][GCC 5.4.0][64 bit] 8bit+10bit+12bit
+x265 [info]: using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX AVX2 FMA3 LZCNT BMI2
+x265 [info]: Main profile, Level-4 (Main tier)
+x265 [info]: Thread pool created using 16 threads
+x265 [info]: Slices                              : 1
+x265 [info]: frame threads / pool features       : 5 / wpp(17 rows)
+x265 [info]: Coding QT: max CU size, min CU size : 64 / 8
+x265 [info]: Residual QT: max TU size, max depth : 32 / 1 inter / 1 intra
+x265 [info]: ME / range / subpel / merge         : hex / 57 / 2 / 2
+x265 [info]: Keyframe min / max / scenecut / bias: 25 / 250 / 40 / 5.00
+x265 [info]: Lookahead / bframes / badapt        : 20 / 4 / 2
+x265 [info]: b-pyramid / weightp / weightb       : 1 / 1 / 0
+x265 [info]: References / ref-limit  cu / depth  : 3 / on / on
+x265 [info]: AQ: mode / str / qg-size / cu-tree  : 1 / 1.0 / 32 / 1
+x265 [info]: Rate Control / qCompress            : CRF-28.0 / 0.60
+x265 [info]: tools: rd=3 psy-rd=2.00 rskip signhide tmvp strong-intra-smoothing
+x265 [info]: tools: lslices=6 deblock sao
+Output #0, mp4, to '/home/nimbix/test.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf58.20.100
+    Stream #0:0(und): Video: hevc (libx265) (hev1 / 0x31766568), yuv420p, 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 29.97 fps, 11988 tbn, 29.97 tbc (default)
+    Metadata:
+      handler_name    : VideoHandler
+      encoder         : Lavc58.35.100 libx265
+frame=  300 fps= 28 q=-0.0 Lsize=    2360kB time=00:00:09.90 bitrate=1950.6kbits/s speed=0.919x
+video:2353kB audio:0kB subtitle:0kB other streams:0kB global headers:2kB muxing overhead: 0.270860%
+x265 [info]: frame I:      2, Avg QP:24.36  kb/s: 7139.57
+x265 [info]: frame P:     75, Avg QP:26.90  kb/s: 4460.35
+x265 [info]: frame B:    223, Avg QP:34.48  kb/s: 1025.40
+x265 [info]: Weighted P-Frames: Y:0.0% UV:0.0%
+x265 [info]: consecutive B-frames: 2.6% 1.3% 1.3% 93.5% 1.3%
+
+encoded 300 frames in 10.70s (28.05 fps), 1924.90 kb/s, Avg QP:32.52
+me@localhost:~$
+```
+
+We can see our video was encoded in 10.70s. Since we used in this example an ephemeral vault, our output file is now lost. But you can use a persistent vault (check available ones in the portal) and store output file into /data, which is associated to requested vault during job execution.
