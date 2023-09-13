@@ -5,7 +5,9 @@ The JARVICE API allows full control on running jobs as well as managing applicat
 https://cloud.nimbix.net/api
 ```
 
-In next examples, we will use `https://jarvice-development-api.jarvicedev.com/` server API endpoint.
+In next examples, we will use `https://jarvice-api.cloud.nimbix.net/` server API endpoint.
+
+Note that a full example of a job submission is available in [Jarvice Job Receip page](recipe.md), in Step by step batch job example.
 
 Unless otherwise noted, all endpoints support both GET and POST request methods.  Also, unless otherwise noted, responses deliver both an HTTP status code and a JSON payload.
 
@@ -26,13 +28,13 @@ Most API "push" rely on passing a JSON to Jarvice API endpoint via POST HTTP.
 In order to POST a JSON file to the API, use the following command (JSON file name and URL to be adapted to your needs):
 
 ```
-curl -H 'Content-Type: application/json' -X POST -d @ubuntu.json https://jarvice-development-api.jarvicedev.com/jarvice/batch
+curl -H 'Content-Type: application/json' -X POST -d @ubuntu.json https://jarvice-api.cloud.nimbix.net/jarvice/batch
 ```
 
 This assumes ubuntu.json file is un current folder. If not, use full path:
 
 ```
-curl -H 'Content-Type: application/json' -X POST -d @/home/me/ubuntu.json https://jarvice-development-api.jarvicedev.com/jarvice/batch
+curl -H 'Content-Type: application/json' -X POST -d @/home/me/ubuntu.json https://jarvice-api.cloud.nimbix.net/jarvice/batch
 ```
 
 ### GET
@@ -42,7 +44,7 @@ In order to get data from API (status, job output, etc), you need to use GET HTT
 In order to GET a data from the API, use the following command (URL and parameters to be adapted to your needs):
 
 ```
-curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/output?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&name=20230901131135-NNW6B-jarvice-batch-me_s1&lines=0'
+curl -X GET 'https://jarvice-api.cloud.nimbix.net/jarvice/output?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&name=20230901131135-NNW6B-jarvice-batch-me_s1&lines=0'
 ```
 
 Data should be displayed in JSON format once server answered.
@@ -60,8 +62,6 @@ curl.exe -X POST http://localhost:5000/node -H 'Content-Type: application/json' 
 ## Job Control
 
 These API endpoints allow you to submit jobs and control their execution.  Jobs run on one or more compute nodes and launch the image of an application from the service catalog.
-
-Note that a full example of a job submission is available in [Jarvice Job Receip page](recipe.md), in Step by step batch job example.
 
 ### Global jobs queries
 
@@ -85,7 +85,7 @@ On success, a JSON payload with job status for each queued or running job (keyed
 ##### Curl example
 
 ```
-curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/jobs?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+curl -X GET 'https://jarvice-api.cloud.nimbix.net/jarvice/jobs?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
 
 ---
@@ -112,7 +112,7 @@ On success, a JSON payload with job status for each queued or running job (keyed
 ##### Curl example
 
 ```
-curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/teamjobs?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+curl -X GET 'https://jarvice-api.cloud.nimbix.net/jarvice/teamjobs?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 ```
 
 ### Submit jobs
@@ -177,7 +177,7 @@ On success, a JSON payload indicating the job name and job number (with ```name`
 ##### CLI example:
 
 ```
-curl -H 'Content-Type: application/json' -X POST -d @my_batch.json https://jarvice-development-api.jarvicedev.com/jarvice/batch
+curl -H 'Content-Type: application/json' -X POST -d @my_batch.json https://jarvice-api.cloud.nimbix.net/jarvice/batch
 ```
 
 ---
@@ -256,7 +256,7 @@ On success, a JSON payload indicating the job name and job number (with respecti
 ##### CLI example:
 
 ```
-curl -H 'Content-Type: application/json' -X POST -d @my_submit_app.json https://jarvice-development-api.jarvicedev.com/jarvice/submit
+curl -H 'Content-Type: application/json' -X POST -d @my_submit_app.json https://jarvice-api.cloud.nimbix.net/jarvice/submit
 ```
 
 ### Interact with job
@@ -612,7 +612,7 @@ A job not in `PROCESSING STARTING` status will return an error, e.g. ```{"error"
 ##### Curl example
 
 ```
-curl --X GET https://jarvice-development-api.jarvicedev.com/jarvice/shutdown?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&name=20230901131135-NNW6B-jarvice-batch-me_s1
+curl --X GET https://jarvice-api.cloud.nimbix.net/jarvice/shutdown?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&name=20230901131135-NNW6B-jarvice-batch-me_s1
 ```
 
 ---
@@ -643,7 +643,7 @@ On success: ```{"status": "terminated"}```
 ##### Curl example
 
 ```
-curl --X GET https://jarvice-development-api.jarvicedev.com/jarvice/terminate?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&name=20230901131135-NNW6B-jarvice-batch-me_s1
+curl --X GET https://jarvice-api.cloud.nimbix.net/jarvice/terminate?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&name=20230901131135-NNW6B-jarvice-batch-me_s1
 ```
 
 ## Global Status and Information

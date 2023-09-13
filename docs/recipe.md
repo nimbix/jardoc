@@ -407,7 +407,7 @@ Remember to adapt machine, vault, and user dicts to your needs.
 Then lets submit a batch job:
 
 ```
-me@localhost:~$ curl -H 'Content-Type: application/json' -X POST -d @ffmpeg_job.json https://jarvice-development-api.jarvicedev.com/jarvice/batch
+me@localhost:~$ curl -H 'Content-Type: application/json' -X POST -d @ffmpeg_job.json https://jarvice-api.cloud.nimbix.net/jarvice/batch
 {
     "name": "20230906104200-995TB-jarvice-batch-me_s1",
     "number": 123065
@@ -419,7 +419,7 @@ You can see we got as response a job name. We will use it in next steps.
 Now lets request the status of our job:
 
 ```
-me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/status?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
+me@localhost:~$ curl -X GET 'https://jarvice-api.cloud.nimbix.net/jarvice/status?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
 {
     "123065": {
         "job_name": "20230906104200-995TB-jarvice-batch-me_s1",
@@ -439,7 +439,7 @@ me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarv
 We can see that the job still havent started yet. If we wait some time and come back with the same command:
 
 ```
-me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/status?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
+me@localhost:~$ curl -X GET 'https://jarvice-api.cloud.nimbix.net/jarvice/status?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
 {
     "123065": {
         "job_name": "20230906104200-995TB-jarvice-batch-me_s1",
@@ -461,7 +461,7 @@ We can now see it is completed.
 Lest request the logs output for this job now:
 
 ```
-me@localhost:~$ curl -X GET 'https://jarvice-development-api.jarvicedev.com/jarvice/output?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
+me@localhost:~$ curl -X GET 'https://jarvice-api.cloud.nimbix.net/jarvice/output?username=me&apikey=XXXXXXXXXXXXXXXXXXXXXX&name=20230906104200-995TB-jarvice-batch-me_s1'
 
 INIT[1]: Configuring user: nimbix nimbix 505...
 INIT[1]: Initializing networking...
