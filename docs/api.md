@@ -160,6 +160,9 @@ NOTE: Public containers from DockerHub must include the ```library/``` prefix. e
 * `machine` dict will define the storage vault, defined in Jarvice portal, to be mounted as `/data` inside the container running the job.
 * `user` dict allows to perform authentication to Jarvice platform, using `username` and `apikey` values in the JSON itself.
 
+##### Optional Parameters
+* `job_priority` assigns a priority to the submitted job. Available levels are `normal`, `high`, or `highest`. (JXE payer and team admins only)
+
 ##### Response
 
 On success, a JSON payload indicating the job name and job number (with ```name``` and ```number``` keys).
