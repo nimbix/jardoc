@@ -2209,7 +2209,12 @@ A basic http server is the perfect hello world example.
 We are going to use nginx to expose a simple html page. Note that Nginx is originaly designe in its default image to run as root.
 App V2 does not allow using root user, and so we are going to rely on a specific image made to run without root priviledges (80 -> 8080 port, user writable pid, user readable cache, etc.).
 
-First create a basic html page, this could be a whole website, here it will be a basic page with a text and a picture:
+We will expose 2 ways of proceeding:
+
+1. Using an ingress
+2. Using a private ipv4 address
+
+First create a basic index.html page, this could be a whole website, here it will be a basic page with a text and a picture:
 
 ```html
 <!DOCTYPE html>
@@ -2339,7 +2344,13 @@ First create a basic html page, this could be a whole website, here it will be a
 </html>
 ```
 
-Then, create folder NAE and create file NAE/AppDef.json with the following content:
+Now lets see the 2 methods.
+
+### 11.1.1. Expose using ingress
+
+This methods has the advantage of using a simple ingress of a full ipv4 address. This reduces the costs of usage, and natively profits from the main domain SSL certificate as we rely on a subpath instead of a dedicated ipv4 or dedicated domain.
+
+First, create folder NAE and create file NAE/AppDef.json with the following content:
 
 ```json
 {
@@ -2364,7 +2375,156 @@ Then, create folder NAE and create file NAE/AppDef.json with the following conte
         "server": {
             "path": "/docker-entrypoint.sh",
             "interactive": true,
-	    "publicip": true,
+            "publicip": false,
+            "url": "http://%PUBLICADDR%:8080",
+            "name": "server",
+            "description": "Nginx Server example",
+            "parameters": {
+		"cmd1": {
+                    "name": "cmd1",
+                    "description": "specify we want to launch nginx",
+                    "type": "STR",
+                    "value": "nginx",
+                    "positional": true,
+                    "variable": false,
+                    "required": true
+                },
+		"cmd2": {
+                    "name": "cmd2",
+                    "description": "start parameter",
+                    "type": "STR",
+                    "value": "-g",
+                    "positional": true,
+                    "variable": false,
+                    "required": true
+                },
+	        "cmd3": {
+                    "name": "cmd3",
+                    "description": "no daemon",
+                    "type": "STR",
+                    "value": "daemon off;",
+                    "positional": true,
+                    "variable": false,
+                    "required": true
+                }
+            }
+        }
+    },
+    "image": {
+	"data": "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",
+        "type": "image/png"
+    }
+}
+```
+
+Note the `url` key, we provide a specific url using the `%PUBLICADDR%` string, that will be automatically substituted by jarvice by the job dedicated subpath generated at job start. Note also that we are using port `8080` as stated before.
+
+Note also that logo image is a 128x128px png file, converted in bas64 with `-w 0` parameter.
+
+Now, we need to create an nginx configuration that:
+
+1. Rely on port 8080
+2. Do not rely on root user
+3. Read files from /usr/share/nginx/html as htdocs path
+4. Rewrite calls to job subpath to main nginx server / path
+
+Official nginx image will automatically execute scripts from /docker-entrypoint.d/ folder if exist and executable.
+
+Create a file called `generate_nginx_conf.sh` with the following content:
+
+```sh
+#!/bin/bash
+set -x
+cat <<EOF> /etc/nginx/conf.d/default.conf
+server {
+    listen       8080;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    location = /${JARVICE_INGRESSPATH} {
+       rewrite ^/${JARVICE_INGRESSPATH}(.*)$ / break;
+       root /usr/share/nginx/html;
+    }
+}
+EOF
+cat /etc/nginx/conf.d/default.conf 
+```
+
+Dont forget to make it executable, using `chmod +x generate_nginx_conf.sh`.
+
+Notice the substitution of JARVICE_INGRESSPATH environment variable. At runtime, this variable contains the ingress subpath used.
+
+Now grab a screenshot (whatever you wish as long as its a png file) and put it as NAE/screenshot.png.
+
+Now create the final Dockerfile:
+
+```dockerfile
+FROM nginxinc/nginx-unprivileged:latest
+
+COPY index.html /usr/share/nginx/html/index.html
+COPY patch_subpath.sh /docker-entrypoint.d/patch_subpath.sh
+# Integrate AppDef file
+COPY NAE/AppDef.json /etc/NAE/AppDef.json
+COPY NAE/screenshot.png /etc/NAE/screenshot.png
+```
+
+Build and push this image to your registry. Then, in Jarvice P2C, pull this image as before, and launch it.
+
+Click on the new app tile:
+![nginx_step_1](img/apps_tutorial/nginx_step_1.png)
+
+Then click on server and start it on a small machine profile:
+![nginx_step_2](img/apps_tutorial/nginx_step_2.png)
+
+Once app has started, you can simply click on the tile to reach the app url:
+![nginx_step_3](img/apps_tutorial/nginx_step_3_1.png)
+
+This should open the index.html small page of our image:
+![nginx_step_4](img/apps_tutorial/nginx_step_4.png)
+
+### 11.1.2. Expose using public ip
+
+This method has the advantage of linking a public ip to the job. You can then use the ip to reach the nginx server, but also other kind of services (this can be mixed with an ssh server for example to manage the nginx website).
+
+The main drawback of this method is the cost or the availability of a public ip feature. Public ip have a cost, and not all cloud providers or self hosted kubernetes clusters can provide this feature. Also, you do not benefit from main cluster SSL certificate, and so only http is possible here by default.
+
+Procedure is similar to the one using ingress, with small changes.
+
+First, create folder NAE and create file NAE/AppDef.json with the following content:
+
+```json
+{
+    "name": "Nginx example",
+    "description": "HTTP server example",
+    "author": "me",
+    "licensed": false,
+    "appdefversion": 2,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "server": {
+            "path": "/docker-entrypoint.sh",
+            "interactive": true,
+	        "publicip": true,
             "ports": [
                 "8080/tcp"
             ],
@@ -2408,9 +2568,7 @@ Then, create folder NAE and create file NAE/AppDef.json with the following conte
 }
 ```
 
-Note that logo image is a 128x128px png file, converted in bas64 with `-w 0` parameter.
-
-Now grab a screenshot (whatever you wish as long as its a png file) and put it as NAE/screenshot.png.
+Note the `publicip` key set to `true`, and that we requested that port `8080` to be opened to world.
 
 Then create the final dockerfile:
 
@@ -2431,8 +2589,6 @@ Then click on server and start it on a small machine profile:
 ![nginx_step_2](img/apps_tutorial/nginx_step_2.png)
 
 Once app has started, you should see the ip provided as "Address" in the running app tile:
-
-Then click on server and start it on a small machine profile:
 ![nginx_step_3](img/apps_tutorial/nginx_step_3.png)
 
 Copy this address, and in another tab of your browser, past it and add `:8080` at the end.
@@ -2442,6 +2598,8 @@ This should open the index.html small page of our image:
 ![nginx_step_4](img/apps_tutorial/nginx_step_4.png)
 
 The same process can be repetead with a much more sophisticated website to host it.
+
+Small note: by default, Jarvice starts at init an ssh server inside the running pod of the job. You can combine this nginx part with the next part, related to ssh server, to be able to manage the nginx server during job execution if an interactive shell is needed.
 
 ### 11.2. Basic ssh server
 
