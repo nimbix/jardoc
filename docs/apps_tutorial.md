@@ -2495,7 +2495,7 @@ This should open the index.html small page of our image:
 
 This method has the advantage of linking a public ip to the job. You can then use the ip to reach the nginx server, but also other kind of services (this can be mixed with an ssh server for example to manage the nginx website).
 
-The main drawback of this method is the cost or the availability of a public ip feature. Public ip have a cost, and not all cloud providers or self hosted kubernetes clusters can provide this feature. Also, you do not benefit from main cluster SSL certificate, and so only http is possible here by default.
+The main drawback of this method is the cost or the availability of a public ip feature. Public ip have a cost, and not all cloud providers or self hosted kubernetes clusters can provide this feature. Also, you do not benefit from main cluster SSL certificate, and so only http is possible here by default for our nginx server.
 
 Procedure is similar to the one using ingress, with small changes.
 
@@ -2570,7 +2570,26 @@ First, create folder NAE and create file NAE/AppDef.json with the following cont
 
 Note the `publicip` key set to `true`, and that we requested that port `8080` to be opened to world.
 
-Then create the final dockerfile:
+**Please take a time to read this important note**:
+
+**START**
+
+If `ports` key is not set in the AppDef file, then by default the following ports will be reachable:
+
+* '80/tcp'
+* '443/tcp'
+* '5901/tcp'
+* '5902/tcp'
+* '8000/tcp'
+* '8080/tcp'
+* '8443/tcp'
+* '8888/tcp'
+
+Note also that '22/tcp' will be exposed on the public ip, but will redirect to port '2222/tcp' on the job's pod side. This is to reach the Jarvice embed ssh server, that listen by default on port 2222. Please see the next session to know how to use this embed ssh server to connect to a shell of your job (if needed).
+
+**END**
+
+Now create the final dockerfile:
 
 ```dockerfile
 FROM nginxinc/nginx-unprivileged:latest
@@ -2610,7 +2629,16 @@ A basic ssh server can be very useful, for many purposes:
 * Build an advanced application that would need more than what current webshell/desktop can offer.
 * Etc.
 
-To simplify process, we will allow user to upload via an STR field a public key to be setup during startup to connect to server. Also, since the ssh server is already embed by Jarvice, we can use a very minimal image, like an Alpine, so our application will be ultra small.
+There are 2 ways to use the Jarvice embed ssh server (that always start with every jobs):
+
+1. Using an app STR field to pass the public key desired.
+2. Using portal SSH keys section.
+
+Lets see the 2 ways.
+
+### 11.2.1. Using STR field
+
+We will allow user to upload via an STR field a public key to be setup during startup to connect to server. Also, since the ssh server is already embed by Jarvice, we can use a very minimal image, like an Alpine, so our application will be ultra small.
 
 Please understand also that while the Jarvice embed ssh server listens on port 2222, Jarvice automaticaly map port 22 of the public ip to port 2222 of the running container. This means we will only need to open port 2222 on the application side, and end user will just have to reach ssh 22 default port on his/her side.
 
@@ -2711,6 +2739,37 @@ jarvice-job-123333-bscv5:/tmp/.ephemeral-home$
 ```
 
 As expressed in the logs, user have to manually kill the job once done (this is a server app, not a computation app).
+
+#### 11.2.2. Using portal SSH Keys
+
+You can upload a public ssh key directly in the portal. Note that legacy portal only supports upload of RSA based keys, while new portal (Bird based) allows more formats.
+
+We will use the legacy portal in this example.
+
+Connect to Jarvice portal, and in Account (1), click on SSH Keys (2), then click Edit (3) and Add (4).
+
+![app_ssh_step_4](img/apps_tutorial/app_ssh_step_4.png)
+
+Add your ssh public key, and save it. Now, each time you launch a new job, this public key will be added automatically to the nimbix's user authorized_keys file.
+
+There is no more need for the STR field parameter, we can directly call a `sleep infinity` command.
+
+But we could do more! For the example, lets combine this ssh key usage with the nginx server example from above.
+Edit the nginx AppDef.json file, and add 2222/tcp along to the 8080/tcp port in ports list:
+
+```json
+	        "publicip": true,
+            "ports": [
+                "8080/tcp",
+                "2222/tcp"
+            ],
+```
+
+Upload the image, and start the nginx server.
+
+Once app has started, you can now ssh into the pod running the nginx server (on port 22, remember that 2222 on the pod is mapped on 22 on the public ip), and modifiy things, like the nginx configuration.
+
+Tip: use `nginx -s reload` to live reload the nginx server (and its new configuration) in the running pod without downtime or job termination ;)
 
 ### 11.3. Minecraft server
 
