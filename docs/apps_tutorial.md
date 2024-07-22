@@ -2348,7 +2348,7 @@ Now lets see the 2 methods.
 
 ### 11.1.1. Expose using ingress
 
-This methods has the advantage of using a simple ingress of a full ipv4 address. This reduces the costs of usage, and natively profits from the main domain SSL certificate as we rely on a subpath instead of a dedicated ipv4 or dedicated domain.
+This methods has the advantage of using a simple ingress instead of a full ipv4 address. This reduces the costs of usage, and natively profits from the main domain SSL certificate as we rely on a subpath instead of a dedicated ipv4 or dedicated domain.
 
 First, create folder NAE and create file NAE/AppDef.json with the following content:
 
