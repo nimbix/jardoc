@@ -2771,6 +2771,82 @@ Once app has started, you can now ssh into the pod running the nginx server (on 
 
 Tip: use `nginx -s reload` to live reload the nginx server (and its new configuration) in the running pod without downtime or job termination ;)
 
+#### 11.2.3. Quick and dirty using portal SSH Keys
+
+There is a very quick and dirty way to achieve ssh access, and this is an interesting topic to understand how to easily do tests on Jarvice, without having to create any specific image.
+
+Since the ssh server is running natively on Jarvice, we can simply use the default ubuntu:jammy image from docker hub, and inject our AppDef.json live in the portal.
+
+Make sure your ssh public key is registered in the portal (see previous section).
+
+Then create a new app in Push2Compute, call it "ssh", and as image use the raw ubuntu:jammy:
+
+![app_ssh_qd_step_1](img/apps_tutorial/app_ssh_qd_step_1.png)
+
+Then in the APPDEF tab, load the following file:
+
+```json
+{
+    "name": "ssh",
+    "description": "ssh",
+    "author": "Benoit Leveugle",
+    "licensed": false,
+    "appdefversion": 2,
+    "classifications": [
+        "Uncategorized"
+    ],
+    "machines": [
+        "*"
+    ],
+    "vault-types": [
+        "FILE",
+        "BLOCK",
+        "BLOCK_ARRAY",
+        "OBJECT"
+    ],
+    "commands": {
+        "ssh": {
+            "path": "/usr/bin/sleep",
+            "interactive": true,
+            "name": "Start ssh server",
+            "description": "Start an ssh server.",
+            "publicip": true,
+            "ports": [
+                "2222/tcp"
+            ],
+            "parameters": {
+                "infinity": {
+                    "name": "infinity",
+                    "description": "infinity",
+                    "type": "CONST",
+                    "value": "infinity",
+                    "positional": true,
+                    "required": true
+                }
+	        }
+        }
+    },
+    "image": {
+        "type": "image/png",
+        "data": ""
+    }
+}
+```
+
+![app_ssh_qd_step_2](img/apps_tutorial/app_ssh_qd_step_2.png)
+
+Then save, and launch this app. Be careful at launch to select the storage you want to be mounted during job (persistent, ephemeral, etc).
+
+Once job is started, ipv4 will be displayed in the portal:
+
+![app_ssh_qd_step_3](img/apps_tutorial/app_ssh_qd_step_3.png)
+
+You can then ssh on this ip on port 22 as nimbix user:
+
+![app_ssh_qd_step_4](img/apps_tutorial/app_ssh_qd_step_4.png)
+
+Remember that you are not root, so you can only do standard usage, but this is enough to access and manage data or execute a script.
+
 ### 11.3. Minecraft server
 
 Minecraft is a very popular building, crafting and adventure game. It is now owned by Microsoft.
