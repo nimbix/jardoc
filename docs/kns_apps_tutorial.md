@@ -340,7 +340,7 @@ A gotty shell is a web based terminal, that will allow app owner to interact via
 
 When app will be running, the app url will be by default in the `http://job-kns-XXX.mycluster.example` format. The gotty shell will be accessible at `http://job-kns-XXX.mycluster.example/gotty-shell`. Credentials to login to the gotty shell are provided through the help interface of the running app:
 
-![GottySHell_1](img/apps_tutorial/kns/gotty_shell_1_1.png)
+![GottySHell_1](img/apps_tutorial/kns/gotty_shell_1.png)
 
 ![GottySHell_1](img/apps_tutorial/kns/gotty_shell_2.png)
 
