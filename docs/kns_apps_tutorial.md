@@ -13,7 +13,7 @@ Before creating apps for KNS scheduler, it is important to understand how KNS op
 KNS stands for Kubernetes Nested Scheduler. As the name says, KNS is a Jarvice downstream component that will spawn nested Kubernetes clusters (based on K3S)
 and will deploy Kubernetes based apps inside these nested clusters, as jobs.
 
-While traditional Jarvice downstreams are made for HPC jobs and parallel short term jobs, KNS has been designed to host long running jobs with massive scaleup capabilities. KNS is in theory capable or running anything that can run on a Kubernetes cluster, making it a very nice shared "sandbox".
+While traditional Jarvice downstreams are made for HPC jobs and parallel short term jobs, KNS has been designed to host long running jobs with massive scaleup capabilities. KNS is, in theory, capable of running anything that can run on a Kubernetes cluster, making it a very nice shared "sandbox".
 
 KNS apps are docker images that contains files (mostly helm/kubectl/kustomize templates) and instructions to be used to deploy Kubernetes based apps, like Kubeflow, ArgoCD, Kubeai, etc. When launching a new job, the KNS will create a dedicated nested K3S cluster for the job, pull the app image from within this cluster, and use image's instructions to deploy the expected resources. Ingresses will allow user to access the nested cluster services.
 
