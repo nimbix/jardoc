@@ -2,7 +2,7 @@
 
 ![GlobalProcess](img/apps_tutorial/SuperNimbix.svg)
 
-Note: it is assumed that the user is already familliar with Jarvice Push to Compute (P2C). Please refer to [apps tutorial](apps_tutorial.md).
+Note: It is assumed that the user is familiar with Jarvice Push to Compute (P2C). For more information, please refer to [apps tutorial](apps_tutorial.md).
 
 Note 2: This tutorial assumes that the user is building applications based on `appdefversion` version `2`.
 
