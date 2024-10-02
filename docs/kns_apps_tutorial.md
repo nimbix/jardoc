@@ -90,7 +90,7 @@ Let's examine this file step by step. We will only focus on the commands part, e
 ```
 
 * `commands` is a list, so you can add any app entry points as needed. This can be useful for creating an all-in-one app image for example.
-* `hello` is the name of the current entry point for the app.
+* `Hello` is the name of the current entry point for the app.
 
 ```json
         "Hello": {
