@@ -141,7 +141,7 @@ Lets see each parts of this new dict.
                 "kubernetes_version": "",
 ```
 
-* `kubernetes_version` allows to specify the Kubernetes version to be used for the K3S nested cluster. Format is `v1.X.Y` with `X` the major and `Y` the minor versions. For example: `v1.28.11`. See the compatibility matrix here: https://vcluster.com/docs/v0.19/deploying-vclusters/compat-matrix
+* `kubernetes_version` allows to specify the Kubernetes version to be used for the K3S nested cluster. Format is `v1.X.Y` with `X` the major and `Y` the minor versions. For example: `v1.28.11`. See the compatibility matrix [here.](https://vcluster.com/docs/v0.19/deploying-vclusters/compat-matrix)
 
 ### 2.2. Ingress parameters
 
