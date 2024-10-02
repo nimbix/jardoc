@@ -262,7 +262,7 @@ To do so, specify a special key `format` to `url`, and provide the URL inside th
 
 Again, YOU MUST trust the owner of the remote template to use this feature.
 
-##### 2.3.2.1. kustomize type
+##### 2.3.2.2. kustomize type
 
 Kustomize will execute the following command:
 
