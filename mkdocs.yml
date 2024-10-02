@@ -9,6 +9,7 @@ theme:
     - toc.integrate
     - toc.follow
 markdown_extensions:
+  - attr_list
   - toc:
       permalink: true
       toc_depth: 3

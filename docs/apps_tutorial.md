@@ -2,23 +2,17 @@
 
 ![GlobalProcess](img/apps_tutorial/SuperNimbix.svg)
 
-This tutorial should allow end users to build their own applications (apps) for Jarvice clusters
-through Jarvice PushToCompute interface.
+This tutorial assists end users in building their own applications (apps) for Jarvice clusters through Jarvice PushToCompute interface.
+It is assumed that the user is building applications based on `appdefversion` version `2`.
 
-This tutorial assumes user is building applications based on `appdefversion` version `2`.
+The first part of the tutorial provides an overview on how to build and deploy a basic application. The second part covers the most standard use cases that users might need to build their application.
 
-First part of the tutorial is dedicated to general knowledge 
-and how to build and deploy a basic application.
-
-Second part covers most standard use cases users could need
-to build their application.
-
-It is assumed user have already installed **docker** on its personal system.
+It is assumed that users have already installed **docker** on their personal system.
 
 It is recommended to first read all sections from part 1 (Global view) to part 5 (Review application parameters) before proceeding to desired application target examples.
-Each of these general steps will help understand all features available, and provides key tips for new applications developers.
+Each of these general steps will help understand all features available, and provides key tips for new application developers.
 
-Table of content:
+Table of contents:
 
   * [1. Global view](#1-global-view)
   * [2. Hello world](#2-hello-world)
@@ -74,14 +68,14 @@ Process global view can be reduced to this simple schema:
 
 ![GlobalProcess](img/apps_tutorial/GlobalProcess.svg)
 
-In order to explain in details this process, best way is to build a Hello World application, steps by steps.
+To explain this process in detail, the best way is to build a Hello World application, step by step.
 
 ## 2. Hello world
 
-Objective of this Hello World application is simply to display an Hello World as output message of a Jarvice job.
+The objective of this Hello World application is to display "Hello World" as the output message of a Jarvice job.
 
-In order to achieve that, we will need to go through multiple steps.
-Process is not complex, but need steps to be understood in ordure to avoid basic issues.
+To achieve that, we will need to go through multiple steps.
+Although the process is not complex, we need to understand the steps clearly to avoid basic issues.
 
 ### 2.1. Create Dockerfile
 
@@ -109,13 +103,14 @@ Create file `Dockerfile` with the following content, which should be self-explai
 FROM ubuntu:latest
 ```
 
-Note: we did not specify any `CMD` or `ENDPOINT`. This is on purpose, as this will be handled by a separated file later.
+Note: We did not specify any `CMD` or `ENDPOINT`. This is on purpose, as this will be handled by a separated file later.
 
-Now, generate the hello_world image, tagging it as `tutorial:hello_word` (to get more details on how to build images, refer to https://docs.docker.com/engine/reference/commandline/build/):
+Now, generate the hello_world image, tagging it as `tutorial:hello_word`:
 
 ```
 docker build --tag="tutorial:hello_world" -f Dockerfile .
 ```
+To get more details on how to build images, refer to https://docs.docker.com/engine/reference/commandline/build/.
 
 Once image has been successfully created, it is possible to test it by manually executing it:
 
@@ -144,7 +139,7 @@ We can see here that image contains Ubuntu 20.04 release.
 
 ![GlobalProcess_step_2](img/apps_tutorial/GlobalProcess_step_2.svg)
 
-We now need to create the Jarvice application file.
+Now, we need to create the Jarvice application file.
 
 Create folder NAE:
 
@@ -153,7 +148,7 @@ mkdir NAE
 cd NAE
 ```
 
-And create here `AppDef.json` file with the following content:
+Then create `AppDef.json` file in the NAE folder with the following content:
 
 ```json
 {
@@ -199,7 +194,7 @@ And create here `AppDef.json` file with the following content:
 }
 ```
 
-Let’s review key parts of this file (when not detailed, just keep it as it):
+Let us review key parts of this file (when not detailed, just keep it as is):
 
 ```json
 {
@@ -215,7 +210,7 @@ Let’s review key parts of this file (when not detailed, just keep it as it):
 }
 ```
 
-This first section of the file details general settings, like application name, a description, the author, if application is under license or not, and application classification.
+This first section of the file details general settings like application name, description, author, if application is under license or not, and application classification.
 
 ```json
 {
@@ -227,7 +222,7 @@ This first section of the file details general settings, like application name, 
 }
 ```
 
-Machines allows you to restrict usage of the application to a specific set of machines registered in the targeted Jarvice cluster. For example, if your application is GPU dedicated, it would make no sense to run it on non-GPU nodes, and so only GPU able nodes should be added here.
+Machines allow you to restrict usage of the application to a specific set of machines registered in the targeted Jarvice cluster. For example, if your application is GPU dedicated, it would make no sense to run it on non-GPU nodes, and so only GPU able nodes should be added here.
 Note that only Jarvice cluster administrator can create machines profiles on its cluster. Please contact your JXE administrator to get a detailed list of available machines.
 
 ```json
@@ -293,7 +288,7 @@ Refer to https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-refe
 }
 ```
 
-The last section, image, refer to logo that will be displayed inside Jarvice interface, for our application. It has to be encoded as text.
+Image refers to the logo that will be displayed inside Jarvice interface, for our application. It has to be encoded as text.
 Let's add an image to our application. Download a basic sample from wikimedia:
 
 ```
@@ -324,7 +319,7 @@ Now that our AppDef file is ready, lets inject it into final image.
 
 ![GlobalProcess_step_3](img/apps_tutorial/GlobalProcess_step_3.svg)
 
-Edit again Dockerfile and add a step to inject AppDef.json file into image, and another step to validate it:
+Edit the Dockerfile again and add a step to inject AppDef.json file into image, and another step to validate it:
 
 ```dockerfile
 FROM ubuntu:latest
@@ -334,7 +329,7 @@ COPY NAE/AppDef.json /etc/NAE/AppDef.json
 RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
 ```
 
-And build again image with this new Dockerfile:
+Then build the image again with this new Dockerfile:
 
 ```
 :~$ docker build --tag="tutorial:hello_world" -f Dockerfile .
@@ -350,21 +345,21 @@ The command '/bin/sh -c curl --fail -X POST -d @/etc/NAE/AppDef.json https://clo
 :~$
 ```
 
-You can see here that we are missing a tool: `curl`. This tool is contained in package curl. We have to add a step in Dockerfile to add it.
+You can see that we are missing a tool: `curl` here. This tool is contained in package curl. We have to add a step in Dockerfile to add it.
 
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update; apt-get install curl -y --no-install-recommends;
+RUN apt-get update; apt-get install curl -y;
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
 RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
 ```
 
-Please note that we also added the `--no-install-recommends` to apt-get command. By default, apt-get or yum/dnf will try to install all recommended packages, generating huge images. 99% of time with app images, we do not need these packages. Setting `--no-install-recommends` for apt-get or `--nobest` for yum and dnf will sometime significantly reduce images sizes.
+<!--Please note that we also added the `--no-install-recommends` to apt-get command. By default, apt-get or yum/dnf will try to install all recommended packages, generating huge images. 99% of time with app images, we do not need these packages. Setting `--no-install-recommends` for apt-get or `--nobest` for yum and dnf will sometime significantly reduce images sizes.-->
 
-And build again:
+Now, build again:
 
 ```
 :~$ docker build --tag="tutorial:hello_world" -f Dockerfile .
@@ -403,7 +398,7 @@ We can see the output of Nimbix application validator:
 
 Our image is ready.
 
-Next step is to push image to a registry.
+The next step is to push image to a registry.
 
 ### 2.4. Register to registry (optional)
 
@@ -413,24 +408,29 @@ This step is optional.
 
 If you do not own a registry, or do not own an account on a third-party registry, you will need to obtain one.
 
-In this tutorial, we are going to get a free account from https://hub.docker.com/ . There are others free registry available on the market, this is only an example. Note that by default, a free account on https://hub.docker.com/ allows unlimited public repositories, but only a single private repository. If you need to host multiple private images, you will need to consider another solution.
+In this tutorial, we are going to get a free account from https://hub.docker.com/ . There are other free registeries available in the market. Docker is an example. Note that by default, a free account on https://hub.docker.com/ allows unlimited public repositories, but only a single private repository. If you need to host multiple private images, you will need to consider another solution.
 
 Create an account on https://hub.docker.com/.
 
-Once account is created, sign in, and click on **Create Repository**.
+Once account is created, sign in, and click on **Create repository**.
 
-![DockerHub_step_1](img/apps_tutorial/docker_hub_step_1.png)
+<!--![DockerHub_step_1](img/apps_tutorial/docker_hub_step_1.png)-->
+![DockerHub_step_1](img\apps_tutorial\New_Images\Img1_CreateRepositoryDocker.png){: style="border: 0.5px solid black;"}
 
-Fill required information, as bellow:
 
-![DockerHub_step_2](img/apps_tutorial/docker_hub_step_2.png)
+Fill the following information, as required.
 
-And click **Create**.
+<!--![DockerHub_step_2](img/apps_tutorial/docker_hub_step_2.png)-->
+![DockerHub_step_2](img\apps_tutorial\New_Images\Img2_CreateRepository.png)
 
-Our application repository is now created and ready to host our image.
-Pull command is displayed on repository page:
 
-![DockerHub_step_3](img/apps_tutorial/docker_hub_step_3.png)
+Then, click **Create**.
+
+The application repository is now created and ready to host our image.
+The Pull command is displayed on repository page, as follows.
+
+<!--![DockerHub_step_3](img/apps_tutorial/docker_hub_step_3.png)-->
+![DockerHub_step_3](img/apps_tutorial/New_Images/Img3_RepositoryCreated.png){: style="border: 0.5px solid black;"}
 
 ### 2.5. Push image
 
@@ -481,81 +481,103 @@ Image is now pushed and can be pulled from Jarvice Push to Compute interface.
 
 We are ready to inject our image into our Jarvice cluster.
 
-Login as usual user, and in the main interface, go to **PushToCompute** tab on the right:
+Login with your user account, and in the main interface, go to **PushToCompute** tab on the left:
 
-![PushToCompute_step_1](img/apps_tutorial/PTC_step_1.png)
+<!--![PushToCompute_step_1](img/apps_tutorial/PTC_step_1.png) -->
+![Img4_PushToCompute](img/apps_tutorial/New_Images/Img4_PushToCompute.png){: style="border: 0.5px solid black;"}
 
-Then, click on **New** to create a new application.
+Then, click on **Add new app** to create a new application.
 
-![PushToCompute_step_2](img/apps_tutorial/PTC_step_2.png)
+<!--![PushToCompute_step_2](img/apps_tutorial/PTC_step_2.png)-->
+![Img5_New](img/apps_tutorial/New_Images/Img5_New.png){: style="border: 0.5px solid black;"}
 
-Fill only `App ID` and `Docker repository`. Everything else will be automatically grabbed from the AppDef.json file created with the application. Then click **OK**.
+Fill the `App Id` and `Docker Repository` fields and click **Save**. 
+The other fields are automatically populated from the AppDef.json file created with the application. 
 
-![PushToCompute_step_3](img/apps_tutorial/PTC_step_3.png)
+<!--![PushToCompute_step_3](img/apps_tutorial/PTC_step_3.png)-->
+![Img6.1_AddApplication](img/apps_tutorial/New_Images/Img6.1_AddApplication.png){: style="border: 0.5px solid black;"}
 
-Now that application is registered into Jarvice, we need to request an image pull, so that Jarvice will retrieve AppDef.json embed into image and update all application data. To do so, click on the small burger on the top left of the application, then **Pull**, confirm pull by clicking **OK**, and close Pull response windows. Then wait few seconds for image to be pulled.
 
-![PushToCompute_step_4](img/apps_tutorial/PTC_step_4.png)
+Now that the application is registered into Jarvice, we need to request an image pull, so that Jarvice will retrieve AppDef.json embed into image and update all application data. To do so, click on the small burger on the bottom right of the application, then click **Pull** and confirm by clicking **Pull** again in the popup that appears. Close Pull response windows. Then, wait a few seconds for image to be pulled.
+
+<!--![PushToCompute_step_4](img/apps_tutorial/PTC_step_4.png)-->
+![Img8_Pull](img/apps_tutorial/New_Images/Img8_Pull.png){: style="border: 1px solid black; width: 400px;"}
+
+![Img9_popup](img/apps_tutorial/New_Images/Img9_popup.png){: style="border: 1px solid black; width: 500px;"}
 
 Once image has been pulled, you can see that application logo has been updated by our base64 encoded png.
 
-![PushToCompute_step_5](img/apps_tutorial/PTC_step_5.png)
+![Img10_ImgPulled](img/apps_tutorial/New_Images/Img10_ImgPulled.png){: style="border: 1px solid black;"}
 
-It is possible to check application logs / history to see pull process. To do so, press burger again, then go to **History**, and you can visualise here the pull process logs. Close the windows once read.
+Furthermore, you can check the application logs/history to see the pull process. To do so, press the burger again, then go to **History**. Close the windows once read.
 
-![PushToCompute_step_6](img/apps_tutorial/PTC_step_6.png)
+<!--![PushToCompute_step_6](img/apps_tutorial/PTC_step_6.png)-->
+![Img11_history](img/apps_tutorial/New_Images/Img11_history.png){: style="border: 1px solid black; width: 400px;"}
+![Img12_history](img/apps_tutorial/New_Images/Img12_history.png){: style="border: 1px solid black; width: 800px;"}
 
-Application is now ready to be run in Jarvice.
+The application is now ready to be run in Jarvice.
 
 ### 2.7. Run application in Jarvice
 
 ![GlobalProcess_step_7](img/apps_tutorial/GlobalProcess_step_7.svg)
 
-To submit an application job to the cluster, simply click on the application card:
+To submit an application job to the cluster, click on the application card.
 
-![Run_Application_step_1](img/apps_tutorial/Run_Application_step_1.png)
+<!--![Run_Application_step_1](img/apps_tutorial/Run_Application_step_1.png)-->
+![Img_RunApplication](img/apps_tutorial/New_Images/Img_RunApplication.png){: style="border: 1px solid black; width: 400px;"}
 
-Then on the application window, click on **Echo With Arguments** (remember, all of this was set in the AppDef.json file when building application image).
+Then on the application window, click on **Echo With Arguments**.
+ Note that all of this is set in the AppDef.json file while building application image.
 
-![Run_Application_step_2](img/apps_tutorial/Run_Application_step_2.png)
+<!--![Run_Application_step_2](img/apps_tutorial/Run_Application_step_2.png)-->
+![Img_SubmitApplication_Echo](img/apps_tutorial/New_Images/Img13_SubmitApplication_Echo.png){: style="border: 1px solid black; width: 700px;"}
 
-In the next window, select the Machine type to be used. For this tutorial hello world, you can use the smallest available.
+In the next window, select the machine type to be used. For this hello world tutorial, you can use the smallest available.
 
 Then click **Submit** to submit the application job and run the application.
 
-![Run_Application_step_3](img/apps_tutorial/Run_Application_step_3.png)
+<!--![Run_Application_step_3](img/apps_tutorial/Run_Application_step_3.png)-->
+![Img14_SubmitApplication](img/apps_tutorial/New_Images/Img14_SubmitApplication.png){: style="border: 1px solid black; width:700px"}
 
-If all goes well, you are automatically redirected to **Dashboard** tab. If not, click on it on the right. You can see here that your job has been submitted, and is now queued. After few seconds/minutes, job will start and application will run. Note the job number here: 11776. This will be the reference for job logs later.
+If all goes well, you are automatically redirected to the **Dashboard** tab. If not, click on it on the left. You can see here that your job has been submitted, and is now queued. After few seconds/minutes, job will start and application will run. Note the job number here: 6000384. This will be the reference for job logs later.
 
-![Run_Application_step_4](img/apps_tutorial/Run_Application_step_4.png)
+<!--![Run_Application_step_4](img/apps_tutorial/Run_Application_step_4.png)-->
+![Img15_RunningApplication](img/apps_tutorial/New_Images/Img15_RunningApplication.png){: style="border: 1px solid black;"}
 
-Once application has finished to run, you will see it marked as **Completed**.
+Once application is sun successfully, you will see it marked as **Completed**.
 
-![Run_Application_step_5](img/apps_tutorial/Run_Application_step_5.png)
+<!--![Run_Application_step_5](img/apps_tutorial/Run_Application_step_5.png)-->
+![Img16_RunCompleted](img\apps_tutorial\New_Images\Img16_RunCompleted.png){: style="border: 1px solid black;"}
 
 ### 2.8. Gather logs
 
 ![GlobalProcess_step_8](img/apps_tutorial/GlobalProcess_step_8.svg)
 
-Now that our application as run, lets gather few logs about it. Note that if the application failed to run, Jarvice local Administrator have access to advanced logs that might help to debug.
+Now that the application ran successfully, let us gather few logs regarding it. Note that if the application failed to run, Jarvice local Administrator has access to advanced logs that might help to debug.
 
-First, to grab job output, simply click on the small arrow on the right of the "completed" job card.
+To see the job output, click on the dropdown arrow on the right of the completed job card.
 
-We can see that our "Hello World!" message is here.
+We can see that the "Hello World!" message is displayed.
 
-![Gather_Logs_step_1](img/apps_tutorial/Gather_Logs_step_1.png)
+<!--![Gather_Logs_step_1](img/apps_tutorial/Gather_Logs_step_1.png)-->
+![Img17_ExpandArrow](img\apps_tutorial\New_Images\Img17_ExpandArrow.png){: style="border: 0.5px solid black;"}
 
-Now, click on **Jobs** tab on the left, and then **History**. You can see here all your jobs history.
 
-![Gather_Logs_step_2](img/apps_tutorial/Gather_Logs_step_2.png)
+Now, click on the **Jobs** tab on the right, and then **History**. You can see all your job history here.
 
-Last part, it is possible to go into **Account** tab on the right, then **Team Log** on the left. In the central area, we can see all team's job.
+<!--![Gather_Logs_step_2](img/apps_tutorial/Gather_Logs_step_2.png)-->
+![Img18_History](img\apps_tutorial\New_Images\Img18_History.png){: style="border: 0.5px solid black;"}
 
-![Gather_Logs_step_3](img/apps_tutorial/Gather_Logs_step_3.png)
+
+Lastly, you can go to the **Account** tab on the left, and then **Team Log** to view all team jobs.
+
+<!--![Gather_Logs_step_3](img/apps_tutorial/Gather_Logs_step_3.png)-->
+![Img19_TeamLogs](img\apps_tutorial\New_Images\Img19_TeamLogs.png){: style="border: 0.5px solid black;"}
+
 
 This is the general process to create an application for Jarvice and inject it through PushToCompute. You may need to iterate time to time between image creation and application jobs, to fix application execution issues. This is an expected behavior.
 
-Also, if too much issues, switch for a time to interactive application (seen later in this documentation) to debug application, and then switch back to non-interactive.
+Also, if you encounter any issues, switch to interactive application (seen later in this documentation) to debug application, and then switch back to non-interactive.
 
 We can now proceed to more productive applications and general guidelines. Next examples will not be as detailed as this one as process is always the same.
 
@@ -581,7 +603,7 @@ Then build fixed image, it will update local copy:
 docker build --tag="tutorial:hello_world" -f Dockerfile .
 ```
 
-Note: sometime, you may want to force rebuilding all the steps, so forcing docker not using build cache. To do so, add `--no-cache` to `docker build` line.
+Note: Sometimes, you may want to force rebuilding all the steps, so forcing docker not using build cache. To do so, add `--no-cache` to `docker build` line.
 
 And tag and push again local copy:
 
@@ -662,9 +684,9 @@ FROM ubuntu:latest
 COPY --from=download_extract_ffmpeg /usr/bin/ffmpeg /usr/bin/ffmpeg
 ```
 
-Note: we could also have `COPY --from=0`, stage number are accepted. But using names is more convenient for large dockerfiles.
+Note: We could also have `COPY --from=0`, stage number are accepted. But using names is more convenient for large dockerfiles.
 
-Let’s build again our image now, and we will need this time to prevent cache usage to be sure image is done again from scratch.
+Let us build our image again, and we will need this time to prevent cache usage to be sure image is done again from scratch.
 
 ```
 docker build --no-cache --tag="tutorial:ffmpeg" -f Dockerfile .
@@ -887,35 +909,40 @@ docker push oxedions/app-interactive_shell:v1
 
 Once image is pushed, add application into Jarvice as before. Note that this time, we didn't base64 encoded a png image, so default image is used.
 
-When clicking on application card, you should now have:
+When you click on the application card, you should now view the following:
 
-![app_interactive_shell_step_1](img/apps_tutorial/app_interactive_shell_step_1.png)
+<!--![app_interactive_shell_step_1](img/apps_tutorial/app_interactive_shell_step_1.png)-->
+![app_interactive_shell_step_1](img\apps_tutorial\New_Images\Img21_GottyShell.png){: style="border: 0.5px solid black; height: 350px; width: 500px;"}
 
-Click on **Gotty Shell**, and in the next window, observe that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
+Click on **Gotty Shell**, and in the next window, note that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
  
-![app_interactive_shell_step_2](img/apps_tutorial/app_interactive_shell_step_2.png)
+<!--![app_interactive_shell_step_2](img/apps_tutorial/app_interactive_shell_step_2.png)-->
+![app_interactive_shell_step_2](img\apps_tutorial\New_Images\Img22_SubmitApplication.png){: style="border: 0.5px solid black;"}
 
 Click on **Submit** to launch the job.
 
-Once job is started, it is possible to click on its card to open a new tab in web browser.
+Once the job is started, you can click on the application card to open a new tab in a web browser.
 
-![app_interactive_shell_step_3](img/apps_tutorial/app_interactive_shell_step_3.png)
+<!--![app_interactive_shell_step_3](img/apps_tutorial/app_interactive_shell_step_3.png)-->
+![app_interactive_shell_step_3](img\apps_tutorial\New_Images\Img23_Processing.png){: style="border: 0.5px solid black;"}
 
 In the new tab, you now have an interactive bash shell. It is possible from here to check file created via Dockerfile (`/knock_knock`):
 
-![app_interactive_shell_step_4](img/apps_tutorial/app_interactive_shell_step_4.png)
+![app_interactive_shell_step_4](img/apps_tutorial/app_interactive_shell_step_4.png){: style="border: 0.5px solid black;"}
 
 ### 4.2. On an existing application image
 
-Sometime, in order to debug an app image, and launch entry point manually to check what is failing, it is useful to temporary switch it to an interactive shell. This basically allows you to "enter" the image inside the running context, and debug interactively.
+Sometimes, to debug an app image, and launch entry point manually to check what is failing, it is useful to temporary switch it to an interactive shell. This basically allows you to "enter" the image inside the running context, and debug interactively.
 
 There is no need to rebuild the image for that, we can live "hack" the AppDef inside Jarvice interface.
 
 Let’s take our hello world application. Click on its burger, and select **Edit**.
 
-![app_interactive_shell_step_5](img/apps_tutorial/app_interactive_shell_step_5.png)
+<!--![app_interactive_shell_step_5](img/apps_tutorial/app_interactive_shell_step_5.png)-->
+![Img24_EditHelloWorld](img\apps_tutorial\New_Images\Img24_EditHelloWorld.png){: style="border: 0.5px solid black; width: 400px;"}
 
-Now, go into tab **APPDEFF** and copy all curent AppDef content from the text area. Edit this json into a text editor, and "hack" it this way (explanations follow):
+Now, go into tab **APPDEF** and copy all curent AppDef content from the text area. 
+Edit this json into a text editor, and "hack" it this way by adding an additional command entry, **Gotty**:
 
 ```json
 {
@@ -968,29 +995,27 @@ Now, go into tab **APPDEFF** and copy all curent AppDef content from the text ar
 }
 ```
 
-Basically, only changes made are the additional command entry added called **Gotty**.
+Then click on **Load From File** and select the hacked json file. This will update application AppDef inside the Jarvice cluster.
 
-Then click on **LOAD FROM FILE** and select the hacked json file. This will update application AppDef inside the Jarvice cluster.
+![app_interactive_shell_step_6](img\apps_tutorial\New_Images\Img25_EditAppDef.png){: style="border: 0.5px solid black;"}
 
-![app_interactive_shell_step_6](img/apps_tutorial/app_interactive_shell_step_6.png)
+Now, when you click on the application to launch it, you can see that we have a second possible entry point into image (you may need to refresh page).
 
-Now, when clicking on application to launch it, you can observe we have a second possible entry point into image (you may need to refresh page):
-
-![app_interactive_shell_step_7](img/apps_tutorial/app_interactive_shell_step_7.png)
+![app_interactive_shell_step_7](img\apps_tutorial\New_Images\Img26_SubmitAppl_GottyShell.png){: style="border: 0.5px solid black;"}
 
 Using this entry point starts an interactive shell, and allows to debug inside the image: once logged, you can start manually the desired command, here `/usr/bin/echo Hello World!`.
 
-Once issues are solved, AppDef will be restored when pulling fixed image into Jarvice.
+Once issues are solved, AppDef will be restored when fixed image is pulled into Jarvice.
 
 ## 5. Review application parameters
 
-Let’s review now available parameters in AppDef for commands entry. We will not cover all of them in this guide, only the most used ones. Please refer to [Appdf commands object reference](https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference) and [Appdf parameters object reference](https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference) for more details.
+Let us now review available parameters in AppDef for commands entry. We will only cover the most used ones in this guide. Please refer to [Appdf commands object reference](https://jarvice.readthedocs.io/en/latest/appdef/#commands-object-reference) and [Appdef parameters object reference](https://jarvice.readthedocs.io/en/latest/appdef/#parameters-object-reference) for more details.
 
 Target here is to test most of the possibilities offered.
 
 ### 5.1. Commands
 
-Let's focus on commands, which is the level above parameters:
+Let us focus on commands, which is the level above parameters:
 
 ```json
 ...
@@ -1011,12 +1036,12 @@ Basic commands can take the following settings: (note: an * means key is mandato
 * <u>**path***</u>: Command entry point which is run when application start.
 * <u>**name***</u>: Command’s name, which is used as the title of the command in the Jarvice interface.
 * <u>**description***</u>: Description of the command’s functionality that is used in the Jarvice interface.
-* <u>**interactive**</u>: (default to `false`) defines if application execution should return to user an URL to interact with execution (automatically forced to true if webshell or desktop are set to true).
-* <u>**webshell***</u>: (default to `false`) run command inside a gotty shell.
-* <u>**desktop***</u>: (default to `false`) run command inside Jarvice Xfce desktop (assumes image includes https://github.com/nimbix/jarvice-desktop).
-* <u>**mpirun***</u>: (default to `false`) run command under mpi environment.
-* <u>**verboseinit***</u>: (default to `false`) enable verbose init app execution phase, including parameters passed to command.
-* <u>**cmdscript***</u>: if set, will trigger cmdscript execution mode. Value of this key will be written into a file matching **path** set above, and executed. This allows injecting scripts directly from AppDef json. User can pass a single line plain text script, or a base64 encoded script (auto detected, allows multilines scripts).
+* <u>**interactive**</u>: (default to `false`) Defines if application execution should return to user a URL to interact with execution (automatically forced to true if webshell or desktop are set to true).
+* <u>**webshell***</u>: (default to `false`) Run command inside a gotty shell.
+* <u>**desktop***</u>: (default to `false`) Run command inside Jarvice Xfce desktop (assumes image includes https://github.com/nimbix/jarvice-desktop).
+* <u>**mpirun***</u>: (default to `false`) Run command under mpi environment.
+* <u>**verboseinit***</u>: (default to `false`) Enable verbose init app execution phase, including parameters passed to command.
+* <u>**cmdscript***</u>: If set, will trigger cmdscript execution mode. Value of this key will be written into a file matching the path set above, and executed. This allows injecting scripts directly from AppDef json. User can pass a single line plain text script, or a base64 encoded script (auto detected, allows multilines scripts).
 * <u>**parameters***</u>: Parameters are used to construct the arguments passed to the command. If no parameters are needed, set it to `{}`
 
 When using standalone binary applications, no parameters are needed. However, most of the time, some 
@@ -1025,12 +1050,12 @@ You may also wish that user could define some application settings.
 
 This is where parameters are needed.
 
-### 5.2. Commands parameters
+### 5.2. Command parameters
 
-Commands parameters allows to:
+Command parameters enables you to:
 
 * Force specific read only values to be passed to application's entry point as arguments (CONST)
-* Allows users to tune settings to be passed to application's entry point or scripts (with mandatory or optional values)
+* Allow users to tune settings to be passed to application's entry point or scripts (with mandatory or optional values)
 
 Remember the Command parameter to be set for interactive gotty shell example:
 
@@ -1057,13 +1082,13 @@ Remember the Command parameter to be set for interactive gotty shell example:
 ...
 ```
 
-![parameters_step_1.png](img/apps_tutorial/parameters_step_1.png)
+![parameters_step_1.png](img/apps_tutorial/parameters_step_1.png){: style="border: 0.5px solid black; width:800px;"}
 
 It is possible to create a detailed environment for an application with a variety of input format.
 
 There are multiple available parameters types: `CONST`, `STR`, `INT`, `FLOAT`, `RANGE`, `BOOL`, `selection`, `FILE`, `UPLOAD`.
 
-[A detailed list of available values/keys is available.](https://jarvice.readthedocs.io/en/latest/appdef/#parameter-type-reference)
+A detailed list of available values/keys is available [here.](https://jarvice.readthedocs.io/en/latest/appdef/#parameter-type-reference)
 
 In order to simplify visual understanding, you can find bellow a table with a screenshot of what each type would generate in job user interface:
 
@@ -1082,7 +1107,7 @@ In order to simplify visual understanding, you can find bellow a table with a sc
 
 In order to understand all possible combination, lets create a specific application. This application makes no sense, this is for testing and understanding purposes.
 
-Note: if you want to play with parameters, remember that you can directly edit AppDef Json in Jarvice UI by editing application. For testing purposed, do not bother building and pushing/pulling an image: simply edit directly in Jarvice UI by pushing updated AppDef jsons.
+Note: If you want to play with parameters, remember that you can directly edit AppDef Json in Jarvice UI by editing application. For testing purposed, do not bother building and pushing/pulling an image: simply edit directly in Jarvice UI by pushing updated AppDef jsons.
 
 Create a new application called app-reverse_engineer, with the following Dockerfile:
 
@@ -1135,7 +1160,7 @@ echo
 echo Script end
 ```
 
-Note: we are using `cat` and not `echo` to display parameters, to avoid echo evaluating some values.
+Note: We are using `cat` and not `echo` to display parameters, to avoid echo evaluating some values.
 
 Create the following `AppDef.json` file with all possible types available, sometime combined with different settings.
 
@@ -1299,19 +1324,19 @@ Create the following `AppDef.json` file with all possible types available, somet
 Build application, create a repository to host it, and pull it into Jarvice.
 Once done, click on **Test Script** to open application's job settings interface.
 
-![reverse_engineer_step_1](img/apps_tutorial/reverse_engineer_step_1.png)
+![reverse_engineer_step_1](img/apps_tutorial/reverse_engineer_step_1.png){: style="border: 0.5px solid black; width:800px;"}
 
-In **GENERAL**, you can observe all parameters set in our AppDef file.
+In **GENERAL**, you can view all parameters set in the AppDef file.
 
-![reverse_engineer_step_2](img/apps_tutorial/reverse_engineer_step_2.png)
+![reverse_engineer_step_2](img/apps_tutorial/reverse_engineer_step_2.png){: style="border: 0.5px solid black; width: 800px;"}
 
 Observe also in **OPTIONAL** tab the non-required `STR` value set in AppDef.
 
-![reverse_engineer_step_3](img/apps_tutorial/reverse_engineer_step_3.png)
+![reverse_engineer_step_3](img/apps_tutorial/reverse_engineer_step_3.png){: style="border: 0.5px solid black; width: 800px;"}
 
-Ensure all fields are set (for this example a txt file with `coucou` as content was uploaded in upload_1 parameter), and click on **Submit** to submit application job.
+Ensure that all fields are set (for this example a txt file with `coucou` as content was uploaded in upload_1 parameter), and click on **Submit** to submit application job.
 
-Once job completed, check job output log, you should have:
+Once the job is completed, check job output log, you should have:
 
 ```
 INIT[1]: Initializing networking...
@@ -1434,7 +1459,7 @@ Users specify some settings via provided application command parameters (input f
 
 Users can also check application logs in their user space on Jarvice interface.
 
-Let’s create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound streams, subtitles, etc. will be ignored).
+Let us create a very basic **ffmpeg** application that will be used to convert uploaded video to `h265` codec. User will be able to set `crf` (video quality). To simplify this tutorial, we will not consider anything else than video (sound streams, subtitles, etc. will be ignored).
 
 Note that you can easily find video samples here: [jell.yfish.us](https://jell.yfish.us/).
 
@@ -1653,7 +1678,7 @@ encoded 900 frames in 216.00s (4.17 fps), 540.39 kb/s, Avg QP:45.30
 
 Launch Jarvice files manager, and see the compressed video:
 
-![app_ffmpeg_step_1](img/apps_tutorial/app_ffmpeg_step_1.png)
+![app_ffmpeg_step_1](img/apps_tutorial/app_ffmpeg_step_1.png){: style="border: 0.5px solid black;"}
 
 Using h265 instead of h264, we reduced video size. This is however a very basic example, and video quality was also reduced. A real ffmpeg application would need much more 
 settings available to users. This was however enough as an example.
@@ -1743,15 +1768,15 @@ Create AppDef file, with target path to gotty shell, and command to our applicat
 
 ### 7.4. Launch and use
 
-Once built and submitted to cluster, it is possible to join session by clicking on "Click here to connect".
+Once built and submitted to cluster, you can join session by clicking on "Click here to connect".
 
-![app_gotty_step_1](img/apps_tutorial/app_gotty_step_1.png)
+![app_gotty_step_1](img/apps_tutorial/app_gotty_step_1.png){: style="border: 0.5px solid black;width: 600px;"}
 
 It should open a new tab in your web browser, and connect you directly to a shell running the application:
 
-![app_gotty_step_2](img/apps_tutorial/app_gotty_step_2.png)
+![app_gotty_step_2](img/apps_tutorial/app_gotty_step_2.png){: style="border: 0.5px solid black; height: 300px; width:700px;"}
 
-Note also that you can replace application command path (`/calculator.py` here) by a full shell instead of an application, like `/usr/bin/bash`, to fully manipulate image.
+Also note that you can replace application command path (`/calculator.py` here) by a full shell instead of an application, like `/usr/bin/bash`, to fully manipulate image.
 
 When debugging an application, it can be a real added value to add a second entry to image, with a gotty shell combined to the bash shell to be able to interactively launch scripts and debug.
 
@@ -1829,18 +1854,19 @@ Create now AppDef file, with `/usr/bin/gimp` as target path:
 
 ### 8.3. Launch application
 
-Once application has been built and uploaded to Jarvice PushToCompute, submit a new job.
+Once the application has been built and uploaded to Jarvice PushToCompute, submit a new job.
 
-Once job is started, simply click on job's "Click here to connect":
+Once job is started, click on job's "Click here to connect":
 
-![app_gimp_step_0](img/apps_tutorial/app_gimp_step_0.png)
+![app_gimp_step_0](img/apps_tutorial/app_gimp_step_0.png){: style="border: 0.5px solid black; width: 600px;"}
+
 
 This will open a new tab in your browser, in which after few seconds you will 
 be connected to a full GUI desktop, with Gimp opened.
 
-BEWARE! If you close gimp window (so end execution of `/usr/bin/gimp`), job will terminate.
+It is important to note that if you close gimp window (so end execution of `/usr/bin/gimp`), job will terminate.
 
-![app_gimp_step_1](img/apps_tutorial/app_gimp_step_1.png)
+![app_gimp_step_1](img/apps_tutorial/app_gimp_step_1.png){: style="border: 0.5px solid black; width: 800px;"}
 
 ## 9. MPI application
 
@@ -1877,7 +1903,7 @@ RUN apt-get update; apt-get install -y wget curl gcc g++ git make bash; apt-get 
 
 # Build IMB-MPI1 which is enough for basic testing
 # Note that we are sourcing Jarcice OpenMPI environment using the provided /opt/JARVICE/jarvice_mpi.sh
-RUN bash -c 'git clone https://github.com/intel/mpi-benchmarks.git; cd mpi-benchmarks; \
+RUN bash -c 'git clone https://github.com/intel/mpi-benchmarks.git; cd mpi-benchmarks; git checkout tags/IMB-v2019.6;\
     source /opt/JARVICE/jarvice_mpi.sh; sed -i 's/mpiicc/mpicc/' src_cpp/Makefile; \
     sed -i 's/mpiicpc/mpicxx/' src_cpp/Makefile; make IMB-MPI1;'
 
@@ -1936,13 +1962,14 @@ Note that we set `mpirun` to **true**, to allow native Jarvice MPI parallel exec
 
 Note also that we set `verboseinit` to **true**. This is optional and allows us to see exactly what is executed at start.
 
-At job submission, use Machine type select box, and Cores range selector to choose more than 1 machine. Then submit the job.
+At job submission, select the Machine type and the number of Cores (choose more than 1 machine). Then submit the job.
 
-![app_mpi_step_1](img/apps_tutorial/app_mpi_step_1.png)
+<!--![app_mpi_step_1](img/apps_tutorial/app_mpi_step_1.png)-->
+![app_mpi_step1](img\apps_tutorial\New_Images\Img28_Machines_main.png){: style="border: 0.5px solid black;"}
 
-If all goes well, you should see the MPI benchmark running on the cluster. It should not take more than few minutes. If it hangs, you may have network issues to investigate with your cluster administrator.
+You will see the MPI benchmark running on the cluster. It should not take more than few minutes. If it hangs, you may have network issues to investigate with your cluster administrator.
 
-![app_mpi_step_2](img/apps_tutorial/app_mpi_step_2.png)
+![app_mpi_step_2](img/apps_tutorial/app_mpi_step_2.png){: style="border: 0.5px solid black;"}
 
 Note that at execution start, verboseinit allowed to see few interesting steps:
 
@@ -1966,8 +1993,7 @@ INIT[1]: SSH test success!
 
 ### 9.2. Using another MPI implementation
 
-If you wish to use your own MPI implementation (Intel MPI, HPCX, etc), you need to 
-uses your own script as path to start your application.
+If you wish to use your own MPI implementation (Intel MPI, HPCX, etc), you need to use your own script as path to start your application.
 
 You can rely on the following example, as a starting point, and also refer to the "MPI Application Configuration Guide" of this documentation.
 
@@ -2103,20 +2129,23 @@ Create on your local system file `AppDef_script.json` with the following content
 
 Note that we added a key called `cmdscript` that contains our script content, and `path` will be the path were script content will be written before being executed.
 
-Now, create a new App, and in first tab, GENERAL, set an App ID, and use docker.io/ubuntu:latest as app base image.
+Now, create a new app. In the General tab, set an App Id, and use docker.io/ubuntu:latest as app base image, and click Save.
 
-![app_script_raw_step_1](img/apps_tutorial/app_script_raw_step_1.png)
+<!--![app_script_raw_step_1](img/apps_tutorial/app_script_raw_step_1.png)-->
+![app_script_raw_step_1](img\apps_tutorial\New_Images\Img29_ScriptBasedApp.png){: style="border: 0.5px solid black;"}
 
-Then go to tab APPDEF, and upload `AppDef_script.json` file created before.
+Then go to tab APPDEF, upload `AppDef_script.json` file created before and click Save.
 
-![app_script_raw_step_2](img/apps_tutorial/app_script_raw_step_2.png)
+<!--![app_script_raw_step_2](img/apps_tutorial/app_script_raw_step_2.png)-->
+![app_script_raw_step_2](img\apps_tutorial\New_Images\Img30_AppDef.png){: style="border: 0.5px solid black;"}
 
-Then validate.
-Our application is ready.
+Then validate. The application is ready.
 
 Submit a job, and you should see the script executing.
 
-However, since json format do not support multiline strings, this is a one-line script, which can be a pain when dealing with large scripts.
+![app_script_raw_step_3](img\apps_tutorial\New_Images\Img30_new.png){: style="border: 0.5px solid black;"}
+
+However, since json format do not support multi-line strings, this is a one-line script, which can be a pain when dealing with large scripts.
 
 When using complex scripts, you can base64 encode them (see below).
 
@@ -2198,7 +2227,7 @@ Then launch a new job. You should see the script execution.
 
 ## 11. Server application
 
-JARVICE system allows to submit server applications, that can be associated with a public ip to be reached. This could be any kind of server, as long as ports are correctly defined in the AppDef.json file.
+JARVICE system allows to submit server applications, that can be associated with a public IP to be reached. This could be any kind of server, as long as ports are correctly defined in the AppDef.json file.
 
 To explain the concept, we are going in this part to deploy 2 kinds of servers. A basic ssh server, and a Minecraft server. First one will be static, and users will be able to submit their ssh public key, while the second one will allow job user to interact with the server (since a Minecraft server allows many live tuning commands), combining public ip and a webshell seen before.
 
@@ -2206,13 +2235,13 @@ To explain the concept, we are going in this part to deploy 2 kinds of servers. 
 
 A basic http server is the perfect hello world example.
 
-We are going to use nginx to expose a simple html page. Note that Nginx is originaly designe in its default image to run as root.
+We are going to use nginx to expose a simple html page. Note that Nginx is originally designed in its default image to run as root.
 App V2 does not allow using root user, and so we are going to rely on a specific image made to run without root priviledges (80 -> 8080 port, user writable pid, user readable cache, etc.).
 
-We will expose 2 ways of proceeding:
+We will expose two ways of proceeding:
 
 1. Using an ingress
-2. Using a private ipv4 address
+2. Using a private IPV4 address
 
 First create a basic index.html page, this could be a whole website, here it will be a basic page with a text and a picture:
 
@@ -2348,7 +2377,7 @@ Now lets see the 2 methods.
 
 ### 11.1.1. Expose using ingress
 
-This methods has the advantage of using a simple ingress instead of a full ipv4 address. This reduces the costs of usage, and natively profits from the main domain SSL certificate as we rely on a subpath instead of a dedicated ipv4 or dedicated domain.
+This methods has the advantage of using a simple ingress instead of a full ipv4 address. This reduces the costs of usage, and natively profits from the main domain SSL certificate as we rely on a subpath instead of a dedicated IPV4 or dedicated domain.
 
 First, create folder NAE and create file NAE/AppDef.json with the following content:
 
@@ -2419,7 +2448,7 @@ First, create folder NAE and create file NAE/AppDef.json with the following cont
 
 Note the `url` key, we provide a specific url using the `%PUBLICADDR%` string, that will be automatically substituted by jarvice by the job dedicated subpath generated at job start. Note also that we are using port `8080` as stated before.
 
-Note also that logo image is a 128x128px png file, converted in bas64 with `-w 0` parameter.
+Also note that logo image is a 128x128px png file, converted in bas64 with `-w 0` parameter.
 
 Now, we need to create an nginx configuration that:
 
@@ -2480,16 +2509,18 @@ COPY NAE/screenshot.png /etc/NAE/screenshot.png
 Build and push this image to your registry. Then, in Jarvice P2C, pull this image as before, and launch it.
 
 Click on the new app tile:
-![nginx_step_1](img/apps_tutorial/nginx_step_1.png)
+
+![nginx_step_1](img/apps_tutorial/nginx_step_1.png){: style="border: 0.5px solid black;"}
 
 Then click on server and start it on a small machine profile:
-![nginx_step_2](img/apps_tutorial/nginx_step_2.png)
+![nginx_step_2](img/apps_tutorial/nginx_step_2.png){: style="border: 0.5px solid black; width:650px;"}
 
 Once app has started, you can simply click on the tile to reach the app url:
-![nginx_step_3](img/apps_tutorial/nginx_step_3_1.png)
+![nginx_step_3](img/apps_tutorial/nginx_step_3_1.png){: style="border: 0.5px solid black;"}
 
 This should open the index.html small page of our image:
-![nginx_step_4](img/apps_tutorial/nginx_step_4.png)
+
+![nginx_step_4](img/apps_tutorial/nginx_step_4.png){: style="border: 0.5px solid black;"}
 
 ### 11.1.2. Expose using public ip
 
@@ -2568,7 +2599,7 @@ First, create folder NAE and create file NAE/AppDef.json with the following cont
 }
 ```
 
-Note the `publicip` key set to `true`, and that we requested that port `8080` to be opened to world.
+Note the `publicip` key set to `true`, and that we requested that port `8080` to be opened to the world.
 
 **Please take a time to read this important note**:
 
@@ -2602,19 +2633,21 @@ COPY NAE/screenshot.png /etc/NAE/screenshot.png
 Build and push this image to your registry. Then, in Jarvice P2C, pull this image as before, and launch it.
 
 Click on the new app tile:
-![nginx_step_1](img/apps_tutorial/nginx_step_1.png)
+
+![nginx_step_1](img/apps_tutorial/nginx_step_1.png){: style="border: 0.5px solid black;"}
 
 Then click on server and start it on a small machine profile:
-![nginx_step_2](img/apps_tutorial/nginx_step_2.png)
+![nginx_step_2](img/apps_tutorial/nginx_step_2.png){: style="border: 0.5px solid black; width:650px;"}
 
 Once app has started, you should see the ip provided as "Address" in the running app tile:
-![nginx_step_3](img/apps_tutorial/nginx_step_3.png)
+![nginx_step_3](img/apps_tutorial/nginx_step_3.png){: style="border: 0.5px solid black; width:650px;"}
 
 Copy this address, and in another tab of your browser, past it and add `:8080` at the end.
 In this example, this would be: `http://34.173.101.107:8080`
 
 This should open the index.html small page of our image:
-![nginx_step_4](img/apps_tutorial/nginx_step_4.png)
+
+![nginx_step_4](img/apps_tutorial/nginx_step_4.png){: style="border: 0.5px solid black; height: 500px; width:400px;"}
 
 The same process can be repetead with a much more sophisticated website to host it.
 
@@ -2622,19 +2655,18 @@ Small note: by default, Jarvice starts at init an ssh server inside the running 
 
 ### 11.2. Basic ssh server
 
-A basic ssh server can be very useful, for many purposes:
+A basic ssh server can be very useful for many purposes such as to:
 
 * Use scp/sftp with tools like Filezilla/WinSCP or simple shell commands to upload complex or very large data to persistent vault.
 * Interactively manipulate remote data in vault.
 * Build an advanced application that would need more than what current webshell/desktop can offer.
-* Etc.
 
-There are 2 ways to use the Jarvice embed ssh server (that always start with every jobs):
+There are two ways to use the Jarvice embed ssh server (that always start with every jobs):
 
 1. Using an app STR field to pass the public key desired.
 2. Using portal SSH keys section.
 
-Lets see the 2 ways.
+Let us see the two ways in detail.
 
 ### 11.2.1. Using STR field
 
@@ -2642,7 +2674,7 @@ We will allow user to upload via an STR field a public key to be setup during st
 
 Please understand also that while the Jarvice embed ssh server listens on port 2222, Jarvice automaticaly map port 22 of the public ip to port 2222 of the running container. This means we will only need to open port 2222 on the application side, and end user will just have to reach ssh 22 default port on his/her side.
 
-First, create image. Dockerfile is very simple:
+First, create the image. The Dockerfile is simple:
 
 ```dockerfile
 FROM alpine:latest
@@ -2652,7 +2684,7 @@ COPY NAE/AppDef.json /etc/NAE/AppDef.json
 RUN mkdir -p /etc/NAE && touch /etc/NAE/AppDef.json
 ```
 
-Then, our NAE/AppDef.json file will be the following (the long text is a base64 encoded png icon for openssh logo):
+Then, the NAE/AppDef.json file will be as follows (the long text is a base64 encoded png icon for openssh logo):
 
 ```json
 {
@@ -2707,15 +2739,15 @@ Then, our NAE/AppDef.json file will be the following (the long text is a base64 
 
 Now, just import application in PushToCompute as usual, and pull it. After few seconds, you should see the application with the openssh icon on it:
 
-![app_ssh_step_1](img/apps_tutorial/app_ssh_step_1.png)
+![app_ssh_step_1](img/apps_tutorial/app_ssh_step_1.png){: style="border: 0.5px solid black;"}
 
 And when launching job, user can set his/her ssh public key to be used to authenticate.
 
-![app_ssh_step_2](img/apps_tutorial/app_ssh_step_2.png)
+![app_ssh_step_2](img/apps_tutorial/app_ssh_step_2.png){: style="border: 0.5px solid black; width:800px;"}
 
 Once job is started, user can retrieve public ip to connect to, and remote user to be used (which can change depending of administrator settings):
 
-![app_ssh_step_3](img/apps_tutorial/app_ssh_step_3.png)
+![app_ssh_step_3](img/apps_tutorial/app_ssh_step_3.png){: style="border: 0.5px solid black; width:800px;"}
 
 It is then possible to login via ssh as usual:
 
@@ -2744,11 +2776,14 @@ As expressed in the logs, user have to manually kill the job once done (this is 
 
 You can upload a public ssh key directly in the portal. Note that legacy portal only supports upload of RSA based keys, while new portal (Bird based) allows more formats.
 
-We will use the legacy portal in this example.
+We will use the new portal in this example.
 
-Connect to Jarvice portal, and in Account (1), click on SSH Keys (2), then click Edit (3) and Add (4).
+Connect to Jarvice portal, and in Account (1), click on SSH Keys (2), then click New (3). If there are existing keys, click Edit and then New.
 
-![app_ssh_step_4](img/apps_tutorial/app_ssh_step_4.png)
+<!--![app_ssh_step_4](img/apps_tutorial/app_ssh_step_4.png)-->
+![app_ssh_step_4](img\apps_tutorial\New_Images\Img31_SSHKeys.png){: style="border: 0.5px solid black; width:800px;"}
+
+![app_ssh_step5](img\apps_tutorial\New_Images\Img31.1_NewSSHKey.png){: style="border: 0.5px solid black; width:800px;"}
 
 Add your ssh public key, and save it. Now, each time you launch a new job, this public key will be added automatically to the nimbix's user authorized_keys file.
 
@@ -2781,7 +2816,8 @@ Make sure your ssh public key is registered in the portal (see previous section)
 
 Then create a new app in Push2Compute, call it "ssh", and as image use the raw ubuntu:jammy:
 
-![app_ssh_qd_step_1](img/apps_tutorial/app_ssh_qd_step_1.png)
+<!--![app_ssh_qd_step_1](img/apps_tutorial/app_ssh_qd_step_1.png)-->
+![pp_ssh_qd_step_1](img\apps_tutorial\New_Images\Img32_NewAppl.png){: style="border: 0.5px solid black;"}
 
 Then in the APPDEF tab, load the following file:
 
@@ -2833,15 +2869,17 @@ Then in the APPDEF tab, load the following file:
 }
 ```
 
-![app_ssh_qd_step_2](img/apps_tutorial/app_ssh_qd_step_2.png)
+<!--![app_ssh_qd_step_2](img/apps_tutorial/app_ssh_qd_step_2.png)-->
+![p_ssh_qd_step_2](img\apps_tutorial\New_Images\Img33_LoadAppDef.png){: style="border: 0.5px solid black;"}
 
 Then save, and launch this app. Be careful at launch to select the storage you want to be mounted during job (persistent, ephemeral, etc).
 
-Once job is started, ipv4 will be displayed in the portal:
+Once job is started, IPV4 will be displayed in the portal:
 
-![app_ssh_qd_step_3](img/apps_tutorial/app_ssh_qd_step_3.png)
+<!--![app_ssh_qd_step_3](img/apps_tutorial/app_ssh_qd_step_3.png)-->
+![app_ssh_qd_step_3](img\apps_tutorial\New_Images\Img34_processing.png){: style="border: 0.5px solid black;"}
 
-You can then ssh on this ip on port 22 as nimbix user:
+You can then ssh on this IP on port 22 as nimbix user:
 
 ![app_ssh_qd_step_4](img/apps_tutorial/app_ssh_qd_step_4.png)
 
@@ -2854,9 +2892,9 @@ A Minecraft server is an interesting example, since it uses a non-standard port,
 
 The architecture schema is simple: server listen on port 25565/tcp and clients can connect to server to join the world (if allowed by server admin whitelist if any).
 
-![app_minecraft_step_1](img/apps_tutorial/app_minecraft_step_1.png)
+![app_minecraft_step_1](img/apps_tutorial/app_minecraft_step_1.png){: style="border: 0.5px solid black;"}
 
-For this app, we need to combine the server with public ip seen before, with an interactive webshell, so administrator can join server shell anytime and interact with it.
+For this app, we need to combine the server with public IP seen before, with an interactive webshell, so administrator can join server shell anytime and interact with it.
 We will also store server world (data) into `/data/minecraft_server` folder for world persistency.
 
 Minecraft server needs a recent Java to run, we will rely on OpenJDK. Also, we will create a small script to start it. Last part is to download the most up to date server file each time application start. We will use a small script from https://gist.github.com/ntoonio/198c14f5915fc9aafe54eba0fc1f4163 to download it at launch.
@@ -2993,21 +3031,21 @@ mv minecraft.png NAE/screenhost.png
 
 And build your app. Once imported in Push2Compute, you should see the server app like this:
 
-![app_minecraft_step_2](img/apps_tutorial/app_minecraft_step_2.png)
+![app_minecraft_step_2](img/apps_tutorial/app_minecraft_step_2.png){: style="border: 0.5px solid black;"}
 
 And once opened:
 
-![app_minecraft_step_3](img/apps_tutorial/app_minecraft_step_3.png)
+![app_minecraft_step_3](img/apps_tutorial/app_minecraft_step_3.png){: style="border: 0.5px solid black;"}
 
 Now, start the application. I strongly recommend at least 4Gb ram and 4 CPU core. Less can work, but may be laggy for few players. If you plan to host more players on the server, you will need more resources and maybe some Java launch tunings. Also, ensure to request a persistent Vault in optional tab! Or your server chunks will not be saved once server shutdown.
 
 Once application is started, you can grab the public ip to be given to users.
 
-![app_minecraft_step_4](img/apps_tutorial/app_minecraft_step_4.png)
+![app_minecraft_step_4](img/apps_tutorial/app_minecraft_step_4.png){: style="border: 0.5px solid black;"}
 
 Note that for now, the server hasn't started yet. Server administrator now must connect once to the webshell to trigger server start. Click on "Click here to connect" to join the webshell and trigger server start.
 
-![app_minecraft_step_5](img/apps_tutorial/app_minecraft_step_5.png)
+![app_minecraft_step_5](img/apps_tutorial/app_minecraft_step_5.png){: style="border: 0.5px solid black;"}
 
 Once server is started, you need to establish a whitelist to prevent unwanted users to login, and add your players in it:
 
@@ -3019,11 +3057,11 @@ Once server is started, you need to establish a whitelist to prevent unwanted us
 
 Then users can join the server if invited by server admin (i.e. added to whitelist), using multiplayer section on the Minecraft client.
 
-![app_minecraft_step_6](img/apps_tutorial/app_minecraft_step_6.png)
+![app_minecraft_step_6](img/apps_tutorial/app_minecraft_step_6.png){: style="border: 0.5px solid black;"}
 
-![app_minecraft_step_7](img/apps_tutorial/app_minecraft_step_7.png)
+![app_minecraft_step_7](img/apps_tutorial/app_minecraft_step_7.png){: style="border: 0.5px solid black;"}
 
-![app_minecraft_step_8](img/apps_tutorial/app_minecraft_step_8.png)
+![app_minecraft_step_8](img/apps_tutorial/app_minecraft_step_8.png){: style="border: 0.5px solid black;"}
 
 You can close webshell tab anytime, and rejoin later. Of course, do not give the link to any users!
 
