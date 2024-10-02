@@ -336,7 +336,7 @@ It is possible to request a gotty shell to be created along the deployment of th
                 "enable_gotty_shell": "true",
 ```
 
-A gotty shell is a web based terminal, that will allow app owner to interact via command lines with its nested cluster.
+A gotty shell is a web based terminal, that allows app owner to interact with the nested cluster via command lines.
 
 When app will be running, the app url will be by default in the `http://job-kns-XXX.mycluster.example` format. The gotty shell will be accessible at `http://job-kns-XXX.mycluster.example/gotty-shell`. Credentials to login to the gotty shell are provided through the help interface of the running app:
 
