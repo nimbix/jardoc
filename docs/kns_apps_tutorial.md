@@ -203,7 +203,7 @@ While each item of the list can set its own parameters, the following global par
                 ]
 ```
 
-The `templates` list allow to execute instructions in an ordered manner, and to apply templates to deploy the app into the nested scheduler.
+The `templates` list allows execution of instructions in an orderly manner and applies templates to deploy the app into the nested scheduler.
 Since the init pod runs with cluster-admin rights (inside the nested K3S cluster), templates can create new namespaces, cluster roles, etc.
 
 Note that before executing templates, the KNS will pull and extract the app image. All files inside the `/templates` folder of the image will be extracted and execution will take place **inside** this extracted folder.
