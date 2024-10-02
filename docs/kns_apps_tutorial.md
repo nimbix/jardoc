@@ -103,7 +103,7 @@ Let's examine this file step by step. We will only focus on the commands part, e
 For KNS jobs, `path` and `parameters` are not used, but need to be present for the app to be usable by Jarvice upstream component.
 `path` should be set to `/usr/bin/true` and `parameters` should be left as an empty dictionary.
 
-`name` and `description` will display as before some details about this entry point, for users to be able to choose between multiple if exist.
+`name` and `description` will display as before some details about this entry point, for users to be able to choose between multiple if they exist.
 
 ```json
             "nestedkubernetes": {
