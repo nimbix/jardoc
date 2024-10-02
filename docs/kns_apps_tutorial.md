@@ -274,7 +274,7 @@ And so allow to use the equivalent of the kustomize command (that was merged int
 
 As for kubectl type, you need to provide a `path` value, relative to the `/templates` folder of the app image.
 
-##### 2.3.2.1. custom type
+##### 2.3.2.3. custom type
 
 Custom allows to execute arbitrary scripts instead of using a specific command to apply templates.
 Since the init image embed helm binary, it is possible to use custom type to deploy helm based applications.
