@@ -15,7 +15,7 @@ and will deploy Kubernetes based apps inside these nested clusters, as jobs.
 
 While traditional Jarvice downstreams are made for HPC jobs and parallel short term jobs, KNS has been designed to host long running jobs with massive scaleup capabilities. KNS is, in theory, capable of running anything that can run on a Kubernetes cluster, making it a very nice shared "sandbox".
 
-KNS apps are docker images that contains files (mostly helm/kubectl/kustomize templates) and instructions to be used to deploy Kubernetes based apps, like Kubeflow, ArgoCD, Kubeai, etc. When launching a new job, the KNS will create a dedicated nested K3S cluster for the job, pull the app image from within this cluster, and use image's instructions to deploy the expected resources. Ingresses will allow user to access the nested cluster services.
+KNS apps are docker images that contain files (mostly helm/kubectl/kustomize templates) and instructions used to deploy Kubernetes based apps like Kubeflow, ArgoCD, Kubeai, etc. While launching a new job, the KNS creates a dedicated nested K3S cluster for the job, pulls the app image from within this cluster, and uses the image's instructions to deploy the expected resources. Ingress allows users to access the nested cluster services.
 
 Note: some apps example for KNS can be found in the [Nimbix kns-apps repository](https://github.com/nimbix/kns-apps). The rest of the tutorial is based on the [Hello World KNS app that can be found here](https://github.com/nimbix/kns-apps/tree/master/apps/hello_world)
 
