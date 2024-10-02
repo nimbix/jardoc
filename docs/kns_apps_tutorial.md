@@ -215,7 +215,7 @@ RUN mkdir /templates
 COPY google-sample.yml /templates/google-sample.yml
 ```
 
-For each step, a `name` parameter must be set. This is only for convenience, and ease logs reading.
+For each step, a `name` parameter must be set. This is only for convenience and ease of reading logs.
 
 It is also possible to fine define retry and sleep between retries:
 
