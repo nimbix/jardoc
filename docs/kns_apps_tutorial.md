@@ -328,7 +328,7 @@ cat myscript.sh | base64 -w 0
 
 Encoding scripts prevents any kind of evaluation issues.
 
-## 2.4. Gotty shell
+## 2.4. GoTTY shell
 
 It is possible to request a gotty shell to be created during the deployment of the application.
 
