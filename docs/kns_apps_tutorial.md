@@ -8,7 +8,7 @@ Note 2: This tutorial assumes that the user is building applications based on `a
 
 ## 1. Introduction
 
-Before creating apps for KNS scheduler, it is important to understand how KNS operates, and what exactly is the KNS.
+Before creating apps for the KNS scheduler, it is important to understand how KNS operates, and what exactly the KNS is.
 
 KNS stands for Kubernetes Nested Scheduler. As the name says, KNS is a Jarvice downstream component that will spawn nested Kubernetes clusters (based on K3S)
 and will deploy Kubernetes based apps inside these nested clusters, as jobs.
