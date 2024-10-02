@@ -82,7 +82,7 @@ A very basic hello world app would use the following AppDef.json file:
 }
 ```
 
-Lets examine this file step by steps. We will only focus on the commands part, everything else is the same than traditional Jarvice apps.
+Let's examine this file step by step. We will only focus on the commands part, everything else is the same astraditional Jarvice apps.
 
 ```json
     "commands": {
