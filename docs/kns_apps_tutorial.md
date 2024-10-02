@@ -132,7 +132,7 @@ For KNS jobs, `path` and `parameters` are not used, but need to be present for t
 ```
 
 `nestedkubernetes` is the new key that allows to define inside it all needed elements for a Kubernetes based app.
-Lets see each parts of this new dict.
+Let's see each partsof this new dictionary.
 
 ### 2.1. General parameters
 
