@@ -330,7 +330,7 @@ Encoding scripts prevents any kind of evaluation issues.
 
 ## 2.4. Gotty shell
 
-It is possible to request a gotty shell to be created along the deployment of the application.
+It is possible to request a gotty shell to be created during the deployment of the application.
 
 ```json
                 "enable_gotty_shell": "true",
