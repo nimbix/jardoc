@@ -188,8 +188,8 @@ Templates are provided as a list, named `templates`, which will be executed in a
 
 While each item of the list can set its own parameters, the following global parameters are available, which apply to all items of the tempate list:
 
-* `global_retry`: how much retry to do if executing the item failed. For example, if the kubectl apply of the template fail, it will be retried. This is useful when a step needs another previous one to have completed to succeed (resources running).
-* `global_retry_sleep`: how much seconds should we wait between each retry.
+* `global_retry`: how many retries to do if executing the item failed. For example, if the kubectl apply of the template fail, it will be retried. This is useful when a step needs another previous one to have completed to succeed (resources running).
+* `global_retry_sleep`: how many seconds should we wait between each retry.
 
 #### 2.3.2. Templates
 
