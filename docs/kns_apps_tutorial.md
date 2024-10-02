@@ -344,4 +344,4 @@ When the app is running, the app URL will be in the `http://job-kns-XXX.mycluste
 
 ![GottySHell_1](img/apps_tutorial/kns/gotty_shell_2.png)
 
-Note that the gotty shell can only be created if the local cluster administrator allowed it during the KNS main deployment.
+Note that the GoTTY shell can only be created if the local cluster administrator allowed it during the KNS main deployment.
