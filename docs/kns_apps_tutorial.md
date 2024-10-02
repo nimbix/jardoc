@@ -17,7 +17,7 @@ While traditional Jarvice downstreams are made for HPC jobs and parallel short t
 
 KNS apps are docker images that contains files (mostly helm/kubectl/kustomize templates) and instructions to be used to deploy Kubernetes based apps, like Kubeflow, ArgoCD, Kubeai, etc. When launching a new job, the KNS will create a dedicated nested K3S cluster for the job, pull the app image from within this cluster, and use image's instructions to deploy the expected resources. Ingresses will allow user to access the nested cluster services.
 
-Note: some apps example for KNS can be found in the [Nimbix kns-apps repository](https://github.com/nimbix/kns-apps).
+Note: some apps example for KNS can be found in the [Nimbix kns-apps repository](https://github.com/nimbix/kns-apps). The rest of the tutorial is based on the [Hello World KNS app that can be found here](https://github.com/nimbix/kns-apps/tree/master/apps/hello_world)
 
 ## 2. The AppDef.json KNS key
 
