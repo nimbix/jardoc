@@ -1,4 +1,4 @@
-# Jarvice KNS Applications tutorial
+# Jarvice Kubernetes Nested Scheduler (KNS) Applications tutorial
 
 ![GlobalProcess](img/apps_tutorial/SuperNimbix.svg)
 
