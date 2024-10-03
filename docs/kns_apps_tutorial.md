@@ -280,7 +280,7 @@ It is also possible to use custom type to deploy helm based applications.
 
 When using custom, a `cmd` key must be set, and it should contain the script to be executed, encoded in base64 format.
 
-For example, to deploy a basic kubeai, which uses helm to deploy:
+For example, to deploy a basic KubeAI, which uses helm to deploy:
 
 ```json
                 "templates": [
