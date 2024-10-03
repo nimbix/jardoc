@@ -95,6 +95,7 @@ Key|Type|Required/Optional|Description
 `desktop *²`|boolean|optional| If true, command will run in interactive mode, inside a GUI desktop reachable through http via JXE web interface. Note that this assumes jarvice-desktop was setup properly inside application image (see https://github.com/nimbix/jarvice-desktop).
 `verboseinit *²`|boolean|optional| If true, init phase of application execution will expose more data (debug usage mainly).
 `cmdscript *²`|string|optional| If set and not empty, content will be written inside `path` and executed. `cmdscript` string can be a single line script, or a base64 encoded script (allowing large and/or multilines scripts, base64 is auto-detected).
+`nestedkubernetes *²`|dictionary|optional| Used only for KNS based applications, this dictionary contains all data to deploy Kubernetes based applications. 
 
 ### `parameters` Object Reference
 
