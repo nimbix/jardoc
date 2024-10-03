@@ -188,7 +188,7 @@ Templates are provided as a list, named `templates`, which will be executed in a
 
 While each item of the list can set its own parameters, the following global parameters are available, which apply to all items of the tempate list:
 
-* `global_retry`: how many retries to do if executing the item failed. For example, if the kubectl apply of the template fail, it will be retried. This is useful when a step needs another previous one to have completed to succeed (resources running).
+* `global_retry`: how many retries to do if executing the item failed. For example, if the `kubectl apply` of the template fails, it will be retried. This is useful when a step needs another previous one to be completed to succeed (resources running).
 * `global_retry_sleep`: how many seconds should we wait between each retry.
 
 #### 2.3.2. Templates
@@ -204,7 +204,6 @@ While each item of the list can set its own parameters, the following global par
 ```
 
 The `templates` list allows execution of instructions in an orderly manner and applies templates to deploy the app into the nested scheduler.
-Since the init pod runs with cluster-admin rights (inside the nested K3S cluster), templates can create new namespaces, cluster roles, etc.
 
 Note that before executing templates, the KNS will pull and extract the app image. All files inside the `/templates` folder of the image will be extracted and execution will take place **inside** this extracted folder.
 
@@ -277,7 +276,7 @@ As for kubectl type, you need to provide a `path` value, relative to the `/templ
 ##### 2.3.2.3. custom type
 
 Custom allows to execute arbitrary scripts instead of using a specific command to apply templates.
-Since the init image embed helm binary, it is possible to use custom type to deploy helm based applications.
+It is also possible to use custom type to deploy helm based applications.
 
 When using custom, a `cmd` key must be set, and it should contain the script to be executed, encoded in base64 format.
 
@@ -330,15 +329,15 @@ Encoding scripts prevents any kind of evaluation issues.
 
 ## 2.4. GoTTY shell
 
-It is possible to request a gotty shell to be created during the deployment of the application.
+It is possible to request a GoTTY shell to be created during the deployment of the application.
 
 ```json
                 "enable_gotty_shell": "true",
 ```
 
-A gotty shell is a web based terminal, that allows app owner to interact with the nested cluster via command lines.
+A GoTTY shell is a web based terminal, that allows the app owner to interact with the nested cluster via command lines.
 
-When the app is running, the app URL will be in the `http://job-kns-XXX.mycluster.example` format by default. The gotty shell will be accessible at `http://job-kns-XXX.mycluster.example/gotty-shell`. Credentials to login to the gotty shell are provided through the help interface of the running app:
+When the app is running, the app URL will be in the `http://job-kns-XXX.mycluster.example` format by default. The GoTTY shell will be accessible at `http://job-kns-XXX.mycluster.example/gotty-shell`. Credentials to login to the GoTTY shell are provided through the help interface of the running app:
 
 ![GottySHell_1](img/apps_tutorial/kns/gotty_shell_1.png)
 
