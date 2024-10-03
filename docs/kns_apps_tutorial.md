@@ -152,7 +152,7 @@ Ingress parameters allow connecting the app to the external world, by giving the
 ```
 
 `ingress_type` specifies the type of ingress to be used. By default it is `subdomain`, which means that for each job, the ingress URL will be of format kns-job-XXX.mycluster.example.
-On some clusters, a subdomain based ingress cannot be used, and so instead of providing a subdomain based ingress, the url will be of format mycluster.example/XXX. To do so, set `ingress_type` to `prefix`. Note that not all KNS applications are compatible with this workaround (Kubeflow for example will not work).
+On some clusters, a subdomain based ingress cannot be used, and so instead of providing a subdomain based ingress, the URL will be of format mycluster.example/XXX. To do so, set `ingress_type` to `prefix`. Note that not all KNS applications are compatible with this workaround (Kubeflow for example will not work).
 
 ```json
                 "targets": [
