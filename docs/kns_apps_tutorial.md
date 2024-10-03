@@ -292,7 +292,7 @@ For example, to deploy a basic KubeAI, which uses helm to deploy:
                 ]
 ```
 
-The `cmd` content is this script:
+The `cmd` content is the result of running this script:
 
 ```bash
 #!/bin/bash
