@@ -118,22 +118,23 @@ Once image has been successfully created, it is possible to test it by manually 
 :~$ docker run -it --rm tutorial:hello_world /usr/bin/echo "Hello World!"
 Hello World!
 :~$ docker run -it --rm tutorial:hello_world /usr/bin/cat /etc/os-release
+PRETTY_NAME="Ubuntu 24.04.1 LTS"
 NAME="Ubuntu"
-VERSION="20.04.2 LTS (Focal Fossa)"
+VERSION_ID="24.04"
+VERSION="24.04.1 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
 ID=ubuntu
 ID_LIKE=debian
-PRETTY_NAME="Ubuntu 20.04.2 LTS"
-VERSION_ID="20.04"
 HOME_URL="https://www.ubuntu.com/"
 SUPPORT_URL="https://help.ubuntu.com/"
 BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
 PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
-VERSION_CODENAME=focal
-UBUNTU_CODENAME=focal
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
 :~$
 ```
 
-We can see here that image contains Ubuntu 20.04 release.
+We can see here that image contains Ubuntu 24.04 release.
 
 ### 2.2. Create AppDef.json
 
@@ -645,7 +646,7 @@ RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.t
 
 RUN tar xvJf ffmpeg-release-amd64-static.tar.xz;
 
-RUN cd ffmpeg-5.0.1-amd64-static; cp ffmpeg /usr/bin/ffmpeg;
+RUN cd ffmpeg-*; cp ffmpeg /usr/bin/ffmpeg;
 ```
 
 Build it:
@@ -676,7 +677,7 @@ RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.t
 
 RUN tar xvJf ffmpeg-release-amd64-static.tar.xz;
 
-RUN cd ffmpeg-5.0.1-amd64-static; cp ffmpeg /usr/bin/ffmpeg;
+RUN cd ffmpeg-*; cp ffmpeg /usr/bin/ffmpeg;
 
 # Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
 FROM ubuntu:latest 
@@ -790,7 +791,7 @@ So, for hello world application, this would be:
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get install curl -y --no-install-recommends && apt-get clean
+RUN apt-get update && apt-get install curl ca-certificates -y --no-install-recommends && apt-get clean
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
@@ -1477,7 +1478,7 @@ RUN wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.t
 
 RUN tar xvJf ffmpeg-release-amd64-static.tar.xz;
 
-RUN cd ffmpeg-5.0.1-amd64-static; cp ffmpeg /usr/bin/ffmpeg;
+RUN cd ffmpeg-*; cp ffmpeg /usr/bin/ffmpeg;
 
 # Stage 1, we simply import /usr/bin/ffmpeg from stage download_extract_ffmpeg
 FROM ubuntu:latest
