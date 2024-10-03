@@ -246,7 +246,7 @@ If `type` is set to `kubectl`, then a `path` must be provided, relative to the r
 In our example, since our `google-sample.yml` file is at `/templates/google-sample.yml` into our app image, `path` will simply be `google-sample.yml`.
 
 Note that the kubectl type also allows to use an URL as a template, to fetch a remote template (with all risks that it implies!).
-To do so, specify a special key `format` to `url`, and provide the URL inside the `path` key. For example, to deploy ArgoCD:
+To do so, specify a special key `format` to `url`, and provide the URL inside the `path` key. For example, to deploy Argo CD:
 
 ```json
                 "templates": [
