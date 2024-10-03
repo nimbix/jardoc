@@ -13,11 +13,11 @@ Before creating apps for the KNS scheduler, it is important to understand how KN
 KNS stands for Kubernetes Nested Scheduler. As the name says, KNS is a Jarvice downstream component that will spawn nested Kubernetes clusters (based on K3S)
 and will deploy Kubernetes based apps inside these nested clusters, as jobs.
 
-While traditional Jarvice downstreams are made for HPC jobs and parallel short term jobs, KNS has been designed to host long running jobs with massive scaleup capabilities. KNS is, in theory, capable of running anything that can run on a Kubernetes cluster, making it a very nice shared "sandbox".
+While traditional Jarvice downstreams are made for HPC jobs and parallel short term jobs, KNS has been designed to host long running jobs with massive scale-up capabilities. KNS is, in theory, capable of running anything that can run on a Kubernetes cluster, making it a very nice shared "sandbox".
 
 KNS apps are docker images that contain files (mostly helm/kubectl/kustomize templates) and instructions used to deploy Kubernetes based apps like Kubeflow, ArgoCD, Kubeai, etc. While launching a new job, the KNS creates a dedicated nested K3S cluster for the job, pulls the app image from within this cluster, and uses the image's instructions to deploy the expected resources. Ingress allows users to access the nested cluster services.
 
-Note: some apps example for KNS can be found in the [Nimbix kns-apps repository](https://github.com/nimbix/kns-apps). The rest of the tutorial is based on the [Hello World KNS app that can be found here](https://github.com/nimbix/kns-apps/tree/master/apps/hello_world)
+Note: Some examples of KNS apps can be found in the [Nimbix kns-apps repository](https://github.com/nimbix/kns-apps). The rest of the tutorial is based on the [Hello World KNS app that can be found here](https://github.com/nimbix/kns-apps/tree/master/apps/hello_world)
 
 ## 2. The AppDef.json KNS key
 
@@ -89,7 +89,7 @@ Let's examine this file step by step. We will only focus on the commands part, e
         "Hello": {
 ```
 
-* `commands` is a list, so you can add any app entry points as needed. This can be useful for creating an all-in-one app image for example.
+* `commands` is a dictionary, so you can add any app entry points as needed. This can be useful for creating an all-in-one app image for example.
 * `Hello` is the name of the current entry point for the app.
 
 ```json
@@ -141,7 +141,7 @@ Let's see each partsof this new dictionary.
                 "kubernetes_version": "",
 ```
 
-* `kubernetes_version` allows to specify the Kubernetes version to be used for the K3S nested cluster. Format is `v1.X.Y` with `X` the major and `Y` the minor versions. For example: `v1.28.11`. See the compatibility matrix [here.](https://vcluster.com/docs/v0.19/deploying-vclusters/compat-matrix)
+* `kubernetes_version` allows to specify the Kubernetes version to be used for the K3S nested cluster. Format is `v1.X.Y` with `X` the major and `Y` the minor versions. For example: `v1.28.11`. Supported versions at this time are v1.30.2, v1.29.6, v1.28.11 and v1.27.15.
 
 ### 2.2. Ingress parameters
 
