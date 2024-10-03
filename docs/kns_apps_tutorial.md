@@ -145,7 +145,7 @@ Let's see each partsof this new dictionary.
 
 ### 2.2. Ingress parameters
 
-Ingress parameters allow to connect app to the external world, by giving final user the URL to reach the app portal/entry point/API/etc.
+Ingress parameters allow connecting the app to the external world, by giving the final user the URL to reach the app portal/entry point/API/etc.
 
 ```json
                 "ingress_type": "subdomain",
