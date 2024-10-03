@@ -165,7 +165,7 @@ On some clusters, a subdomain based ingress cannot be used, and so instead of pr
 ```
 
 `targets` list is then used to define ingresses to spawn.
-For now, KNS will only consider the first item in the list. This limitation will be removed in later versions.
+For now, KNS will only consider the first item on the list. This limitation will be removed in later versions.
 
 The following parameters are to be set for each ingress target:
 
