@@ -269,7 +269,7 @@ Kustomize will execute the following command:
 /usr/bin/kubectl apply -k path/to/folder/
 ```
 
-And so allow to use the equivalent of the kustomize command (that was merged into kubectl command) on a folder of dynamic templates.
+And so allows using the equivalent of the kustomize command (that was merged into kubectl command) on a folder of dynamic templates.
 
 As for kubectl type, you need to provide a `path` value, relative to the `/templates` folder of the app image.
 
