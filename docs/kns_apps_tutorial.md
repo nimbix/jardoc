@@ -186,7 +186,7 @@ The following parameters are to be set for each ingress target:
 
 Templates are provided as a list, named `templates`, which will be executed in an ordered manner.
 
-While each item of the list can set its own parameters, the following global parameters are available, which apply to all items of the tempate list:
+While each item of the list can set its own parameters, the following global parameters are available, which apply to all items of the template list:
 
 * `global_retry`: how many retries to do if executing the item failed. For example, if the `kubectl apply` of the template fails, it will be retried. This is useful when a step needs another previous one to be completed to succeed (resources running).
 * `global_retry_sleep`: how many seconds should we wait between each retry.
