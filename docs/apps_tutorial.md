@@ -367,7 +367,7 @@ Now, build again:
 Sending build context to Docker daemon   16.9kB
 Step 1/4 : FROM ubuntu:latest
  ---> 7e0aa2d69a15
-Step 2/4 : RUN apt-get update; apt-get install curl ca-certificates -y --no-install-recommends;
+Step 2/4 : RUN apt-get update; apt-get install curl -y;
  ---> Running in d97271342b81
 ...
 Removing intermediate container d97271342b81
