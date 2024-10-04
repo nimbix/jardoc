@@ -367,7 +367,7 @@ Now, build again:
 Sending build context to Docker daemon   16.9kB
 Step 1/4 : FROM ubuntu:latest
  ---> 7e0aa2d69a15
-Step 2/4 : RUN apt-get update; apt-get install curl -y --no-install-recommends;
+Step 2/4 : RUN apt-get update; apt-get install curl ca-certificates -y --no-install-recommends;
  ---> Running in d97271342b81
 ...
 Removing intermediate container d97271342b81
@@ -791,7 +791,7 @@ So, for hello world application, this would be:
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get install curl ca-certificates -y --no-install-recommends && apt-get clean
+RUN apt-get update && apt-get install curl -y && apt-get clean
 
 COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
@@ -824,7 +824,7 @@ Now, create here a Dockerfile with the following content:
 ```dockerfile
 FROM ubuntu:latest
 
-RUN apt-get update && apt-get install curl -y --no-install-recommends && apt-get clean
+RUN apt-get update && apt-get install curl -y && apt-get clean
 
 RUN echo "Sarah Connor?" > /knock_knock ;
 
