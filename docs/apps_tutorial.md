@@ -356,7 +356,6 @@ COPY NAE/AppDef.json /etc/NAE/AppDef.json
 
 RUN curl --fail -X POST -d @/etc/NAE/AppDef.json https://cloud.nimbix.net/api/jarvice/validate
 ```
-
 <!--Please note that we also added the `--no-install-recommends` to apt-get command. By default, apt-get or yum/dnf will try to install all recommended packages, generating huge images. 99% of time with app images, we do not need these packages. Setting `--no-install-recommends` for apt-get or `--nobest` for yum and dnf will sometime significantly reduce images sizes.-->
 
 Now, build again:
@@ -495,25 +494,25 @@ Fill the `App Id` and `Docker Repository` fields and click **Save**.
 The other fields are automatically populated from the AppDef.json file created with the application. 
 
 <!--![PushToCompute_step_3](img/apps_tutorial/PTC_step_3.png)-->
-![Img6.1_AddApplication](img/apps_tutorial/New_Images/Img6.1_AddApplication.png){: style="border: 0.5px solid black;"}
+![Img6.1_AddApplication](img/apps_tutorial/New_Images/Img6.1_AddApplication.png){: style="border: 0.5px solid black; width:850px;"}
 
 
-Now that the application is registered into Jarvice, we need to request an image pull, so that Jarvice will retrieve AppDef.json embed into image and update all application data. To do so, click on the small burger on the bottom right of the application, then click **Pull** and confirm by clicking **Pull** again in the popup that appears. Close Pull response windows. Then, wait a few seconds for image to be pulled.
+Now that the application is registered into Jarvice, we must request an image pull, so that Jarvice will retrieve AppDef.json embed into image and update all application data. To do so, click on the small burger on the bottom right of the application, then click **Pull** and confirm by clicking **Pull** again in the popup that appears. Close Pull response windows. Then, wait a few seconds for image to be pulled.
 
 <!--![PushToCompute_step_4](img/apps_tutorial/PTC_step_4.png)-->
-![Img8_Pull](img/apps_tutorial/New_Images/Img8_Pull.png){: style="border: 1px solid black; width: 400px;"}
+![Img8_Pull](img/apps_tutorial/New_Images/Img8_Pull.png){: style="border: 0.5px solid black; width: 400px;"}
 
-![Img9_popup](img/apps_tutorial/New_Images/Img9_popup.png){: style="border: 1px solid black; width: 500px;"}
+![Img9_popup](img/apps_tutorial/New_Images/Img9_popup.png){: style="border: 0.5px solid black; width: 500px;"}
 
-Once image has been pulled, you can see that application logo has been updated by our base64 encoded png.
+Once the image is pulled, you can see that the application logo is updated by our base64 encoded png.
 
-![Img10_ImgPulled](img/apps_tutorial/New_Images/Img10_ImgPulled.png){: style="border: 1px solid black;"}
+![Img10_ImgPulled](img/apps_tutorial/New_Images/Img10_ImgPulled.png){: style="border: 0.5px solid black;"}
 
 Furthermore, you can check the application logs/history to see the pull process. To do so, press the burger again, then go to **History**. Close the windows once read.
 
 <!--![PushToCompute_step_6](img/apps_tutorial/PTC_step_6.png)-->
-![Img11_history](img/apps_tutorial/New_Images/Img11_history.png){: style="border: 1px solid black; width: 400px;"}
-![Img12_history](img/apps_tutorial/New_Images/Img12_history.png){: style="border: 1px solid black; width: 800px;"}
+![Img11_history](img/apps_tutorial/New_Images/Img11_history.png){: style="border: 0.5px solid black; width: 400px;"}
+![Img12_history](img/apps_tutorial/New_Images/Img12_history.png){: style="border: 0.5px solid black; width: 800px;"}
 
 The application is now ready to be run in Jarvice.
 
@@ -524,30 +523,30 @@ The application is now ready to be run in Jarvice.
 To submit an application job to the cluster, click on the application card.
 
 <!--![Run_Application_step_1](img/apps_tutorial/Run_Application_step_1.png)-->
-![Img_RunApplication](img/apps_tutorial/New_Images/Img_RunApplication.png){: style="border: 1px solid black; width: 400px;"}
+![Img_RunApplication](img/apps_tutorial/New_Images/Img_RunApplication.png){: style="border: 0.5px solid black; width: 400px;"}
 
 Then on the application window, click on **Echo With Arguments**.
  Note that all of this is set in the AppDef.json file while building application image.
 
 <!--![Run_Application_step_2](img/apps_tutorial/Run_Application_step_2.png)-->
-![Img_SubmitApplication_Echo](img/apps_tutorial/New_Images/Img13_SubmitApplication_Echo.png){: style="border: 1px solid black; width: 700px;"}
+![Img_SubmitApplication_Echo](img/apps_tutorial/New_Images/Img13_SubmitApplication_Echo.png){: style="border: 0.5px solid black; width: 700px;"}
 
 In the next window, select the machine type to be used. For this hello world tutorial, you can use the smallest available.
 
 Then click **Submit** to submit the application job and run the application.
 
 <!--![Run_Application_step_3](img/apps_tutorial/Run_Application_step_3.png)-->
-![Img14_SubmitApplication](img/apps_tutorial/New_Images/Img14_SubmitApplication.png){: style="border: 1px solid black; width:700px"}
+![Img14_SubmitApplication](img/apps_tutorial/New_Images/Img14_SubmitApplication.png){: style="border: 0.5px solid black; width:700px"}
 
 If all goes well, you are automatically redirected to the **Dashboard** tab. If not, click on it on the left. You can see here that your job has been submitted, and is now queued. After few seconds/minutes, job will start and application will run. Note the job number here: 6000384. This will be the reference for job logs later.
 
 <!--![Run_Application_step_4](img/apps_tutorial/Run_Application_step_4.png)-->
-![Img15_RunningApplication](img/apps_tutorial/New_Images/Img15_RunningApplication.png){: style="border: 1px solid black;"}
+![Img15_RunningApplication](img/apps_tutorial/New_Images/Img15_RunningApplication.png){: style="border: 0.5px solid black;"}
 
-Once application is sun successfully, you will see it marked as **Completed**.
+Once the application is run successfully, you will see it marked as **Completed**.
 
 <!--![Run_Application_step_5](img/apps_tutorial/Run_Application_step_5.png)-->
-![Img16_RunCompleted](img\apps_tutorial\New_Images\Img16_RunCompleted.png){: style="border: 1px solid black;"}
+![Img16_RunCompleted](img\apps_tutorial\New_Images\Img16_RunCompleted.png){: style="border: 0.5px solid black;"}
 
 ### 2.8. Gather logs
 
@@ -912,7 +911,7 @@ Once image is pushed, add application into Jarvice as before. Note that this tim
 When you click on the application card, you should now view the following:
 
 <!--![app_interactive_shell_step_1](img/apps_tutorial/app_interactive_shell_step_1.png)-->
-![app_interactive_shell_step_1](img\apps_tutorial\New_Images\Img21_GottyShell.png){: style="border: 0.5px solid black; height: 350px; width: 500px;"}
+![app_interactive_shell_step_1](img\apps_tutorial\New_Images\Img21_GottyShell.png){: style="border: 0.5px solid black; width: 450px;"}
 
 Click on **Gotty Shell**, and in the next window, note that you can tune the command to be launched if desired (here default value is `/bin/bash` as requested in AppDef.json file).
  
@@ -2492,9 +2491,12 @@ Dont forget to make it executable, using `chmod +x generate_nginx_conf.sh`.
 
 Notice the substitution of JARVICE_INGRESSPATH environment variable. At runtime, this variable contains the ingress subpath used.
 
-Now grab a screenshot (whatever you wish as long as its a png file) and put it as NAE/screenshot.png.
+Now capture a screenshot and put it as NAE/screenshot.png. 
 
-Now create the final Dockerfile:
+Note: The screenshot can be any image in 16:9 aspect ratio. Also, the image resolution of 960*540 works best for optimal display.
+
+Then 
+create the final Dockerfile:
 
 ```dockerfile
 FROM nginxinc/nginx-unprivileged:latest
@@ -2510,13 +2512,21 @@ Build and push this image to your registry. Then, in Jarvice P2C, pull this imag
 
 Click on the new app tile:
 
-![nginx_step_1](img/apps_tutorial/nginx_step_1.png){: style="border: 0.5px solid black;"}
+<!--![nginx_step_1](img/apps_tutorial/nginx_step_1.png){: style="border: 0.5px solid black;"}-->
+
+![nginx_step_1](img/apps_tutorial/New_Images/NginxExample_1.png){: style="border: 0.5px solid black;"}
 
 Then click on server and start it on a small machine profile:
-![nginx_step_2](img/apps_tutorial/nginx_step_2.png){: style="border: 0.5px solid black; width:650px;"}
+<!--![nginx_step_2](img/apps_tutorial/nginx_step_2.png){: style="border: 0.5px solid black; width:650px;"}-->
+
+![nginx_step_1](img\apps_tutorial\New_Images\NginxExample_2.png){: style="border: 0.5px solid black;"}
 
 Once app has started, you can simply click on the tile to reach the app url:
-![nginx_step_3](img/apps_tutorial/nginx_step_3_1.png){: style="border: 0.5px solid black;"}
+<!--![nginx_step_3](img/apps_tutorial/nginx_step_3_1.png){: style="border: 0.5px solid black;"}-->
+
+![nginx_step_3](img\apps_tutorial\New_Images\Nginx_Example_3.png){: style="border: 0.5px solid black;"}
+
+![nginx_step_3](img\apps_tutorial\New_Images\NginxExample_4.png){: style="border: 0.5px solid black;"}
 
 This should open the index.html small page of our image:
 
@@ -2634,24 +2644,31 @@ Build and push this image to your registry. Then, in Jarvice P2C, pull this imag
 
 Click on the new app tile:
 
-![nginx_step_1](img/apps_tutorial/nginx_step_1.png){: style="border: 0.5px solid black;"}
+![nginx_step_1](img/apps_tutorial/New_Images/NginxExample_1.png){: style="border: 0.5px solid black;"}
 
-Then click on server and start it on a small machine profile:
-![nginx_step_2](img/apps_tutorial/nginx_step_2.png){: style="border: 0.5px solid black; width:650px;"}
+The Submit Application window opens. Click on server. 
+![nginx_step_2](img/apps_tutorial/New_Images/NginxExample_2.png){: style="border: 0.5px solid black;"}
 
-Once app has started, you should see the ip provided as "Address" in the running app tile:
-![nginx_step_3](img/apps_tutorial/nginx_step_3.png){: style="border: 0.5px solid black; width:650px;"}
+Then start it on a small machine profile.
 
-Copy this address, and in another tab of your browser, past it and add `:8080` at the end.
-In this example, this would be: `http://34.173.101.107:8080`
+![nginx_step_3](img/apps_tutorial/New_Images/NginxExample_SubmitApplication.png){: style="border: 0.5px solid black; width:800px;"}
 
-This should open the index.html small page of our image:
+Once app has started, you should see the Job number, command and status in the running app tile:
+![nginx_step_4](img/apps_tutorial/New_Images/Nginx_Example_3.png){: style="border: 0.5px solid black;"}
 
-![nginx_step_4](img/apps_tutorial/nginx_step_4.png){: style="border: 0.5px solid black; height: 500px; width:400px;"}
+<!--Copy this address, and in another tab of your browser, past it and add `:8080` at the end.
+In this example, this would be: `http://34.173.101.107:8080`-->
 
-The same process can be repetead with a much more sophisticated website to host it.
+When you hover on the app tile, you can see "Click to connect".
+![nginx_step_5](img/apps_tutorial/New_Images/NginxExample_4.png){: style="border: 0.5px solid black;"}
 
-Small note: by default, Jarvice starts at init an ssh server inside the running pod of the job. You can combine this nginx part with the next part, related to ssh server, to be able to manage the nginx server during job execution if an interactive shell is needed.
+ Click on it to open the index.html page of our image:
+
+![nginx_step_6](img/apps_tutorial/nginx_step_4.png){: style="border: 0.5px solid black; height: 500px; width:400px;"}
+
+The same process can be repeated with a much more sophisticated website to host it.
+
+Note: By default, Jarvice starts at init an ssh server inside the running pod of the job. You can combine this nginx part with the next part, related to ssh server, to be able to manage the nginx server during job execution if an interactive shell is needed.
 
 ### 11.2. Basic ssh server
 
@@ -2739,15 +2756,15 @@ Then, the NAE/AppDef.json file will be as follows (the long text is a base64 enc
 
 Now, just import application in PushToCompute as usual, and pull it. After few seconds, you should see the application with the openssh icon on it:
 
-![app_ssh_step_1](img/apps_tutorial/app_ssh_step_1.png){: style="border: 0.5px solid black;"}
+![app_ssh_step_1](img\apps_tutorial\New_Images\Img35_SSH_Server.png){: style="border: 0.5px solid black;"}
 
-And when launching job, user can set his/her ssh public key to be used to authenticate.
+And while launching the job, users can set their ssh public key to be used to authenticate.
 
-![app_ssh_step_2](img/apps_tutorial/app_ssh_step_2.png){: style="border: 0.5px solid black; width:800px;"}
+![app_ssh_step_2](img\apps_tutorial\New_Images\Img37_SSH_Server_Launch.png){: style="border: 0.5px solid black; width:800px;"}
 
-Once job is started, user can retrieve public ip to connect to, and remote user to be used (which can change depending of administrator settings):
+Once the job starts running, user can retrieve public IP to connect to, and remote user to be used (which can change depending on administrator settings):
 
-![app_ssh_step_3](img/apps_tutorial/app_ssh_step_3.png){: style="border: 0.5px solid black; width:800px;"}
+![app_ssh_step_3](img\apps_tutorial\New_Images\Img38_SSH_Server.png){: style="border: 0.5px solid black; width:800px;"}
 
 It is then possible to login via ssh as usual:
 
@@ -2770,7 +2787,7 @@ You may change this message by editing /etc/motd.
 jarvice-job-123333-bscv5:/tmp/.ephemeral-home$
 ```
 
-As expressed in the logs, user have to manually kill the job once done (this is a server app, not a computation app).
+As expressed in the logs, user must manually kill the job once done (this is a server app, not a computation app).
 
 #### 11.2.2. Using portal SSH Keys
 
@@ -2781,9 +2798,9 @@ We will use the new portal in this example.
 Connect to Jarvice portal, and in Account (1), click on SSH Keys (2), then click New (3). If there are existing keys, click Edit and then New.
 
 <!--![app_ssh_step_4](img/apps_tutorial/app_ssh_step_4.png)-->
-![app_ssh_step_4](img\apps_tutorial\New_Images\Img31_SSHKeys.png){: style="border: 0.5px solid black; width:800px;"}
+![app_ssh_step_4](img\apps_tutorial\New_Images\Img31_SSHKeys.png){: style="border: 0.5px solid black;"}
 
-![app_ssh_step5](img\apps_tutorial\New_Images\Img31.1_NewSSHKey.png){: style="border: 0.5px solid black; width:800px;"}
+![app_ssh_step5](img\apps_tutorial\New_Images\Img31.1_NewSSHKey.png){: style="border: 0.5px solid black; width:900px;"}
 
 Add your ssh public key, and save it. Now, each time you launch a new job, this public key will be added automatically to the nimbix's user authorized_keys file.
 
@@ -3018,9 +3035,9 @@ Now create NAE folder, and inside create the AppDef.json file. The Minecraft log
 }
 ```
 
-Note that we opened both 25565 and 5902 ports. 25565 is for the Minecraft server, and 5902 is required by webshell when public ip mechanism is used.
+Note that we opened both 25565 and 5902 ports. 25565 is for the Minecraft server, and 5902 is required by webshell when public IP mechanism is used.
 
-Finally, we need a nice screenshot. I propose here the file https://www.minecraft-france.fr/wp-content/uploads/2020/11/minecraft.jpg, but depending of licenses and your taste, you could download something else.
+Finally, choose a nice screenshot. We suggest using the file at https://www.minecraft-france.fr/wp-content/uploads/2020/11/minecraft.jpg, but depending of licenses and your taste, you could download something else.
 
 Now convert it as png, and store it as NAE/screenshot.png:
 
@@ -3031,23 +3048,28 @@ mv minecraft.png NAE/screenhost.png
 
 And build your app. Once imported in Push2Compute, you should see the server app like this:
 
-![app_minecraft_step_2](img/apps_tutorial/app_minecraft_step_2.png){: style="border: 0.5px solid black;"}
+<!--![app_minecraft_step_2](img/apps_tutorial/app_minecraft_step_2.png){: style="border: 0.5px solid black;"}-->
+![app_minecraft_step_2](img\apps_tutorial\New_Images\Minecraft_Server_Img1.png){: style="border: 0.5px solid black;"}
 
 And once opened:
 
-![app_minecraft_step_3](img/apps_tutorial/app_minecraft_step_3.png){: style="border: 0.5px solid black;"}
+<!--![app_minecraft_step_3](img/apps_tutorial/app_minecraft_step_3.png){: style="border: 0.5px solid black;"}-->
+![app_minecraft_step_3](img\apps_tutorial\New_Images\Minecraft_Server_img2.png){: style="border: 0.5px solid black;"}
 
-Now, start the application. I strongly recommend at least 4Gb ram and 4 CPU core. Less can work, but may be laggy for few players. If you plan to host more players on the server, you will need more resources and maybe some Java launch tunings. Also, ensure to request a persistent Vault in optional tab! Or your server chunks will not be saved once server shutdown.
+Now, start the application. It is highly recommended to use at least 4GB RAM and 4 CPU core. Less can work, but may be laggy for few players. If you plan to host more players on the server, you will need more resources and maybe some Java launch tunings. Also, ensure to request a persistent Vault in optional tab! Or your server chunks will not be saved once server shutdown.
 
-Once application is started, you can grab the public ip to be given to users.
+Once application is started, you can grab the public IP to be given to users.
 
-![app_minecraft_step_4](img/apps_tutorial/app_minecraft_step_4.png){: style="border: 0.5px solid black;"}
+<!--![app_minecraft_step_4](img/apps_tutorial/app_minecraft_step_4.png){: style="border: 0.5px solid black;"}-->
+![app_minecraft_step_4](img\apps_tutorial\New_Images\Minecraft_Server_img3.png){: style="border: 0.5px solid black;"}
 
-Note that for now, the server hasn't started yet. Server administrator now must connect once to the webshell to trigger server start. Click on "Click here to connect" to join the webshell and trigger server start.
+Note that for now, the server hasn't started yet. Server administrator now must connect once to the webshell to trigger server start. Hover on the running app tile and click on "Click here to connect" to join the webshell and trigger server start.
+
+![app_minecraft_step_5](img\apps_tutorial\New_Images\Minecraft_Server_img4.png){: style="border: 0.5px solid black;"}
 
 ![app_minecraft_step_5](img/apps_tutorial/app_minecraft_step_5.png){: style="border: 0.5px solid black;"}
 
-Once server is started, you need to establish a whitelist to prevent unwanted users to login, and add your players in it:
+Once server is started, you must establish a whitelist to prevent unwanted users to login, and add your players in it:
 
 ```
 /whitelist on
@@ -3065,7 +3087,7 @@ Then users can join the server if invited by server admin (i.e. added to whiteli
 
 You can close webshell tab anytime, and rejoin later. Of course, do not give the link to any users!
 
-Once server must be shutdown (upgrade, maintenance, etc.), ensure all users are aware of the shutdown, then use command `stop` to ensure server save chunks before stopping gracefully.
+Whenever the server is shutdown (upgrade, maintenance, etc.), ensure that all the users are aware of the shutdown, then use command `stop` to enable the server to save chunks before stopping gracefully.
 
 Note that to allow advanced server usage, like modding, etc., we could also propose a full remote desktop for this application, etc.
 
