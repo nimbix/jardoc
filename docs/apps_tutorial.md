@@ -2922,7 +2922,7 @@ First, create Dockerfile:
 ```dockerfile
 FROM ubuntu:22.04
 
-RUN apt update && apt install -y python3 python3-requests tmux openjdk-19-jre --no-install-recommends
+RUN apt update && apt install -y python3 python3-requests tmux openjdk-19-jre
 
 COPY start.sh /start.sh
 COPY get_server.py /get_server.py
