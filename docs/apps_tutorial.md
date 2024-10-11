@@ -414,7 +414,7 @@ Create an account on https://hub.docker.com/.
 Once account is created, sign in, and click on **Create repository**.
 
 <!--![DockerHub_step_1](img/apps_tutorial/docker_hub_step_1.png)-->
-![DockerHub_step_1](img\apps_tutorial\New_Images\Img1_CreateRepositoryDocker.png){: style="border: 0.5px solid black;"}
+![DockerHub_step_1](img\apps_tutorial\New_Images\Img1_CreateRepository.png){: style="border: 0.5px solid black;"}
 
 
 Fill the following information, as required.
@@ -631,7 +631,7 @@ We want to install Intel Parallel Studio Compilers. Archive is big (> 3GB).
 
 In stage 0 (counter start at 0), we **ADD** archive to image, and install Intel product into `/opt/intel` folder. Final image layers contains both installer archive, extracted archive content, and final installed product.
 
-Then, in second stage we simply say "now copy all that is in `/opt/intel` from stage 0 into current stage, so final image of this stage only contains final installed product in its layers, we don't have archive and extracted archive in final application image layer, which saves a LOT of disks and bandwidth.
+Then, in second stage we simply say "now copy all that is in `/opt/intel` from stage 0 into current stage, so final image of this stage only contains final installed product in its layers, we don't have archive and extracted archive in final application image layer, which saves a lot of disks and bandwidth.
 
 As a simple example here, lets create a naive standard image that would download and install ffmpeg, the famous video processing tool:
 
