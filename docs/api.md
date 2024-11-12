@@ -59,6 +59,24 @@ Note also that in Windows command prompt, if passing JSON content directly, you 
 curl.exe -X POST http://localhost:5000/node -H 'Content-Type: application/json' -d '{\"node_id\":\"c002\"}'
 ```
 
+## External Billing API
+
+This API endpoints allow you to set up new external resources, manage billing, and create billing reports.
+
+The resources consumed by Jarvice while running a job can be Compute or External. The usage of compute resources such as the specific machine, and an application that is executed, is logged by Jarvice automatically on a per job basis. 
+
+However, the usage of <external resources> such as a specialised hardware is not automatically measured by Jarvice. Such resources are tracked by scripts or services run externally and the Jarvice REST API is used to log them. 
+
+Refer to **/external/v1/docs** to learn more about the Jarvice REST API for external resources and billing.
+
+Consider a scenario where an application requires the user to run quantum algorithms on a QPU (Quantum Processing Unit) offered by an external service provider. Each execution of a quantum circuit is counted as a quantum shot, and the provider charges for each shot executed. 
+
+The number of quantum shots executed and the bill per shot is recorded by the external provider, while the JARVICE REST API can be used to log them and generate a report on the consumption of the resource during a specified period.
+
+To register quantum shots as a resource on JARVICE, it must first be defined by using the **/billing-resources (POST)** API. Then the number of quantum shots excuted is logged and added as billing entries by using the **/billing-items (POST)** API. Once the usage is logged, the charges can be applied for each billing item by using **/billing-items-billed/{idx} (PUT)** API. Then, at the end of the billing period, a report can be generated including the details of the usage and the associated costs by using the **billing-report-external (GET)** API. The report can also be downloaded by the users (in the csv format).
+
+To delete any billing item, users can use the **/billing-items/{idx} (DELETE)** API. Furthermore, to edit the details of an external resource or to delete an external resource, use the **/billing-resources/{resource} (PUT)** or **/billing-report-external (GET)** API respectively. 
+
 ## Job Control
 
 These API endpoints allow you to submit jobs and control their execution.  Jobs run on one or more compute nodes and launch the image of an application from the service catalog.
