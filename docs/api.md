@@ -63,14 +63,11 @@ curl.exe -X POST http://localhost:5000/node -H 'Content-Type: application/json' 
 
 These API endpoints allow you to set up new external resources, manage billing, and create billing reports.
 
-The resources consumed by Jarvice while running a job can be Compute or External. The usage of compute resources such as the specific machine, and an application that is executed, is logged by Jarvice automatically on a per job basis. 
-
-However, the usage of external resources such as a specialised hardware is not automatically measured by Jarvice. Such resources are tracked by scripts or services run externally and the External Billing REST API is used to log them. 
+The resources consumed by Jarvice while running a job can be Compute or External. The usage of compute resources such as the specific machine, and an application that is executed, is logged by Jarvice automatically on a per job basis. However, the usage of external resources such as a specialised hardware is not automatically measured by Jarvice. Such resources are tracked by scripts or services run externally and the External Billing REST API is used to log them. 
 
 Refer to [/v1/docs](https://jarvice-development-api.jarvicedev.com/v1/docs/) to learn more about the JARVICE API for external resources and billing.
 
 Consider a scenario where an application requires the user to run quantum algorithms on a QPU (Quantum Processing Unit) offered by an external service provider. Each execution of a quantum circuit is counted as a quantum shot, and the provider charges for each shot executed. 
-
 The number of quantum shots executed and the bill per shot is recorded by the external provider, while the JARVICE API (for External Billing) can be used to log them and generate a report on the consumption of the resource during a specified period.
 
 To register quantum shots as a resource on Jarvice, it must first be defined by using the **/billing-resources (POST)** API. Then the number of quantum shots executed is logged and added as billing entries by using the **/billing-items (POST)** API. Once the usage is logged, the charges can be applied for each billing item by using **/billing-items-billed/{idx} (PUT)** API. Then, at the end of the billing period, a report can be generated including the details of the usage and the associated costs by using the **/billing-report-external (GET)** API. The report can also be downloaded by the users (in the csv format).
