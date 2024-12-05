@@ -59,7 +59,7 @@ Note also that in Windows command prompt, if passing JSON content directly, you 
 curl.exe -X POST http://localhost:5000/node -H 'Content-Type: application/json' -d '{\"node_id\":\"c002\"}'
 ```
 
-## External Billing API
+## External Billing
 
 These API endpoints allow you to set up new external resources, manage billing, and create billing reports.
 
