@@ -84,6 +84,9 @@ The URL to provide when a user clicks on a running application - this is used to
 
 HTML help to pop up when the user clicks the help button while the application is running.
 
+#### /etc/NAE/swlicense.txt
+swlicense enables fast PushToCompute pulls for new and existing applications.
+
 ## Metadata optimization for PushToCompute
 
 The `/etc/NAE/screenshot.png`, `/etc/NAE/screenshot.txt`,
