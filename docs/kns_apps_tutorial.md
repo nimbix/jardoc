@@ -17,11 +17,9 @@ While traditional Jarvice downstreams are made for HPC jobs and parallel short t
 
 KNS apps are docker images that contain files (mostly helm/kubectl/kustomize templates) and instructions used to deploy Kubernetes based apps like Kubeflow, ArgoCD, Kubeai, etc. While launching a new job, the KNS creates a dedicated nested K3S cluster for the job, pulls the app image from within this cluster, and uses the image's instructions to deploy the expected resources. Ingress allows users to access the nested cluster services.
 
-Note: Some examples of KNS apps can be found in the [Nimbix kns-apps repository](https://github.com/nimbix/kns-apps). The rest of the tutorial is based on the [Hello World KNS app that can be found here](https://github.com/nimbix/kns-apps/tree/master/apps/hello_world)
-
 ## 2. The AppDef.json KNS key
 
-KNS introduces a new key, `nestedkubernetes`, inside traditional *AppDef.json* file of Jarvice applications, at `commands` level.
+KNS introduces a new key, `nested_kubernetes`, inside traditional *AppDef.json* file of Jarvice applications, at `commands` level.
 
 A very basic hello world app would use the following AppDef.json file:
 
@@ -50,10 +48,7 @@ A very basic hello world app would use the following AppDef.json file:
             "name": "Start nested http server",
             "description": "Start a nested http server for testing and to say hello world.",
             "parameters": {},
-            "nestedkubernetes": {
-                "kubernetes_version": "",
-                "enable_gotty_shell": "true",
-                "ingress_type": "subdomain",
+            "nested_kubernetes": {
                 "targets": [
                     {
                         "service_name": "web",
@@ -61,10 +56,6 @@ A very basic hello world app would use the following AppDef.json file:
                         "service_namespace": "default"
                     }
                 ],
-                "templates_settings": {
-                    "global_retry": 20,
-                    "global_retry_sleep": 15
-                },
                 "templates": [
                     {
                         "name": "google-sample",
@@ -106,10 +97,7 @@ For KNS jobs, `path` and `parameters` are not used, but need to be present for t
 `name` and `description` will display as before some details about this entry point, for users to be able to choose between multiple if they exist.
 
 ```json
-            "nestedkubernetes": {
-                "kubernetes_version": "",
-                "enable_gotty_shell": "true",
-                "ingress_type": "subdomain",
+            "nested_kubernetes": {
                 "targets": [
                     {
                         "service_name": "web",
@@ -117,10 +105,6 @@ For KNS jobs, `path` and `parameters` are not used, but need to be present for t
                         "service_namespace": "default"
                     }
                 ],
-                "templates_settings": {
-                    "global_retry": 20,
-                    "global_retry_sleep": 15
-                },
                 "templates": [
                     {
                         "name": "google-sample",
@@ -131,27 +115,21 @@ For KNS jobs, `path` and `parameters` are not used, but need to be present for t
             }
 ```
 
-`nestedkubernetes` is the new key that allows to define inside it all needed elements for a Kubernetes based app.
+`nested_kubernetes` is the new key that allows to define inside it all needed elements for a Kubernetes based app.
 Let's see each partsof this new dictionary.
 
 ### 2.1. General parameters
 
 ```json
-            "nestedkubernetes": {
+            "nested_kubernetes": {
                 "kubernetes_version": "",
 ```
 
-* `kubernetes_version` allows to specify the Kubernetes version to be used for the K3S nested cluster. Format is `v1.X.Y` with `X` the major and `Y` the minor versions. For example: `v1.28.11`. Supported versions at this time are v1.30.2, v1.29.6, v1.28.11 and v1.27.15.
+* `kubernetes_version` (optional) allows to specify the Kubernetes version to be used for the K3S nested cluster. Note that only major version are supported, like `v1.30`. Minor version is automatically chosen depending on the KNS tool version.
 
 ### 2.2. Ingress parameters
 
-Ingress parameters allow connecting the app to the external world, by giving the final user the URL to reach the app portal/entry point/API/etc.
-
-```json
-                "ingress_type": "subdomain",
-```
-
-`ingress_type` specifies the type of ingress to be used. By default it is `subdomain`, which means that for each job, the ingress URL will be of format kns-job-XXX.mycluster.example. For now, no other type of ingresses are allowed.
+Ingress parameters allow connecting the app to the external world, by giving the final user the URL to reach the app portal/entry point/API/etc. You need to specify here the target service.
 
 ```json
                 "targets": [
@@ -325,21 +303,3 @@ cat myscript.sh | base64 -w 0
 ```
 
 Encoding scripts prevents any kind of evaluation issues.
-
-## 2.4. GoTTY shell
-
-It is possible to request a GoTTY shell to be created during the deployment of the application.
-
-```json
-                "enable_gotty_shell": "true",
-```
-
-A GoTTY shell is a web based terminal, that allows the app owner to interact with the nested cluster via command lines.
-
-When the app is running, the app URL will be in the `http://job-kns-XXX.mycluster.example` format by default. The GoTTY shell will be accessible at `http://job-kns-XXX.mycluster.example/gotty-shell`. Credentials to login to the GoTTY shell are provided through the help interface of the running app:
-
-![GottySHell_1](img/apps_tutorial/kns/gotty_shell_1.png)
-
-![GottySHell_1](img/apps_tutorial/kns/gotty_shell_2.png)
-
-Note that the GoTTY shell can only be created if the local cluster administrator allowed it during the KNS main deployment.
