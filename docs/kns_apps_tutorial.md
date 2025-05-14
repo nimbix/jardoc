@@ -30,6 +30,7 @@ A very basic hello world app would use the following AppDef.json file:
     "author": "oxedions",
     "licensed": false,
     "appdefversion": 2,
+    "appkind": "kns",
     "classifications": [
         "Uncategorized"
     ],
@@ -303,3 +304,12 @@ cat myscript.sh | base64 -w 0
 ```
 
 Encoding scripts prevents any kind of evaluation issues.
+
+### 2.4. AppKind
+
+When creating a KNS application, it is possible and recommended to add the appkind value to the appdef.
+
+By default, if not set, the appkind will be defined to "k8s". For KNS applications, appkind should be set to "kns" instead.
+
+This key allows a machines filtering mechanism when selecting machine for a job in the portal interface.
+If not set, all machines will display, leading to possible missusage and crash of job.
