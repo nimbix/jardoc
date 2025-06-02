@@ -90,7 +90,7 @@ swlicense enables fast PushToCompute pulls for new and existing applications.
 ## Metadata optimization for PushToCompute
 
 The `/etc/NAE/screenshot.png`, `/etc/NAE/screenshot.txt`,
-`/etc/NAE/license.txt`, and `/etc/NAE/AppDef.json` files are loaded by JARVICE
+`/etc/NAE/license.txt`, `/etc/NAE/swlicense.txt`, and `/etc/NAE/AppDef.json` files are loaded by JARVICE
 when it pulls application docker images into the platform.
 
 If you will be building your images outside of the PushToCompute
@@ -98,5 +98,5 @@ If you will be building your images outside of the PushToCompute
 pushed into the final layer of your docker image.  This may be done by
 adding the following to the last line of your `Dockerfile`:
 ```
-RUN mkdir -p /etc/NAE && touch /etc/NAE/screenshot.png /etc/NAE/screenshot.txt /etc/NAE/license.txt /etc/NAE/AppDef.json
+RUN mkdir -p /etc/NAE && touch /etc/NAE/screenshot.png /etc/NAE/screenshot.txt /etc/NAE/license.txt /etc/NAE/swlicense.txt /etc/NAE/AppDef.json
 ```
