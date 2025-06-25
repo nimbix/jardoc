@@ -181,6 +181,7 @@ When the type is `CONST`, the `value` key may be either an actual value or one o
 * `%TGPUS%` – total number of GPUs selected (`%GPUS%` + (`%SGPUS%` * (`%NODES%` – 1)))
 * `%TRAM%` – total amount of RAM selected (`%RAM%` + (`%SRAM%` * (`%NODES%` – 1)))
 * `%JOBLABEL%` – job label, if specified
+* `%JOBPROJECT%`- job project, if specified
 * `%MACHINETYPE%` – machine type (e.g. n0, n3, etc.)
 * `%VTYPE%` – vault type (e.g. NONE, FILE, OBJECT, BLOCK, BLOCK_ARRAY)
 * `%VNAME%` - vault name the job was launched with
